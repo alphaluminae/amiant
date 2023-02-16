@@ -1,6 +1,6 @@
 ### AmiantRuntimeEnvironment
 
-- Amiant: die Power einer LowLevel-Programmierung in einer sicheren Umgebung -
+- Amiant: die Power einer LowLevel-Programmierung in einer sicheren Umgebung
 
 Amiant ist eine Programmiersprache, welche die Syntax von LISP modernisiert.
 
@@ -14,7 +14,7 @@ Kernfunktionen der Sprache sind:
 
 Ein Hello World Programm in Amiant:
 ```
-println "Hello World!"
+println "Hello World!";
 ```
 
 ### Syntax
@@ -56,12 +56,25 @@ Zeilenkommentare können mit dem Symbol `#` gestartet werden, und gehen bis ans 
 | Map      | Map (Key-Value-Pairs) |
 | Matrix   | Matrizen              |
 
+Zahlen und Bytes sind die einzigen Datentypen, die bei Übertragungen kopiert werden! Bei allen anderen Datentypen wird der Wert kopiert (es wird eine Referenz auf die Originaldaten übergeben). Diese Referenz sorgt dafür, dass Amiant weniger Speicher verbraucht. Der Operator `copy` veranlasst der AVM eine Kopie der übergebenen Daten anzufertigen:
+
+```
+var name "Booktitle";
+var name2 name; # name1 und name2 weisen auf den gleichen String im Speicher
+     # der String "Booktitle" existiert nur ein Mal im Speicher!
+
+assign name2 copy name; # name1 und name2 weisen auf unterschiedliche Stellen im Speicher
+
+     # Nun existiert der String "Booktitle" zwei Male im Speicher
+
+```
+
 ### Keywords
 Folgende Keywords sind reserviert, und können deshalb nicht außerhalb ihres Kontextes gebraucht werden:
 
 | Keyword | Bedeutung     |
 | :---:   |     :---:     |
-| pi      | 301           |
+| pi      | 3.14159...    |
 
 
 ### Zahlen
@@ -128,7 +141,7 @@ Funktionen können mit dem Operator `~` aufgerufen werden. Dabei muss der Name d
 
 ### If-Verzweigungen
 
-Bedingte Verzweigungen werden durch den `if`-Operator realisiert. Die allgemeinen Formen eine if-Abzweigung und if-Else-Abzweigung sehen folgendermaßen aus:
+Bedingte Verzweigungen werden durch den `if`-Operator realisiert. Die allgemeinen Formen einer if-Abzweigung und if-Else-Abzweigung sehen folgendermaßen aus:
 
 If-Abzweigung:
 ```
@@ -201,7 +214,7 @@ Bitoperatoren bezeichnen die Bearbeitung einzelner Bits in einem Byte. Es gibt d
 
 | Operation                 | Bedeutung                              |
 |   :---:                   |     :---:                              |
-|     '(bitshiftr byte)'    | Bits um eine Stelle nach rechts bewegen|
+|     `(bitshiftr byte)`    | Bits um eine Stelle nach rechts bewegen|
 |     `(bitshiftl byte)`    | Bits um eine Stelle nach links bewegen |
 |     `(bitand byte1 byte2)`| Bitweises-Und                          |
 |     `(bitor byte1 byte2)` | Bitweises-Oder                         | 
@@ -215,7 +228,7 @@ Der letzte geworfene Fehler kann mit `(error)` geholt werden. Das gibt den Typ d
 | Operation            | Bedeutung                                                              |
 |   :---:              |     :---:                                                              |
 |     `(errorline)`    | gibt die Zeilennummer als Zahl zurück, an der der letzte Fehler auftrat|
-|     '(errorfunction)'| gibt den Namen der Funktion zurück, in der der letzte Fehler auftrat   |
+|     `(errorfunction)`| gibt den Namen der Funktion zurück, in der der letzte Fehler auftrat   |
 |     `(error clear)`  | löscht den letzten Fehler                                              |
 
 Es gibt folgende Fehlertypen:
