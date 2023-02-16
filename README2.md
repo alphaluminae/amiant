@@ -4,13 +4,18 @@
 
 Amiant ist eine Programmiersprache, welche die Syntax von LISP modernisiert.
 
-### Ideen
+### Ideen und Hello World
 
 Kernfunktionen der Sprache sind:
 - die gesamte Laufzeitumgebung ist in plain-C geschrieben (es gibt keine Abhängigkeiten von irgendwelchen Header-Dateien), was sie für neue Plattformen und Embedded-Systeme attraktiv macht 
 - die AVM besitzt eine hohe Geschwindigkeit, die mit nativen Erweiterungsmöglichkeiten erhöht werden kann
 - die freie S-Syntax erlaubt es, die bei LISP häufig unnötigen und unübersichtlichen Klammern zu überwinden, ohne dabei beim Parsing einen Geschwindigkeitsnachteil zu erhalten
 - Amiant besitzt einen ARC-GC, sodass keine Speicherlecks entstehen
+
+Ein Hello World Programm in Amiant:
+```
+println "Hello World!"
+```
 
 ### Syntax
 
@@ -20,13 +25,17 @@ function foo {
     println "Hello";
     println "World"
 };
-```. Diese Deklaration kann auch in strikter S-Notation (also ohne `;` erfolgen):
+```
+
+Diese Deklaration kann auch in strikter S-Notation (also ohne `;` erfolgen):
+
 ```
 (function foo (
     (println "Hello")
     (println "World")
 ))
-```. Es ist gut zu erkennen, wie das Semikolon jeweils ein `()`-Paar ersetzen kann. Der jeweils letzte Ausdruck benötigt kein Semikolon, da keine Abtrennung zum nächsten Ausdruck nötig ist.
+```
+Es ist gut zu erkennen, wie das Semikolon jeweils ein `()`-Paar ersetzen kann. Der jeweils letzte Ausdruck benötigt kein Semikolon, da keine Abtrennung zum nächsten Ausdruck nötig ist.
 
 ### Kommentare
 Zeilenkommentare können mit dem Symbol `#` gestartet werden, und gehen bis ans Ende der Zeile. Mehrzeilige Kommentare gibt es nicht. Für diesen Fall muss jede Zeile des Kommentars mit dem Kommentarzeichen beginnen:
@@ -71,7 +80,7 @@ mehreren Zeilen."
 Bei den mehrzeiligen Strings werden alle Zeichen zwischen den `"` beachtet! Somit werden die drei Leerzeichen vor `auf` auch gewertet.
 
 ### Liste
-Listen können erzeugt werden, in dem eine Anzahl an Objekten geklammert werden: `($1 $2 $3)` ergibt eine Liste, die die Zahlen 1,2 und 3 enthält. Listen besitzen keine Typbeschränkung. Somit kann eine Liste Objekte unterschiedlicher Datentypen enthalten. Zugriff auf die in der Liste befindlichen Objekte bekommt man über den `listget`-Operator. Der Index einer Liste beginnt bei Null.
+Listen können erzeugt werden, in dem eine Anzahl an Objekten geklammert werden: `($1 $2 $3)` ergibt eine Liste, die die Zahlen `1`, `2` und `3` enthält. Listen besitzen keine Typbeschränkung. Somit kann eine Liste Objekte unterschiedlicher Datentypen enthalten. Zugriff auf die in der Liste befindlichen Objekte bekommt man über den `listget`-Operator. Der Index einer Liste beginnt bei Null.
 Der Ausdruck `listget $2 ($2 $4 $6 $8)` gibt den Wert `6` zurück.
 
 ### Map
@@ -81,7 +90,20 @@ Eine Map ist eine ungeordnete Sammlung von Key-Value-Pairs. Ein Key ist immer ei
 Die Überführung von einem Datentyp zu einem anderen ist eine unsichere Operation.
 
 ### Variablen
-In jedem Scope kann eine Variable gleichen Namens immer nur einmal definiert werden. Die Scopes sind hierarchisch organisiert. 
+In jedem Scope kann eine Variable gleichen Namens immer nur einmal definiert werden. Die Scopes sind hierarchisch organisiert. Eine Variable wird mit dem Keyword `var` erzeugt:
+```
+var i $0;
+```
+Hierbei wird eine Variable mit dem Namen `i` erzeugt, die den Wert `4` enthält und vom Typ `Number` ist.
+Auf Variablen kann mit ihrem Namen zugegriffen werden.
+```
+println i; # gibt den Wert von i auf der Konsole aus
+```
+
+Variablen können mit dem `assign`-Operator überschrieben werden:
+`(assign i $5)` weist der Variable 'i' den Wert `5` zu.
+Variablen können gelöscht werden, in dem der `delete`-Operator auf ihnen ausgeführt wird: `delete i;`
+Amiant verwaltet den Speicher und löscht ungenutzte Variablen, sobald keine Referenzen mehr auf sie zeigen. Variablen müssen also nicht von Hand gelöscht werden. Der `delete`-Operator ist dennoch implementiert, um zur Laufzeit einige Optimierungen des Programmierers zuzulassen.
 
 ### Funktionen
 
@@ -104,23 +126,23 @@ function add {
 ```
 Funktionen können mit dem Operator `~` aufgerufen werden. Dabei muss der Name der Funktion angegeben werden. Der Funktion kann beim Aufruf Argumente übergeben werden. Diese müssen immer mit einem Parameter-Label markiert sein! Die übergebenen Werte werden der Funktion als lokale Variablen während des Aufrufes zur Verfügung gestellt. Die add-Funktion benötigt `n` und `m` im Funktionskörper. Deshalb müssen diese explizit beim Aufruf übergeben werden. Die Reihenfolge ist dabei egal. Wenn sie nicht übergeben werden, wird die Funktion trotzdem ausgeführt, und an der entsprechenden Stelle wird es zu einem Fehler kommen.
 
-### If
+### If-Verzweigungen
 
 Bedingte Verzweigungen werden durch den `if`-Operator realisiert. Die allgemeinen Formen eine if-Abzweigung und if-Else-Abzweigung sehen folgendermaßen aus:
 
 If-Abzweigung:
 ```
 if condition then {
-
+    # Code here
 };
-
 ```
+
 If-Else-Abzweigung:
 ```
 if condition then {
-
+    # if true
 } else {
-
+    # if false
 };
 ```
 
@@ -129,7 +151,7 @@ In Amiant gibt es zwei Schleifentypen. Zunächst gibt es die bedingte Schleife, 
 
 ```
 while condition {
-
+    # Code here
 };
 ```
 Anstelle des Keywords `while` ist auch das Keyword `loop` für diese Operation belegt.
@@ -141,10 +163,9 @@ Jeder Schleifenkörper stellt einen eigenen Scope für die Variablen bereit.
 
 ```
 for elementName in list {
-
+    # Code here
 };
 ```
-
 
 ### Konsole I
 
@@ -166,30 +187,36 @@ Die AVM stellt Grundrechenarten zur Verfügung, die intern und nicht in der Spra
 
 ### Mathematische Operationen II - Matrizen
 
-Matrizen können problemlos in Amiant selbst implementiert werden, in dem Listen miteinander verkettet werden. Die AVM stellt allerdings Operatoren zur direkten Matrixmanipulation bereit, was die Geschwindigkeit dieser Operationen stark erhöht.
+Matrizen können problemlos in Amiant selbst implementiert werden, in dem Listen miteinander verkettet werden. Allerdings stellt die AVM für diesen Fall Operatoren zur direkten Matrixmanipulation bereit, was die Geschwindigkeit dieser Operationen stark erhöht.
 
-`matrix n m stdValue` erzeugt eine n x m Matrix (Spalten, Zeilen) und gibt jeder Komponente den Wert `stdValue`.
-`matrixset matrix n m value` setzt den Wert der Matrix `matrix` an der Stelle `n` und `m` auf `value`. Der vorherige Wert wird überschrieben.
-`matrixget matrix n m` gibt den Wert der Matrix `matrix` an der Stelle `n` und `m` zurück.
- 
+| Operation                       | Bedeutung                                                                                                      |
+|   :---:                         |     :---:                                                                                                      |
+|     `matrix n m stdValue`       | erzeugt eine n x m Matrix (Spalten, Zeilen) und gibt jeder Komponente den Wert `stdValue`                      |
+|     `matrixset matrix n m value`| setzt den Wert der Matrix `matrix` an der Stelle `n` und `m` auf `value`. Der vorherige Wert wird überschrieben|
+|     `matrixget matrix n m`      | gibt den Wert der Matrix `matrix` an der Stelle `n` und `m` zurück.                                            |
 
 ### Bitoperationen
 
 Bitoperatoren bezeichnen die Bearbeitung einzelner Bits in einem Byte. Es gibt die Möglichkeit, Bits um eine Position nach rechts oder links zu bewegen, ein Bitweises-Und oder Oder zwischen zwei Bytes zu vollziehen, oder eine bitweise Negation durchzuführen.
 
-`(bitshiftr byte)` - Bits um eine Stelle nach rechts bewegen
-`(bitshiftl byte)` - Bits um eine Stelle nach links bewegen
-`(bitand byte1 byte2)` - Bitweises-Und
-`(bitor byte1 byte2)` - Bitweises-Oder
-`(bitnot byte)` - Bitweises-Nicht
+| Operation                 | Bedeutung                              |
+|   :---:                   |     :---:                              |
+|     '(bitshiftr byte)'    | Bits um eine Stelle nach rechts bewegen|
+|     `(bitshiftl byte)`    | Bits um eine Stelle nach links bewegen |
+|     `(bitand byte1 byte2)`| Bitweises-Und                          |
+|     `(bitor byte1 byte2)` | Bitweises-Oder                         | 
+|     `(bitnot byte)`       | Bitweises-Nicht                        |
 
 ### Error Handling und Fehlercodes
 
 Die AVM speichert immer nur den
 Der letzte geworfene Fehler kann mit `(error)` geholt werden. Das gibt den Typ des Fehlers als String zurück.
-`(errorline)` gibt die Zeilennummer als Zahl zurück, an der der letzte Fehler auftrat.
-'(errorfunction)' gibt den Namen der Funktion zurück, in der der letzte Fehler auftrat.
-`(error clear)` löscht den letzten Fehler.
+
+| Operation            | Bedeutung                                                              |
+|   :---:              |     :---:                                                              |
+|     `(errorline)`    | gibt die Zeilennummer als Zahl zurück, an der der letzte Fehler auftrat|
+|     '(errorfunction)'| gibt den Namen der Funktion zurück, in der der letzte Fehler auftrat   |
+|     `(error clear)`  | löscht den letzten Fehler                                              |
 
 Es gibt folgende Fehlertypen:
 
@@ -199,9 +226,11 @@ Es gibt folgende Fehlertypen:
 Die AVM unterstützt nativ kein Multithreading! Aufgrund der angestrebten Unabhängigkeit darf auf keine Thread-Bibliothek zurückgegriffen werden, was dazu führt, das kein Multithreading zur Verfügung gestellt werden kann. Dennoch ist die AVM so konstruiert, dass sie Multithreading unterstützen könnte, wenn die dazugehörigen Bibliotheken zur Verfügung stünden. Hierfür müsste die die Implementierung für AVM allein vollzogen werden, und sie dann neu kompiliert werden. Damit dieser Vorgang so wenige Eingriffe wie nötig erfordert, stellt die AVM die nötigen Definitionen bereit.
 Wenn die Anknüpfung mit der AVM gemacht wurde, stehen folgende Operationen zur Nutzung von Threads zur verfügung:
 
-`(thread threadName functionName)` - startet einen neuen Thread namens `threadName` (vom Typ String) und ruft darin die Funktion `functionName` auf.
-`(threadstop)` - stoppt den aktuellen Thread. Wenn diese Funktion im main-Thread aufgerufen wird, passiert nichts.
-`(thread)` - gibt den Namen des aktuellen Threads als String zurück.
+| Operation                             | Bedeutung                                                                                                     |
+|   :---:                               |     :---:                                                                                                     |
+|     `(thread threadName functionName)`| startet einen neuen Thread namens `threadName` (vom Typ String) und ruft darin die Funktion `functionName` auf|
+|     `(threadstop)`                    | stoppt den aktuellen Thread. Wenn diese Funktion im main-Thread aufgerufen wird, passiert nichts              |
+|     `(thread)`                        | gibt den Namen des aktuellen Threads als String zurück                                                        |
 
 ### Kompilierung der AVM
 Der gesamte C-Code soll in einer einzigen Compilation-Unit verarbeitet werden, weshalb sämtliche Funktionalitäten in Header-Dateien abgelegt sind. Dies ist unüblich, gibt allerdings den Vorteil einer einfacheren Kompilierung. Die `amiant.h` enthält alle includes in der richtigen Reihenfolge. Es ist also nur notwendig, die `amiant.h` einzubinden.
