@@ -164,14 +164,18 @@ Die Sicherheit des Codes
 
 ### Amiant-Meta-VM:
 
-Die AVM ist in der Lage, dynamisch neuen Code auszuführen. Dieser Code läuft dann in einem gesonderten Bereich, sodass Zugriffe in andere Bereiche nicht möglich sind. Um innerhalb eines laufenden Programms weiteren Amiant-Code auszuführen, muss dieser Code lediglich als String vorliegen, und mithilfe des Keywords `avm` ausgeführt werden.
+Die AVM ist in der Lage, dynamisch neuen Code auszuführen. Dieser Code läuft dann in einem gesonderten Bereich, sodass Zugriffe in andere Bereiche nicht möglich sind. Um innerhalb eines laufenden Programms weiteren Amiant-Code auszuführen, muss dieser Code lediglich als String vorliegen, und mithilfe des Keywords `amiant` ausgeführt werden.
 
 ```
-avm "println $4"; # startet ein weiteres Programm, das die Zahl 4 auf der Konsole ausgibt
+amiant "println $4"; # startet ein weiteres Programm, das die Zahl 4 auf der Konsole ausgibt
 ```
 
 Es ist wichtig zu beachten, dass es sich hierbei nicht um eine Multithreading-Lösung handelt! Der Programmfluss stoppt an dieser Stelle, bis das Unterprogramm seine Ausführung beendet hat. Aber mit einer geeigneten Implementierung einer Threading-Bibliothek über die Native-Schnittstelle ist die Auslagerung in einen separaten Thread ohne Probleme möglich. Da das innere Programm keinen Zugriff auf das äußere Programm hat, kann es dort nicht zu problematischen Interaktionen kommen. Umgekehrt besteht zwar kein direkter Zugriff, wohl aber ein indirekter: Daten können in das Programm gebracht werden, in dem sie in den String des Programmcodes beispielsweise als Variablen geschrieben werden. Da das äußere Programm den Programmcode des inneren Programmes besitzt, kann der eben so angepasst werden, dass bestimmte Informationen vor dem Start des inneren Programms eben direkt einprogrammiert werden.
-Es ist wichtig darauf hinzuweisen, dass trotz dieser Abkapselung es nicht zu einem Starten einer neuen und eigenständigen AVM kommt! Intern läuft weiterhin nur eine einzige AVM, die sich jedoch rekursiv verwenden kann. Das schlägt sich beispielsweise in den internen Speicherstatistiken wieder. Ein äußeres und ein inneres Programm tragen gleichermaßen zu den selben Statistiken bei. Auch das Akquirieren neuen Speichers erfolgt über die exakt gleichen Funktionen. Diese Fähigkeit von Amiant erleichtert es, eine AVM in einem Kernel (oder als Proto-Kernel) laufen zu lassen, die dann wiederum Unterprogramme starten kann, jedoch nur eine Stelle besitzt, an der der gesamte Speicher verwaltet werden muss.
+Es ist darauf hinzuweisen, dass trotz dieser Abkapselung es nicht zu einem Starten einer neuen und eigenständigen AVM kommt! Intern läuft weiterhin nur eine einzige AVM, die sich jedoch rekursiv verwenden kann. Das schlägt sich beispielsweise in den internen Speicherstatistiken wieder. Ein äußeres und ein inneres Programm tragen gleichermaßen zu den selben Statistiken bei. Auch das Akquirieren neuen Speichers erfolgt über die exakt gleichen Funktionen. Diese Fähigkeit von Amiant erleichtert es, eine AVM in einem Kernel (oder als Proto-Kernel) laufen zu lassen, die dann wiederum Unterprogramme starten kann, jedoch nur eine Stelle besitzt, an der der gesamte Speicher verwaltet werden muss.
+
+Jedes Amiant-Programm kann sofort beendet werden, in dem das `exit`-Keyword genutzt wird. Dabei wird nur das lokale Amiant-Programm beendet. Wenn ein Unterprogramm `exit` aufruft, so wird nur das Unterprogramm beendet, und das Oberprogramm setzt die Ausführung fort. Sollte das oberste Programm ein `exit` ausführen, so beendet sich die komplette AVM.
+
+Es ist möglich, zur Laufzeit herauszufinden, in welchem Level der aktuelle Code ausgeführt wird. Als Level wird die Stufe in der Hierarchie der Programme und Unterprogramme. Das oberste Programm läuft im Level 0. Wenn dieses Programm mithilfe des `amiant`-Keywords ein Unterprogramm startet, so liefe dieses Unterprogramm auf Level 1, usw. Den numerischen Wert des aktuellen Programmausführungslevels kann mit `level` zurückgegeben werden.
 
 ### If-Verzweigungen
 
@@ -273,9 +277,47 @@ Der letzte geworfene Fehler kann mit `(error)` geholt werden. Das gibt den Typ d
 Es gibt folgende Fehlertypen:
 
 
+### Reflection
+
+Amiant erhält während der Ausführung die vollständige Programmstruktur. Somit ist es möglich, Informationen dieser Struktur zur Laufzeit zu bekommen, aber auch dynamische Zugriffe in ihr zu erlauben.
+
+`this` gibt den Namen der Funktion als String zurück, in der dieses Keyword steht.
+`call <str>` ruft eine Funktion in diesem Scope über den Namen auf, und gibt das Ergebnis der Funktion zurück. Wichtig: Dieses Keyword kann keine Argumente an die Funktion übergeben!
+`line` gibt die aktuelle Zeilennummer als Zahl zurück.
+`take <str>` greift auf eine Variable über ihren Namen aus dem Scope zurück, und gibt die Referenz darauf zurück, ansonsten einen Nullpointer.
+`rename <str> <str>` benennt eine Funktion während der Laufzeit um. Es ist wichtig zu beachten, dass die Funktion in ihrem Scope bleibt, und dass die Funktion möglicherweise einen Namen besitzt, der in dem Scope schon definiert ist.
+'mount <str> <str>' hängt eine neue Funktion unter dem Namen und unter dem übergebenen Code in die AVM an dieser Stelle im Scope ein. Somit können partielle Codeerweiterungen problemlos erfolgen, ohne direkt eine Meta-VM starten zu müssen.
+`unmount <str>` löscht eine Funktion aus dem aktuellen Scope. Ihr Aufruf ist danach nicht mehr möglich.
+
+Folgendes Beispielprogramm erzeugt eine Funktion und tauscht sie während der Laufzeit wieder aus:
+
+```
+function reflectionTest {
+     mount "newFunc" "println $4;"; # hängt dynamisch eine neue Funktion ein
+
+     call "newFunc"; # newFunc könnte auch normal mit ~newFunc; aufgerufen werden
+};
+
+~reflectionTest; # gibt 4 auf der Konsole aus
+
+unmount "reflectionTest"; # löscht die Funktion reflectionTest
+
+mount "reflectionTest" "print $5"; # hängt eine neue Funktion unter dem gleichen Namen ein
+
+~reflectionTest; # nun wird die Zahl 5 auf der Konsole ausgegeben (die Funktion wurde ausgetauscht)
+
+```
+
+Hinweise
+--------
+
+1) Reflection ist ein mächtiges Werkzeug. Es werden generell keine Überprüfungen im Bezug auf doppelte Benennungen durchgeführt! Das resultiert jedoch in keine Speicherprobleme innerhalb der VM. Allerdings ist nicht eindeutig definiert, welche Funktion aufgerufen wird, wenn es Mehrfachbenennungen durch Reflection gibt! Die Überprüfung der Namensdopplung gibt es nur in der normalen Funktionsdefinition über das `function`-Keyword.
+
+2) Das Hinzufügen von Funktionen ist eine große Operation, da der übergebene String völlig neu geparst und verarbeitet werden muss. Es wird also von einem übermäßigen Gebrauch abgeraten.
+
 ### Multithreading Konzepte und Clustering
 
-Die AVM unterstützt nativ kein Multithreading! Aufgrund der angestrebten Unabhängigkeit darf auf keine Thread-Bibliothek zurückgegriffen werden, was dazu führt, das kein Multithreading zur Verfügung gestellt werden kann. Dennoch ist die AVM so konstruiert, dass sie Multithreading unterstützen könnte, wenn die dazugehörigen Bibliotheken zur Verfügung stünden. Hierfür müsste die die Implementierung für AVM allein vollzogen werden, und sie dann neu kompiliert werden. Damit dieser Vorgang so wenige Eingriffe wie nötig erfordert, stellt die AVM die nötigen Definitionen bereit.
+Die AVM unterstützt nativ kein Multithreading! Aufgrund der angestrebten Unabhängigkeit darf auf keine Thread-Bibliothek zurückgegriffen werden, was dazu führt, dass kein Multithreading zur Verfügung gestellt werden kann. Dennoch ist die AVM so konstruiert, dass sie Multithreading unterstützen könnte, wenn die dazugehörigen Bibliotheken zur Verfügung stünden. Hierfür müsste die die Implementierung für AVM allein vollzogen werden, und sie dann neu kompiliert werden. Damit dieser Vorgang so wenige Eingriffe wie nötig erfordert, stellt die AVM die nötigen Definitionen bereit.
 Wenn die Anknüpfung mit der AVM gemacht wurde, stehen folgende Operationen zur Nutzung von Threads zur verfügung:
 
 | Operation                             | Bedeutung                                                                                                     |
@@ -285,7 +327,8 @@ Wenn die Anknüpfung mit der AVM gemacht wurde, stehen folgende Operationen zur 
 |     `(thread)`                        | gibt den Namen des aktuellen Threads als String zurück                                                        |
 
 ### Kompilierung der AVM
-Der gesamte C-Code soll in einer einzigen Compilation-Unit verarbeitet werden, weshalb sämtliche Funktionalitäten in Header-Dateien abgelegt sind. Dies ist unüblich, gibt allerdings den Vorteil einer einfacheren Kompilierung. Die `amiant.h` enthält alle includes in der richtigen Reihenfolge. Es ist also nur notwendig, die `amiant.h` einzubinden.
+
+Der gesamte C-Code soll in einer einzigen Compilation-Unit verarbeitet werden, weshalb sämtliche Funktionalitäten in Header-Dateien abgelegt sind. Dies ist unüblich, gibt allerdings den Vorteil einer einfacheren Kompilierung. Die `amiant.h` enthält alle includes in der richtigen Reihenfolge. Es ist also nur notwendig, die `amiant.h` erfolgreich einzubinden.
 
 ### __RAW_MACHINE
 
@@ -294,6 +337,10 @@ Der gesamte C-Code soll in einer einzigen Compilation-Unit verarbeitet werden, w
 ### Alternative Speicherallokation und -deallokation
 
 ### AmiantNativeBridge
+
+### Einstellungen und Informationen der AVM
+
+Das Keyword `avm` gibt einen internen Zugriff auf die Amiant Virtual Machine (AVM). Hierbei kann auf die verwendete Version zugegriffen werden
 
 ### Debug-Mode
 
