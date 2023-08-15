@@ -379,6 +379,7 @@ Amiant erhält während der Ausführung die vollständige Programmstruktur. Somi
 `rename <str> <str>` benennt eine Funktion während der Laufzeit um. Es ist wichtig zu beachten, dass die Funktion in ihrem Scope bleibt, und dass die Funktion möglicherweise einen Namen besitzt, der in dem Scope schon definiert ist.
 `mount <str> <str>` hängt eine neue Funktion unter dem Namen und unter dem übergebenen Code in die AVM an dieser Stelle im Scope ein. Somit können partielle Codeerweiterungen problemlos erfolgen, ohne direkt eine Meta-VM starten zu müssen.
 `unmount <str>` löscht eine Funktion aus dem aktuellen Scope. Ihr Aufruf ist danach nicht mehr möglich.
+`defined <fieldName>` prüft, ob eine Variable in diesem Scope definiert wurde (gibt einen Boolean zurück)
 
 Folgendes Beispielprogramm erzeugt eine Funktion und tauscht sie während der Laufzeit wieder aus:
 
