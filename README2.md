@@ -261,7 +261,7 @@ var addFunc \add;
 println ~addFunc n:$4; # gibt 8 auf der Konsole aus
 ```
 
-### Amiant-Meta-VM:
+### Amiant-Meta-VM
 
 Die AVM ist in der Lage, dynamisch neuen Code auszuführen. Dieser Code läuft dann in einem gesonderten Bereich, sodass Zugriffe in andere Bereiche nicht möglich sind. Um innerhalb eines laufenden Programms weiteren Amiant-Code auszuführen, muss dieser Code lediglich als String vorliegen, und mithilfe des Keywords `amiant` ausgeführt werden.
 
@@ -389,7 +389,21 @@ Es gibt folgende Fehlertypen:
 |    14      | Es wurde versucht, eine durch contract gesperrte Funktion aufzurufen            |
 |    15      | Interner schwerwiegender Fehler                                                 |
 
+In Amiant ist es möglich, eigene Fehlercodes zu setzen. Das geschieht mit dem `throw`-Keyword, das schlicht einen Ausdruck erwartet, der eine Zahl enthält - eben den Fehlercode. Throw unterbricht allerdings nicht den Codeflow! Die Ausführung wird fortgesetzt. Dennoch kann man damit eigene Fehlerroutinen implementieren, und auf Fehler reagieren. Fehlercodes sind ganze Zahlen - sie können auch negativ sein, und auch die obigen Fehlercodezahlen mitnutzen. Davon wird der Übersichtlichkeit wegen und wegen der großen Zahl an freien Fehlercodes abgeraten.
 
+```
+
+if (= (~fetchData) "404") {
+    throw $404; # Fehler werfen
+};
+
+...
+
+if(= (error) $404) {
+    # Fehlerbehandlung
+};
+
+```
 
 ### Reflection
 
