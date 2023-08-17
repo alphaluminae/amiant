@@ -247,7 +247,7 @@ contract > i $0; # garantiert der AVM, dass der Wert der Variablen immer größe
 Die Sicherheit des Codes kann damit zur Laufzeit erhöht werden, in dem fehlerbehaftete Äste innerhalb des Programms dadurch nach und nach deaktiviert werden. Eine gesperrte Funktion kann durch einen mount über den gleichen Namen jedoch wieder nutzbar gemacht werden (siehe Reflection)
 Eine Verletzung des Contracts in der globalen Funktion (globaler Scope) führt nicht zu einer Sperrung. Die obersten Funktionen (async-Blöcke, Meta Vm globaler Scope)sind somit immun gegen contracts.
 
-### Funktionen III - Funktionales Programmieren
+### Funktionen III - Funktionale Programmierung
 
 In Amiant sind Funktionen first-class-objects. Funktionen können also selbst als Wert übergeben werden, sodass man sie durch das Programm bewegen kann. Um eine Variable zu erstellen, die einen Pointer auf eine Funktion enthält, muss man den Function-Pointer-Operator `\` nutzen. Dieser sucht im aktuellen Scope nach der Funktion, und gibt einen Zeiger darauf zurück. Sollte die Funktion nicht gefunden werden, wird `null` zurückgegeben. Der `~` Operator erwartet ein Fieldname und keine Expression, sodass man die Funktion, die man als Pointer besitzt, nur dann ausführen kann, wenn man den Pointer vorher in eine Variable legt, und diese dann hinter dem `~` Operator schreibt:
 
