@@ -478,7 +478,7 @@ Async erwartet als erstes Argument ein fieldName zu einer Variable, die am Ende 
 Innerhalb der Async-Blöcke hat man keinen Zugriff auf außenstehende Funktionen oder Variablen! Allerdings bleibt der Zugriff auf alle Funktionen, die mit der Native-Bridge eingebunden sind, bestehen!
 Jede aynchrone Codeblock läuft auf dem avm-level 2, sodass Zugriffe auf restart von dort aus nicht möglich sind.
 
-Die asyncVar enthält dann das Ergebnis des asynchronen Abarbeitens. Der Wert der Variable wird vom async-Block verändert. Wichtig: auch Konstanten können als async-Variable verwendet werden!
+Die asyncVar enthält dann das Ergebnis des asynchronen Abarbeitens. Der Wert der Variable wird vom async-Block verändert. Wichtig: auch Konstanten können als async-Variable verwendet werden! Wenn man auf eine async-Var zugreift, während sie vom async verwendet wird, wird sie immer `null` zurückgeben! Nur das await-Keyword kann auf den richtigen und fertigen Wert warten. Sobald die Variable wieder freigegeben ist, kann man sie wieder normal nutzen.
 
 Sollte kein Threading unterstützt sein, so gibt `await` schlicht den aktuellen Wert der Variable zurück, und `async` wird synchron ausgeführt, sodass das Programm an dieser Stelle wartet, bis die Ausführung des async-Blockes vollendet wurde. Das Programm verhält sich also exakt gleich - es dauert nur etwas länger, da nicht parallel ausgeführt wird.
 
