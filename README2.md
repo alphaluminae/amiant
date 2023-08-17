@@ -162,6 +162,7 @@ In jedem Scope kann eine Variable gleichen Namens immer nur einmal definiert wer
 var i $0;
 ```
 Hierbei wird eine Variable mit dem Namen `i` erzeugt, die den Wert `4` enthält und vom Typ `Number` ist.
+
 Auf Variablen kann mit ihrem Namen zugegriffen werden.
 ```
 println i; # gibt den Wert von i auf der Konsole aus
@@ -169,6 +170,8 @@ println i; # gibt den Wert von i auf der Konsole aus
 
 Variablen können mit dem `assign`-Operator überschrieben werden:
 `(assign i $5)` weist der Variable `i` den Wert `5` zu.
+Wenn eine Variable einen Typ während der Initialisierung angenommen hat, so darf man diese Variable nur mit einem Wert gleichen Typs überschreiben. Die einzige Ausnahme ist der Typ Null. Eine Variable, die den Wert `null` besitzt, gilt als Typuninitialisiert, und kann mithilfe eines Assigns auf einen festen Typ gebracht werden.
+
 Amiant verwaltet den Speicher und löscht ungenutzte Variablen, sobald keine Referenzen mehr auf sie zeigen. Variablen müssen also nicht von Hand gelöscht werden. Der `delete`-Operator ist dennoch implementiert, um zur Laufzeit einige Optimierungen des Programmierers zuzulassen.
 
 Eine Variable kann im Nachhinein als konstant markiert werden, sodass ein nachträgliches Bearbeiten des Wertes nicht mehr möglich ist:
@@ -177,6 +180,12 @@ Eine Variable kann im Nachhinein als konstant markiert werden, sodass ein nachtr
 var x $4; # normale Variable
 constant x; # jetzt kann x nicht mehr bearbeitet werden
 
+```
+
+Wenn man eine Variable nicht initialisiert, wird sie automatisch den Wert `null` annehmen:
+
+```
+var i; # i hat den Wert null
 ```
 
 Variablen können als `lazy` definiert sein. Eine Lazyvar besitzt solange den Wert null, bis sie im Code als Field-Name verwendet wird. Erst dann wird ihr Wert (der hinter ihrer Definition steht) berechnet. Damit kann Rechenzeit und Arbeitsspeicher gespart werden, und Definitionen erst dann erfolgen, wenn man die Variable auch wirklich braucht.
@@ -237,6 +246,20 @@ contract > i $0; # garantiert der AVM, dass der Wert der Variablen immer größe
 
 Die Sicherheit des Codes kann damit zur Laufzeit erhöht werden, in dem fehlerbehaftete Äste innerhalb des Programms dadurch nach und nach deaktiviert werden. Eine gesperrte Funktion kann durch einen mount über den gleichen Namen jedoch wieder nutzbar gemacht werden (siehe Reflection)
 Eine Verletzung des Contracts in der globalen Funktion (globaler Scope) führt nicht zu einer Sperrung. Die obersten Funktionen (async-Blöcke, Meta Vm globaler Scope)sind somit immun gegen contracts.
+
+### Funktionen III - Funktionales Programmieren
+
+In Amiant sind Funktionen first-class-objects. Funktionen können also selbst als Wert übergeben werden, sodass man sie durch das Programm bewegen kann. Um eine Variable zu erstellen, die einen Pointer auf eine Funktion enthält, muss man den Function-Pointer-Operator `\` nutzen. Dieser sucht im aktuellen Scope nach der Funktion, und gibt einen Zeiger darauf zurück. Sollte die Funktion nicht gefunden werden, wird `null` zurückgegeben. Der `~` Operator erwartet ein Fieldname und keine Expression, sodass man die Funktion, die man als Pointer besitzt, nur dann ausführen kann, wenn man den Pointer vorher in eine Variable legt, und diese dann hinter dem `~` Operator schreibt:
+
+```
+function add {
+    return + n n;
+};
+
+var addFunc \add;
+
+println ~addFunc n:$4; # gibt 8 auf der Konsole aus
+```
 
 ### Amiant-Meta-VM:
 
@@ -413,14 +436,16 @@ Die AVM unterstützt paralleles Ausführen von Code mithilfe von Async-Await.
 
 `async asyncVarName arg1:capture1 arg2:capture2 ... argn:capturen asyncExpression;`
 
+Die Variable, auf die mit asyncVarName verwiesen wird, muss vom Typ Null sein, damit der async-Block in der Lage ist, ihren Wert mit beliebigen Typen zu überschreiben!
+
 Hier ist ein kleines Beispiel, wie man Async Await in Amiant nutzen könnte:
 
 ```
 var loginToken "12345";
 var secureKey $12345;
 
-var firstName null;
-var lastName null;
+var firstName; # Wert ist null
+var lastName; # Wert ist null
 
 async firstName token:loginToken key:secureKey { # der Block wird parallel ausgeführt
    return ~fetchSomeDataFromDataBase token:token key:key;
