@@ -1,4 +1,4 @@
-### AmiantRuntimeEnvironment
+## AmiantRuntimeEnvironment v0.9 (18.08.2023)
 
 - Amiant: die Power einer LowLevel-Programmierung in einer sicheren Umgebung
 
@@ -506,9 +506,18 @@ Ansonsten genügt auch schlicht ein:
 gcc main.c -o avm
 ```
 
-### __RAW_MACHINE
-
 ### AmiantNativeBridge
+
+Amiant unterstützt das Aufrufen von C-Funktionen. Diese Funktionen müssen mit in die AVM kompiliert werden. Dabei geht man folgendermaßen vor:
+
+1. Die Funktion, die von Amiant aufgerufen werden soll, muss folgende Signatur besitzen: `void LIST* functionName(struct LIST* data)`.
+2. Die Funktion muss in einer .h definiert sein
+3. Diese Header-Datei wird in der native_bridge.h von Amiant in der "INCLUDE-SEKTION FÜR DIE STANDARDBIBLIOTHEK HEADER FILES" includiert.
+4. In der darunter liegenden Funktion `standardLibraryGetFunctions()` müssen die C-Funktionen für Amiant registriert werden. Das geschieht mithilfe folgender Zeile code: `standardLibraryAddStandardFunction(libraryFunctionsList, "funcName", 8, false, &functionName);` Dabei gibt es folgendes zu beachten: Der String "functionName" gibt an, unter welchem Namen die C-Funktion innerhalb von Amiant aus aufrufbar ist. Dieser Name muss nicht deckungsgleich mit dem Namen der C-Funktion sein. Die Zahl hinter dem String (in diesem Fall die 8) gibt an, wie viele Zeichen der Name lang ist. "funcName" besitzt 8 Buchstaben, also 8 Zeichen. Der Funktionsname für Amiant darf nur Zahlen und Buchstaben enthalten, ansonsten ist die Funktion nicht aufrufbar! Als letztes Argument muss der Funktionspointer zu der C-Funktion übergeben werden.
+
+Es ist auch möglich C-Funktionen aufzurufen, die nicht mit in die AVM kompiliert wurden. Diese Funktionen müssen dann anderweitig in den Speicher geladen werden, und können dann mit `native fieldName functionPointerExpr` eingehangen werden. Dabei muss der fieldName der Name der Funktion sein, wie sie in Amiant benutzt werden kann, und die functionPointerExpr muss ein Ausdruck sein, der eine Zahl zurück gibt: die Adresse der C-Funktion. Die C-Funktion muss dabei wieder die obige Signatur `void LIST* functionName(struct LIST* data)` besitzen!
+
+Beim Aufrufen von nativen C-Funktionen kann Amiant dieser Argumente übergeben. Diese Argumente verlieren bei der Übertragung allerdings ihren Namen, sodass nur noch die Daten an sich und ihre Reihenfolge garantiert werden kann. Die Datenliste data besitzt alle Amiant Pointer zu den übergebenen Daten. Weder die Liste noch die Pointer dürfen von der C-Funktion gelöscht oder Verändert werden! Die Datenhoheit besitzt weiterhin die AVM. Als Rückgabewert kann NULL zurückgegeben werden, oder allerdings eine eigene Datenliste. Es ist darauf zu achten, dass Pointer, die man in diese Rückgabeliste legt, nach dem Hinzufügen auch wieder freigibt, damit die Liste die einzige Datenhoheit über die Rückgabedaten besitzt. Es sollte darauf verzichtet werden, Pointer der data-Liste in die return Liste zu legen.
 
 ### Einstellungen und Informationen der AVM
 
@@ -518,8 +527,6 @@ Das Keyword `avm` gibt einen internen Zugriff auf die Amiant Virtual Machine (AV
 `avm restart` beendet alle Meta-AVMs und startet das gesamte Programm neu. Dabei wird allerdings kein neuer Code eingelesen, sondern der vorhandene schlicht neu gestartet! Alle mit Reflections vorgenommene Änderungen am Code bleiben dabei erhalten! Diese Funktion steht nur der obersten AVM zur Verfügung (level 1), und kann von Meta-AVMs nicht genutzt werden.
 `avm compver` gibt die Version des verwendeten C-Standards bei der Kompilierung zurück. Hierbei werden die offiziellen Versionsnamen verwendet. Bei C89/90 und tiefer wird standardmäßig `198901L` zurückgegeben, auch wenn es diese Versionsnummer offiziell nie gegeben hat.
 `memory` gibt den gesamten aktuell genutzten Arbeitsspeicher aller (Unter-)AVMs zurück. Wichtig: bei C99 und tiefer kann es durch die Verwendung von async-await zu falschen Werten kommen. Das Statistikmodul benötigt atomics, die bei C99 und tiefer allerdings nicht vorhanden sind. 
-
-### Debug-Mode
 
 ### Hinweise an LISP-Nutzer
 
