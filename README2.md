@@ -1,16 +1,21 @@
 ## AmiantRuntimeEnvironment v0.9 (18.08.2023)
 
-- Amiant: die Power einer LowLevel-Programmierung in einer sicheren Umgebung
+/Die Power einer LowLevel-Programmierung in einer sicheren Umgebung/
 
-Amiant ist eine Programmiersprache, welche die Syntax von LISP modernisiert.
+Amiant ist eine Programmiersprache, welche die Syntax von LISP modernisiert, auf keinen externen Headerdateien beruht, und Low-Level agiert.
 
 ### Ideen und Hello World
 
 Kernfunktionen der Sprache sind:
-- die gesamte Laufzeitumgebung ist in plain-C geschrieben (es gibt keine Abhängigkeiten von irgendwelchen Header-Dateien - nichtmal den CXX Bibliotheken), was sie für neue Plattformen und Embedded-Systeme attraktiv macht 
-- die AVM besitzt eine hohe Geschwindigkeit, die mit nativen Erweiterungsmöglichkeiten erhöht werden kann
-- die freie S-Syntax erlaubt es, die bei LISP häufig unnötigen und unübersichtlichen Klammern zu überwinden, ohne dabei beim Parsing einen Geschwindigkeitsnachteil zu erhalten
-- Amiant besitzt einen ARC-GC, sodass keine Speicherlecks entstehen, und die Wahrscheinlichkeit für Segfaults bei Null liegt
+- Die gesamte Laufzeitumgebung ist in plain-C geschrieben (es gibt keine Abhängigkeiten von irgendwelchen Header-Dateien - nichtmal den CXX Bibliotheken), was sie für neue Plattformen und Embedded-Systeme attraktiv macht 
+- Die AVM besitzt eine hohe Geschwindigkeit, die mit nativen Erweiterungsmöglichkeiten erhöht werden kann
+- Die freie S-Syntax erlaubt es, die bei LISP häufig unnötigen und unübersichtlichen Klammern zu überwinden, ohne dabei beim Parsing einen Geschwindigkeitsnachteil zu erhalten
+- Amiant besitzt einen ARC-GC, sodass keine Speicherlecks entstehen, und die Wahrscheinlichkeit für Segfaults bei Null liegt. Zusätzlich besitzt man keine Halts, die beim Einsetzen eines GC entstehen, und die Performance verringern
+- Amiant ist hochreflektiv. Ein Amiant-Programm kann sich während der Laufzeit komplett umprogrammieren, ohne neu gestartet werden zu müssen. Zusätzlich kann mit den MetaVMs dynamisch neuer Code im Programm ausgeführt werden
+- Amiant bietet eine Unterstützung für paralleles Arbeiten mithilfe von Async-Await (sollte eine Threadimplementierung vorliegen)
+- String interning sorgt für eine reduzierte Speichernutzung bei der Verwendung von literalen Strings
+- Ein einfaches Error-System erlaubt die Möglichkeit der Fehlerbehandlung ohne Overhead oder unkontrolloliertem Control-Flow
+- Listen und Structs sind beides Containertypen, die per Referenz übertragen werden.
 
 Ein Hello World Programm in Amiant:
 ```
