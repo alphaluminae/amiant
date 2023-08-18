@@ -113,16 +113,13 @@ assign name2 copy name1; # name1 und name2 weisen auf unterschiedliche Stellen i
 
 ```
 
-### Keywords
-Folgende Keywords sind reserviert, und können deshalb nicht außerhalb ihres Kontextes gebraucht werden:
+### Konstanten
+Folgende Keywords sind als Konstanten reserviert, und können deshalb nicht außerhalb ihres Kontextes gebraucht werden:
 
 | Keyword | Bedeutung     |
 | :---:   |     :---:     |
 | pi      | 3.14159...    |
 | eul     | 2.71828...    |
-| line    | ------------- |
-| level   | ------------- |
-| avm     | ------------- |
 
 ### Zahlen
 Number-Literals müssen im Code mit einem `$` vorgeschrieben werden. Ansonsten wird die Zahl als fieldname gewertet. Mehr zu den fieldnames findet sich im Kapitel zu den Variablen. Folgende Ausdrücke resultieren nicht in Zahlen: `40`, `-5.2`. Korrekt müsste es heißen: `$40`, `$-5.2`. Sollte ein fehlerhafter Ausdruck hinter dem `$` erkannt werden, wird dieser Ausdruck als Zahl `0` gewertet. Es ist ausschließlich die Notation in Dezimalzahlen möglich.
