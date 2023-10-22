@@ -125,7 +125,7 @@ Folgende Keywords sind als Konstanten reserviert, und können deshalb nicht auß
 | pi      | 3.14159...    |
 | eul     | 2.71828...    |
 
-Typkonstanten enthalten den Datentypnamen als String.
+Typkonstanten enthalten den Datentypnamen als String. Typkonstanten werden immer groß geschrieben.
 
 | Typkonstante | Bedeutung     |
 | :---:        |     :---:     |
@@ -140,7 +140,7 @@ Typkonstanten enthalten den Datentypnamen als String.
 | Any          | "Any"         |
 
 ### Zahlen
-Number-Literals müssen im Code mit einem `$` vorgeschrieben werden. Ansonsten wird die Zahl als fieldname gewertet. Mehr zu den fieldnames findet sich im Kapitel zu den Variablen. Folgende Ausdrücke resultieren nicht in Zahlen: `40`, `-5.2`. Korrekt müsste es heißen: `$40`, `$-5.2`. Sollte ein fehlerhafter Ausdruck hinter dem `$` erkannt werden, wird dieser Ausdruck als Zahl `0` gewertet. Es ist ausschließlich die Notation in Dezimalzahlen möglich.
+Number-Literals müssen im Code mit einem `$` vorgeschrieben werden. Ansonsten wird die Zahl als Feldname gewertet. Mehr zu den Feldnamen findet sich im Kapitel zu den Variablen. Folgende Ausdrücke resultieren nicht in Zahlen: `40`, `-5.2`. Korrekt müsste es heißen: `$40`, `$-5.2`. Sollte ein fehlerhafter Ausdruck hinter dem `$` erkannt werden, wird dieser Ausdruck als Zahl `0` gewertet. Es ist __ausschließlich__ die Notation in Dezimalzahlen möglich!
 
 ### String
 Strings werden im Code mit Anführungszeichen markiert. Zeichenketten müssen also folgendermaßen gekapselt werden: `"Hallo Welt!"`. Zeilenumbrüche innerhalb des Strings werden mit gewertet. Somit sind mehrzeilige Strings problemlos möglich. Wenn das `"`-Symbol Teil des Strings werden soll, muss es escaped werden: `"\""`.
@@ -155,15 +155,15 @@ mehreren Zeilen."
 Bei den mehrzeiligen Strings werden alle Zeichen zwischen den `"` beachtet! Somit werden die drei Leerzeichen vor `auf` auch gewertet.
 
 ### Liste
-Listen können mit dem `list`-Keyword erzeugt werden: `list $1 $2 $3` ergibt eine Liste, die die Zahlen `1`, `2` und `3` enthält. Listen dürfen keine Listen oder Structs als Inhalt besitzen. Allerdings kann eine Liste Objekte unterschiedlicher Datentypen enthalten, solange sie primitiv sind (eine Liste kann auch Typen mischen). Zugriff auf die in der Liste befindlichen Objekte bekommt man über den `get`-Operator. Der Index einer Liste beginnt bei Null.
-Der Ausdruck `get ($2 $4 $6 $8) $2` gibt den Wert `6` zurück. Man kann nach der Erzeugung Daten an eine bestehende Liste anhängen, indem man das `put`-Keyword verwendet: `put ($4 $5 $6) $7`
+Listen können mit dem `list`-Keyword erzeugt werden: `list $1 $2 $3` ergibt eine Liste, die die Zahlen `1`, `2` und `3` enthält. Listen __dürfen keine__ Listen oder Structs als Inhalt besitzen! Allerdings kann eine Liste Objekte unterschiedlicher Datentypen enthalten, solange sie primitiv sind (eine Liste kann auch Typen mischen). Zugriff auf die in der Liste befindlichen Objekte bekommt man über den `get`-Operator. Der Index einer Liste beginnt bei Null.
+Der Ausdruck `get (list $2 $4 $6 $8) $2` gibt den Wert `6` zurück. Man kann nach der Erzeugung Daten an eine bestehende Liste anhängen, indem man das `put`-Keyword verwendet: `put (list $4 $5 $6) $7`
 
 ### Struct
 
-Ein Struct ist eine Art Map, die unter ein Keyword Daten speichern und über das Keyword wieder zurückgeben kann. Structs in Amiant unterscheiden sich deshalb erheblich von denen in C oder C++. In Amiant ist ein Struct schlicht ein Container, und nicht ein Type, der sich aus seinen Subtypen zusammensetzt. Ein Struct darf auch leer sein. Daten können aus einem Struct nicht entfernt werden, allerdings werden die alten Daten gelöscht, wenn man unter einem bestehenden Keyword neue Daten ablegen möchte. Das Keyword darf jeden Wert jeder Primitiven annehmen. So sind `null`, `$4`, `"value1"` allesamt gültige Keywords. In einem Struct wird garantiert, dass unter einem Keyword immer nur einmal Daten liegen. Doppelte Keywords sind nicht möglich. Ein Struct wird folgend erzeugt und verwendet:
+Ein Struct ist eine Art Map, die unter ein Keyword Daten speichert und über das Keyword wieder zurückgeben kann. Structs in Amiant unterscheiden sich deshalb erheblich von denen in C oder C++. In Amiant ist ein Struct schlicht ein Container, und __nicht__ ein Typ, der sich aus seinen Subtypen zusammensetzt. Ein Struct darf auch leer sein! Daten können aus einem Struct nicht entfernt werden, allerdings werden die alten Daten gelöscht, sollten sie unter einem bestehenden Keyword neu abgelegt. Das Keyword darf jeden Wert jeder Primitiven annehmen. So sind `null`, `$4`, `"value1"` allesamt gültige Keywords. In einem Struct wird garantiert, dass unter einem Keyword immer nur einmal Daten liegen. Doppelt besetzte Keywords sind __nicht__ möglich. Ein Struct wird folgend erzeugt und verwendet:
 
 ```
-var data struct; # erzeugt ein Struct und speichert es in die Variable data
+var data struct; # erzeugt ein leeres Struct und speichert es in die Variable data
 
 put data "age_joe" $4; # legt Daten in das Struct
 
@@ -171,13 +171,15 @@ println get data "age_joe"; # gibt die Daten aus dem Struct zurück
 
 ```
 
-Es fällt auf, dass sowohl Listen als auch Structs die gleichen Keywörter `put` und `get` verwenden. Bei Structs erwartet der put-Operator logischerweise ein Argument mehr als bei einer Liste.
+Es fällt auf, dass sowohl Listen als auch Structs die gleichen Keywörter `put` und `get` verwenden. Bei Structs erwartet der put-Operator logischerweise ein Argument mehr als bei einer Liste. Diese generischen Accessoren werden in einem späteren Kapitel noch einmal behandelt 
+
+### Generische Accessoren
 
 ### Typumwandlungen
-Die Überführung von einem Datentyp zu einem anderen ist eine unsichere Operation.
+Bisher können Zahlen in Strings und Strings in Zahlen umgewandelt werden. Um einen Datentyp in eine Zahl umzuwandeln, wird das `number`-Keyword genutzt. Um einen Datentyp in einen String umzuwandeln das Keyword `string`.
 
-### Variablen, Konstanten und Lazy
-In jedem Scope kann eine Variable gleichen Namens immer nur einmal definiert werden. Die Scopes sind hierarchisch organisiert. Eine Variable wird mit dem Keyword `var` erzeugt:
+### Variablen und Konstanten
+In jedem Scope kann eine Variable gleichen Namens immer __nur ein Mal__ definiert werden. Die Scopes sind hierarchisch organisiert. Eine Variable wird mit dem Keyword `var` erzeugt:
 ```
 var i $0;
 ```
@@ -190,9 +192,14 @@ println i; # gibt den Wert von i auf der Konsole aus
 
 Variablen können mit dem `assign`-Operator überschrieben werden:
 `(assign i $5)` weist der Variable `i` den Wert `5` zu.
-Wenn eine Variable einen Typ während der Initialisierung angenommen hat, so darf man diese Variable nur mit einem Wert gleichen Typs überschreiben. Die einzige Ausnahme ist der Typ Null. Eine Variable, die den Wert `null` besitzt, gilt als Typuninitialisiert, und kann mithilfe eines Assigns auf einen festen Typ gebracht werden.
+Wenn eine Variable einen Typ während der Initialisierung angenommen hat, so darf man diese Variable __nur mit einem Wert gleichen Typs__ überschreiben. Die einzige Ausnahme ist der Typ Null. Eine Variable, die den Wert `null` besitzt, gilt als _Typuninitialisiert_, und kann mithilfe eines Assigns auf einen festen Typ gebracht werden. Uninitialisierte Variablen können auf zwei Arten erstellt werden:
 
-Amiant verwaltet den Speicher und löscht ungenutzte Variablen, sobald keine Referenzen mehr auf sie zeigen. Variablen müssen also nicht von Hand gelöscht werden. Der `delete`-Operator ist dennoch implementiert, um zur Laufzeit einige Optimierungen des Programmierers zuzulassen.
+```
+var uninitialized; # Beide Variablen gelten als ..
+var uninitialized2 null; # .. uninitialisiert!
+```
+
+Amiant verwaltet den Speicher und löscht ungenutzte Variablen, sobald keine Referenzen mehr auf sie zeigen. Variablen müssen also __nicht von Hand freigegeben__ werden. Der `delete`-Operator ist dennoch implementiert, um zur Laufzeit einige Optimierungen des Programmierers zuzulassen.
 
 Eine Variable kann im Nachhinein als konstant markiert werden, sodass ein nachträgliches Bearbeiten des Wertes nicht mehr möglich ist:
 
@@ -202,30 +209,9 @@ constant x; # jetzt kann x nicht mehr bearbeitet werden
 
 ```
 
-Wenn man eine Variable nicht initialisiert, wird sie automatisch den Wert `null` annehmen:
-
-```
-var i; # i hat den Wert null
-```
-
-Variablen können als `lazy` definiert sein. Eine Lazyvar besitzt solange den Wert null, bis sie im Code als Field-Name verwendet wird. Erst dann wird ihr Wert (der hinter ihrer Definition steht) berechnet. Damit kann Rechenzeit und Arbeitsspeicher gespart werden, und Definitionen erst dann erfolgen, wenn man die Variable auch wirklich braucht.
-
-```
-lazy i ~load4KVideo;
-
-# i hat hier den Wert null. Die Funktion wurde noch nicht aufgerufen, und kein RAM ist belegt.
-
-~renderSomethingElse; # i ist noch immer nicht definiert, und nimmt somit keinen großen Platz ein. Der Ram ist frei für das Rendering.
-
-~play video:i; # jetzt erst wird i geladen
-
-# Es wurde Speicherplatz und Rechenkapazität nur in dem Moment benötigt, wo es unabdingbar war 
-
-```
-
 ### Funktionen I - Allgemeines
 
-Funktionen können im Amiant mit dem Funktionsoperator erzeugt werden. Sie werden dabei in dem aktuellen Scope erzeugt, und sind auch nur dort aufrufbar. Wenn eine Funktion bereits in dem Scope definiert wurde, kann sie nicht erstellt werden. Beim Funktionsaufruf wird zunächst im aktuellen Scope nach der aufzurufenden Funktion suchen, ehe hieriarchisch nach oben gesucht wurde.
+Funktionen können in Amiant mit dem Funktionsoperator erzeugt werden. Sie werden dabei in dem aktuellen Scope erzeugt, und sind auch nur dort aufrufbar. Wenn eine Funktion bereits in dem Scope definiert wurde, kann sie nicht erstellt werden. Beim Funktionsaufruf wird zunächst im aktuellen Scope nach der aufzurufenden Funktion suchen, ehe hieriarchisch nach oben gesucht wurde.
 
 Funktionsdefinition:
 ```
