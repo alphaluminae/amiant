@@ -411,13 +411,11 @@ catch $404 {
 
 ### Reflection
 
-Amiant erhält während der Ausführung die vollständige Programmstruktur. Somit ist es möglich, Informationen dieser Struktur zur Laufzeit zu bekommen, aber auch dynamische Zugriffe in ihr zu erlauben.
+Amiant erhält während der Ausführung die vollständige Programmstruktur. Somit ist es möglich, Informationen dieser Struktur zur Laufzeit zu bekommen, aber auch dynamische Zugriffe in ihr zu erlauben, sie zu verändern.
 
 `this` gibt den Namen der Funktion als String zurück, in der dieses Keyword steht.
 `call <str>` ruft eine Funktion in diesem Scope über den Namen auf, und gibt das Ergebnis der Funktion zurück. Wichtig: Dieses Keyword kann keine Argumente an die Funktion übergeben!
 `line` gibt die aktuelle Zeilennummer, in der dieses Keyword steht, als Zahl zurück. Die Zählung beginnt bei 1!
-(`take <str>` greift auf eine Variable über ihren Namen aus dem Scope zurück, und gibt die Referenz darauf zurück, ansonsten einen Nullpointer.)
-`rename <str> <str>` benennt eine Funktion während der Laufzeit um. Es ist wichtig zu beachten, dass die Funktion in ihrem Scope bleibt, und dass die Funktion möglicherweise einen Namen besitzt, der in dem Scope schon definiert ist.
 `mount <str> <str>` hängt eine neue Funktion unter dem Namen und unter dem übergebenen Code in die AVM an dieser Stelle im Scope ein. Somit können partielle Codeerweiterungen problemlos erfolgen, ohne direkt eine Meta-VM starten zu müssen.
 `unmount <str>` löscht eine Funktion aus dem aktuellen Scope. Ihr Aufruf ist danach nicht mehr möglich.
 `defined <fieldName>` prüft, ob eine Variable in diesem Scope definiert wurde (gibt einen Boolean zurück)
@@ -443,7 +441,7 @@ mount "reflectionTest" "print $5"; # hängt eine neue Funktion unter dem gleiche
 
 Hinweise:
 
-1) Reflection ist ein mächtiges Werkzeug. Es werden generell keine Überprüfungen im Bezug auf doppelte oder falsche Benennungen durchgeführt! Das resultiert jedoch in keine Speicherprobleme innerhalb der VM. Allerdings ist nicht eindeutig definiert, welche Funktion aufgerufen wird, wenn es Mehrfachbenennungen durch Reflection gibt! Die Überprüfung der Namensdopplung gibt es nur in der normalen Funktionsdefinition über das `function`-Keyword.
+1) Reflection ist ein mächtiges Werkzeug. Es werden generell __keine Überprüfungen__ im Bezug auf doppelte oder falsche Benennungen durchgeführt! Das resultiert jedoch in keine Speicherprobleme innerhalb der AVM. Allerdings ist dann nicht eindeutig definiert, welche Funktion aufgerufen wird, wenn es Mehrfachbenennungen durch Reflection gibt! Die Überprüfung der Namensdopplung gibt es nur in der normalen Funktionsdefinition über das `function`-Keyword, aber nicht bei Refelction.
 
 2) Das Hinzufügen von Funktionen ist eine große Operation, da der übergebene String völlig neu geparst und verarbeitet werden muss. Es wird also von einem übermäßigen Gebrauch abgeraten.
 
@@ -454,7 +452,7 @@ Die AVM unterstützt paralleles Ausführen von Code mithilfe von Async-Await.
 
 `async asyncVarName arg1:capture1 arg2:capture2 ... argn:capturen asyncExpression;`
 
-Die Variable, auf die mit asyncVarName verwiesen wird, muss vom Typ Null sein, damit der async-Block in der Lage ist, ihren Wert mit beliebigen Typen zu überschreiben!
+Die Variable, auf die mit asyncVarName verwiesen wird, muss vom Typ Null sein (also uninitialisiert), damit der async-Block in der Lage ist, ihren Wert mit beliebigen Typen zu überschreiben!
 
 Hier ist ein kleines Beispiel, wie man Async Await in Amiant nutzen könnte:
 
@@ -477,26 +475,26 @@ println string "Vorname: " (await firstName) " Nachname: " await lastName; # hie
 
 ```
 
-Async erwartet als erstes Argument ein fieldName zu einer Variable, die am Ende der Ausführung des Async-Codes das Ergebnis eben dieses Codes enthalten soll. Die Variable wird als async markiert, und kann dann nicht zeitgleich von einem anderen async-Keywort genutzt werden. Das geht nur, wenn der async-Block fertig ist, und die Variable wieder freigibt. Auf eine asynchrone Variable kann immer zugegriffen werden. Greift man ohne `await` auf eine asynchrone Variable zu, so wird ihr aktueller Wert zurückgegeben, der nicht unbedingt der Rückgabewert des asynchronen Codes sein muss (dieser kann schließlich noch arbeiten). Um nun den Rückgabewert des asynchronen Blocks zu bekommen, muss man bei der Verwendung der Variable schlicht das Keyword `await` davor setzen. Der Codefluss wartet an der Stelle, bis die Variable vom async-Code freigegeben wurde. Danach wird ihr Wert erst aufgelöst.
+Async erwartet als erstes Argument ein fieldName zu einer Variable, die am Ende der Ausführung des Async-Codes das Ergebnis eben dieses Codes enthalten soll. Die Variable wird als async markiert, und kann dann __nicht zeitgleich von einem anderen async-Keywort genutzt werden__. Das geht nur wieder, sobald der async-Block fertig ist, und die Variable wieder freigibt. Auf eine asynchrone Variable kann immer zugegriffen werden. Greift man ohne `await` auf eine asynchrone Variable zu, so wird ihr _aktueller_ Wert zurückgegeben, der nicht unbedingt der Rückgabewert des asynchronen Codes sein muss (dieser kann schließlich noch arbeiten). Um nun den Rückgabewert des asynchronen Blocks zu bekommen, muss man bei der Verwendung der Variable schlicht das Keyword `await` davor setzen. Der Codefluss __wartet__ an der Stelle, bis die Variable vom async-Code freigegeben wurde. Danach wird ihr Wert erst aufgelöst.
 
 Innerhalb der Async-Blöcke hat man keinen Zugriff auf außenstehende Funktionen oder Variablen! Allerdings bleibt der Zugriff auf alle Funktionen, die mit der Native-Bridge eingebunden sind, bestehen! Um dennoch Funktionen von außerhalb zu nutzen, kann man diese via Funktionspointer in die Captureliste vom async-Block setzen.
-Jede aynchrone Codeblock läuft auf dem avm-level 2, sodass Zugriffe auf restart von dort aus nicht möglich sind.
+Jeder aynchrone Codeblock läuft auf dem AVM-Level 2, sodass Zugriffe auf _restart_ von dort aus __nicht__ möglich sind. Sie sind untergeordnet zum Hauptprogramm auf Level 1!
 
-Die asyncVar enthält dann das Ergebnis des asynchronen Abarbeitens. Der Wert der Variable wird vom async-Block verändert. Wichtig: auch Konstanten können als async-Variable verwendet werden! Wenn man auf eine async-Var zugreift, während sie vom async verwendet wird, wird sie immer `null` zurückgeben! Nur das await-Keyword kann auf den richtigen und fertigen Wert warten. Sobald die Variable wieder freigegeben ist, kann man sie wieder normal nutzen.
+Die asyncVar enthält dann das Ergebnis des asynchronen Abarbeitens. Der Wert der Variable wird vom async-Block verändert. Wichtig: __auch Konstanten können als async-Variable verwendet werden!__ Wenn man auf eine async-Var zugreift, während sie vom async verwendet wird, wird sie immer `null` zurückgeben! Nur das await-Keyword kann auf den richtigen und fertigen Wert warten. Sobald die Variable wieder freigegeben ist, kann man sie wieder normal nutzen.
 
-Async-Await funktioniert nur auf Level 0 und kann damit nicht in einer Meta-VM genutzt werden! Sollte man dennoch Async-Await nutzen, so wird dieses lediglich linear ausgeführt. Der Code funktioniert also trotzdem - nur die echte Parallelisierung per Threads fällt weg.
+__Async-Await funktioniert ausschließlich auf Level 0__ und kann damit nicht in einer Meta-VM genutzt werden! Sollte man dennoch Async-Await nutzen, so wird dieses lediglich linear ausgeführt. Der Code funktioniert also trotzdem - nur die echte Parallelisierung per Threads fällt weg. Nur Hauptprogramme können sich also aufspalten.
 
-Sollte kein Threading unterstützt sein, so gibt `await` schlicht den aktuellen Wert der Variable zurück, und `async` wird synchron ausgeführt, sodass das Programm an dieser Stelle wartet, bis die Ausführung des async-Blockes vollendet wurde. Das Programm verhält sich also exakt gleich - es dauert nur etwas länger, da nicht parallel ausgeführt wird.
+Sollte kein Threading unterstützt sein, so gibt `await` schlicht den aktuellen Wert der Variable zurück, und `async` wird synchron ausgeführt, sodass das Programm an dieser Stelle wartet, bis die Ausführung des async-Blockes vollendet wurde. Das Programm __verhält sich also exakt gleich__ - es dauert nur etwas länger, da nicht parallel ausgeführt wird.
 
 ### Async Await II - Implementierung
 
-Da reines C keine Multithreading unterstützt, muss eine eigene Implementierung erfolgen. Sollte die verwendete Plattform die pthread.h unterstützen, so kann in die parallel.h gegangen werden, und die entsprechen Zeilen in der `avmThreadStart(...)` auskommentiert werden, sowie das include-Statement über der Funktion. Zusätzlich muss in der `avmThreadWorking(void)` ein paar Zeilen weiter oben der Rückgabeboolean von `false` auf `true` gesetzt werden.
+Da reines C kein Multithreading unterstützt, muss eine eigene Implementierung erfolgen. Sollte die verwendete Plattform die _pthread.h_ unterstützen, so kann in die parallel.h gegangen werden, und die entsprechen Zeilen in der `avmThreadStart(...)` auskommentiert werden, sowie das include-Statement über der Funktion. Zusätzlich muss in der `avmThreadWorking(void)` ein paar Zeilen weiter oben der Rückgabeboolean von `false` auf `true` gesetzt werden.
 Wenn keine pthread.h zur Verfügung steht (beispielsweise unter Windows) muss in der `avmThreadStart(...)` an der entsprechenden Stelle eine andere Implementierung genutzt werden. Der Boolean in der `avmThreadWorking(void)` muss dennoch auf `true` gesetzt werden.
 
 ### Kompilierung der AVM
 
-Der gesamte C-Code soll in einer einzigen Compilation-Unit verarbeitet werden, weshalb sämtliche Funktionalitäten in Header-Dateien abgelegt sind. Dies ist unüblich, gibt allerdings den Vorteil einer einfacheren Kompilierung. Die `amiant.h` enthält alle includes in der richtigen Reihenfolge. Es ist also nur notwendig, die `amiant.h` erfolgreich einzubinden.
-Es wird empfohlen, die AVM unter C11 oder höher zu kompilieren. Unter C11 funktioniert die gesamte AVM wie gehabt, nur das Statistik-Modul (das außschließlich zu Debugzwecken verwendet werden sollte), kann dort aufgrund fehlender atomics unter Race-Conditions leiden. Das hat allerdings keinen Einfluss auf die Speichersicherheit der AVM! Diese bleibt unverändert funktionstüchtig!
+Der gesamte C-Code soll in einer einzigen Compilation-Unit verarbeitet werden, weshalb sämtliche Funktionalitäten in Header-Dateien abgelegt sind. Dies ist unüblich, gibt allerdings den Vorteil einer einfacheren Kompilierung. Die `amiant.h` enthält alle Includes in der richtigen Reihenfolge. Es ist also nur notwendig, die `amiant.h` erfolgreich einzubinden.
+Es wird empfohlen, die AVM unter C11 oder höher zu kompilieren. In Versionen niedriger als C11 funktioniert die gesamte AVM wie gehabt, nur das Statistik-Modul (das außschließlich zu Debugzwecken verwendet werden sollte), kann dort aufgrund fehlender Atomics unter Race-Conditions leiden. Das hat allerdings __keinen__ Einfluss auf die Speichersicherheit der AVM! Diese bleibt unverändert funktionstüchtig!
 
 Folgender Befehl unter gcc sollte verwendet werden, um keine Warnungen zu erhalten:
 
@@ -530,8 +528,8 @@ Das Keyword `avm` gibt einen internen Zugriff auf die Amiant Virtual Machine (AV
 `avm version` gibt die aktuelle Version der AVM als Zahl zurück.
 `avm restart` beendet alle Meta-AVMs und startet das gesamte Programm neu. Dabei wird allerdings kein neuer Code eingelesen, sondern der vorhandene schlicht neu gestartet! Alle mit Reflections vorgenommene Änderungen am Code bleiben dabei erhalten! Diese Funktion steht nur der obersten AVM zur Verfügung (level 1), und kann von Meta-AVMs nicht genutzt werden.
 `avm compver` gibt die Version des verwendeten C-Standards bei der Kompilierung zurück. Hierbei werden die offiziellen Versionsnamen verwendet. Bei C89/90 und tiefer wird standardmäßig `198901L` zurückgegeben, auch wenn es diese Versionsnummer offiziell nie gegeben hat.
-`memory` gibt den gesamten aktuell genutzten Arbeitsspeicher aller (Unter-)AVMs zurück. Wichtig: bei C99 und tiefer kann es durch die Verwendung von async-await zu falschen Werten kommen. Das Statistikmodul benötigt atomics, die bei C99 und tiefer allerdings nicht vorhanden sind. 
+`memory` gibt den gesamten aktuell genutzten Arbeitsspeicher aller (Unter-)AVMs zurück. Wichtig: __bei C99 und tiefer kann es durch die Verwendung von async-await zu falschen Werten kommen.__ Das Statistikmodul benötigt Atomics, die bei C99 und tiefer allerdings nicht vorhanden waren. 
 
 ### Hinweise an LISP-Nutzer
 
-Amiant ist kein LISP, sondern nutzt nur die Idee der Klammerung, erweitert sie, und fügt modernere Keywords ein. Zudem ist es nicht möglich, neue Sprachkonstruktionen in Amiant einzuführen, wie es bei LISP der Fall ist.
+Amiant ist kein LISP, sondern nutzt nur die Idee der Klammerung, erweitert sie, und fügt modernere Keywords ein. Zudem ist es nicht möglich, neue Sprachkonstruktionen in Amiant einzuführen, wie es bei LISP der übliche Fall ist.
