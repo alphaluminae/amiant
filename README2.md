@@ -211,12 +211,12 @@ constant x; # jetzt kann x nicht mehr bearbeitet werden
 
 ### Funktionen I - Allgemeines
 
-Funktionen können in Amiant mit dem Funktionsoperator erzeugt werden. Sie werden dabei in dem aktuellen Scope erzeugt, und sind auch nur dort aufrufbar. Wenn eine Funktion bereits in dem Scope definiert wurde, kann sie nicht erstellt werden. Beim Funktionsaufruf wird zunächst im aktuellen Scope nach der aufzurufenden Funktion suchen, ehe hieriarchisch nach oben gesucht wurde.
+Funktionen können in Amiant mit dem Funktionsoperator (`function`) erzeugt werden. Sie werden dabei in dem aktuellen Scope erstellt, und sind auch nur dort und hierarchisch tiefer aufrufbar. Wenn eine Funktion bereits in dem Scope definiert wurde, kann sie nicht erstellt werden, und es wird ein Fehler geworfen. Beim Funktionsaufruf wird zunächst im aktuellen Scope nach der aufzurufenden Funktion suchen, ehe hieriarchisch nach oben gesucht wird. Funktionen gehören zu den wenigen Konstruktionen in Amiant, __die einen neuen Scope__ im letzten Argument erstellen!
 
 Funktionsdefinition:
 ```
 function foo {
-   # Code here in a new scope
+   # Dieser Code wird in einem neuen Scope ausgeführt
 };
 ```
 
@@ -228,34 +228,33 @@ function add {
 
 ~add n:$4 m:$5;
 ```
-Funktionen können mit dem Operator `~` aufgerufen werden. Dabei muss der Name der Funktion angegeben werden. Der Funktion kann beim Aufruf Argumente übergeben werden. Diese müssen immer mit einem Parameter-Label markiert sein! Die übergebenen Werte werden der Funktion als lokale Variablen während des Aufrufes zur Verfügung gestellt. Die add-Funktion benötigt `n` und `m` im Funktionskörper. Deshalb müssen diese explizit beim Aufruf übergeben werden. Die Reihenfolge ist dabei egal. Wenn sie nicht übergeben werden, wird die Funktion trotzdem ausgeführt, und an der entsprechenden Stelle wird es zu einem Fehler kommen.
+Funktionen können mit dem Operator `~` und dem dazugehörigen Namen aufgerufen werden. Der Funktion kann beim Aufruf Argumente übergeben werden. Diese müssen __immer__ mit einem Parameter-Label markiert sein! Die übergebenen Werte werden der Funktion als lokale Variablen während des Aufrufes zur Verfügung gestellt. Die add-Funktion benötigt `n` und `m` im Funktionskörper. Deshalb müssen diese explizit beim Aufruf übergeben werden. __Die Reihenfolge ist dabei beliebig__. Wenn sie nicht übergeben werden, wird die Funktion _trotzdem_ ausgeführt, und an der entsprechenden Stelle wird es zu einem Fehler kommen.
 
 Mit dem Keyword `return` kann die Funktionsausführung an dieser Stelle beendet werden. Man kann mit oder ohne Wert eine Funktion abbrechen. Eine Funktion, die keinen expliziten Wert zurückgibt, gibt implizit den Wert `null` zurück.
 
-Sollte es innerhalb einer Funktion zu einem Fehler kommt, so wird mit Standardwerten weiter gearbeitet. Die Funktion bricht ihre Ausführung nicht ab.
+Sollte es innerhalb einer Funktion zu einem Fehler kommt, so wird mit Standardwerten weiter gearbeitet. Die Funktion bricht ihre Ausführung __nicht__ ab.
 
 ### Funktionen II - Contacts und Debugging
 
-Da Amiant eine Sprache ist, die LowLevel-Scripting verlangt, ist das Thema Sicherheit von großer Bedeutung. Fehler können während der Laufzeit auftauchen, und sie werden intern so gehandhabt, dass ein Absturz der AVM in jedem Falle auszuschließen ist. Aus diesem Grunde wird ein Fehler nicht zum Abbruch des Programmes führen, sondern zum Weiterarbeiten mit Standardwerten. In manchen Situationen ist das Arbeiten mit solchen Standardwerten kritisch oder gar gefährlich. Dazu gibt Amiant zwei Möglichkeiten der Überprüfung:
+Da Amiant eine Sprache ist, die LowLevel-Scripting bereit stellt, ist das Thema Sicherheit von großer Bedeutung. Fehler können während der Laufzeit auftauchen, und sie werden intern so gehandhabt, dass ein Absturz der AVM in jedem Falle auszuschließen ist. _Aus diesem Grunde wird ein Fehler nicht zum Abbruch des Programmes führen, sondern zum Weiterarbeiten mit Standardwerten_. In manchen Situationen ist das Arbeiten mit solchen Standardwerten kritisch oder gar gefährlich. Dazu gibt Amiant zwei Möglichkeiten der Überprüfung:
 
 1) Assert:
 
-Das Keyword `assert` prüft, ob ein bestimmter Ausdruck wahr ist. Sollte er wahr sein, läuft das Programm einfach weiter. Sollte der Ausdruck falsch sein, bricht das gesamte Programm an dieser Stelle mit einer Fehlermeldung ab. Ein Assert kann also das Weiterlaufen eines fehlerhaften Programmes verhindern.
+Das Keyword `assert` prüft, ob ein bestimmter Ausdruck wahr ist. Sollte er wahr sein, läuft das Programm einfach weiter. Sollte der Ausdruck falsch sein, bricht das gesamte Programm an dieser Stelle mit einer Fehlermeldung ab. Ein Assert kann also das Weiterlaufen eines fehlerhaften Programmes verhindern. Dabei wird die gesamte VM (bzw. MetaVM) unterbrochen!
 
 2) Contract:
 
-Ein weiterer Schlüssel in der Sicherheitsarchitektur Amiants ist das Nutzen von Contracts. Contracts verweisen auf eine Eigenschaft von Funktionen innerhalb der AVM. Eine Funktion kann frei sein, oder unter Vertrag stehen. Eine freie Funktion ist eine gewöhnliche Funktion, die bei Aufruf ihren Code ausführt. Sollte es innerhalb der Funktion zu Fehlern kommen, so wird die Funktion mit Standardwerten weiterarbeiten, ganz gleich was das Ergebnis davon ist. Sollte eine Funktion jedoch unter Vertrag stehen, ist sie verpflichtet, für die Richtigkeit der in ihr generierten Daten die Verantwortung zu übernehmen. Sollten die Daten allesamt korrekt sein, so wird diese Funktion schlicht ihren Code ausführen. Sollten die Daten inkorrekt sein, so liegt eine Vertragsverletzung im Bezug zur AVM vor, sodass die AVM diese Funktion dann sperrt. Die Funktion bricht an dem Keyword sofort ab, und kann danach während der aktuellen Laufzeit des Programmes nicht mehr aufgerufen werden. Sollte sie dennoch irgendwo aufgerufen werden, so wird mit null an dieser Stelle abgebrochen. Ein Ausführen der Funktion ist somit unmöglich. Diese Architektur erlaubt es, fehlerhafte Codeabschnitte zur Laufzeit zu entfernen, sodass zu jedem Zeitpunkt ein fehlerfreies Programm garantiert werden kann. Voraussetzung dafür ist das konsequente Nutzen von Contracts.
+Ein weiterer Schlüssel in der Sicherheitsarchitektur Amiants ist das Nutzen von Contracts. Contracts verweisen auf eine Eigenschaft von Funktionen innerhalb der AVM: eine Funktion kann frei sein, oder unter "Vertrag" stehen. Eine freie Funktion ist eine gewöhnliche Funktion, die bei Aufruf ihren Code ausführt. Sollte es innerhalb der Funktion zu Fehlern kommen, so wird die Funktion mit Standardwerten weiterarbeiten, ganz gleich was das Ergebnis davon ist. Sollte eine Funktion jedoch unter Vertrag stehen, ist sie verpflichtet, für die Richtigkeit der in ihr generierten Daten die Verantwortung zu übernehmen. Sollten die Daten allesamt korrekt sein, so wird diese Funktion schlicht ihren Code ausführen. Sollten die Daten inkorrekt sein, so liegt eine "Vertragsverletzung" in Bezug zur AVM vor, sodass die AVM diese Funktion dann __sperrt__. Die Funktion bricht an dem Keyword sofort ab, und kann danach __während der aktuellen Laufzeit des Programmes nicht mehr aufgerufen werden__. Sollte sie dennoch irgendwo aufgerufen werden, so wird mit null an dieser Stelle abgebrochen, und ein Fehler geworfen. Ein Ausführen der Funktion ist somit _unmöglich_. Diese Architektur erlaubt es, fehlerhafte Codeabschnitte zur Laufzeit zu entfernen, sodass zu jedem Zeitpunkt ein fehlerfreies Programm garantiert werden kann. Voraussetzung dafür ist das konsequente Nutzen von Contracts.
 
 ```
 contract > i $0; # garantiert der AVM, dass der Wert der Variablen immer größer Null ist
 ```
 
-Die Sicherheit des Codes kann damit zur Laufzeit erhöht werden, in dem fehlerbehaftete Äste innerhalb des Programms dadurch nach und nach deaktiviert werden. Eine gesperrte Funktion kann durch einen mount über den gleichen Namen jedoch wieder nutzbar gemacht werden (siehe Reflection)
-Eine Verletzung des Contracts in der globalen Funktion (globaler Scope) führt nicht zu einer Sperrung. Die obersten Funktionen (async-Blöcke, Meta Vm globaler Scope)sind somit immun gegen contracts.
+Die Sicherheit des Codes kann damit zur Laufzeit erhöht werden, in dem fehlerbehaftete Äste innerhalb des Programms nach und nach deaktiviert werden. Eine gesperrte Funktion kann durch einen mount über den gleichen Namen jedoch wieder nutzbar gemacht werden (siehe Reflection). Eine Verletzung des Contracts in der _globalen Funktion_ (globaler Scope) führt allerdings _nicht_ zu einer Sperrung. Die obersten Funktionen (async-Blöcke, MetaVM globaler Scope) sind somit immun gegen Contracts.
 
 ### Funktionen III - Funktionale Programmierung
 
-In Amiant sind Funktionen first-class-objects. Funktionen können also selbst als Wert übergeben werden, sodass man sie durch das Programm bewegen kann. Um eine Variable zu erstellen, die einen Pointer auf eine Funktion enthält, muss man den Function-Pointer-Operator `\` nutzen. Dieser sucht im aktuellen Scope nach der Funktion, und gibt einen Zeiger darauf zurück. Sollte die Funktion nicht gefunden werden, wird `null` zurückgegeben. Der `~` Operator erwartet ein Fieldname und keine Expression, sodass man die Funktion, die man als Pointer besitzt, nur dann ausführen kann, wenn man den Pointer vorher in eine Variable legt, und diese dann hinter dem `~` Operator schreibt:
+In Amiant sind Funktionen first-class-objects. Funktionen können selbst als Wert übergeben werden, sodass man sie durch das Programm bewegen kann. Um eine Variable zu erstellen, die einen Pointer auf eine Funktion enthält, muss man den Function-Pointer-Operator `\` nutzen. Dieser sucht im aktuellen Scope nach der Funktion, und gibt einen Zeiger darauf zurück. Sollte die Funktion nicht gefunden werden, wird `null` zurückgegeben. Der `~` Operator erwartet ein Fieldname und keine Expression, sodass man die Funktion, die man als Pointer besitzt, nur dann ausführen kann, wenn man den Pointer vorher in eine Variable legt, und diese dann hinter dem `~` Operator schreibt:
 
 ```
 function add {
@@ -267,7 +266,7 @@ var addFunc \add;
 println ~addFunc n:$4; # gibt 8 auf der Konsole aus
 ```
 
-### Amiant-Meta-VM
+### Amiant-MetaVM
 
 Die AVM ist in der Lage, dynamisch neuen Code auszuführen. Dieser Code läuft dann in einem gesonderten Bereich, sodass Zugriffe in andere Bereiche nicht möglich sind. Um innerhalb eines laufenden Programms weiteren Amiant-Code auszuführen, muss dieser Code lediglich als String vorliegen, und mithilfe des Keywords `amiant` ausgeführt werden.
 
@@ -275,18 +274,18 @@ Die AVM ist in der Lage, dynamisch neuen Code auszuführen. Dieser Code läuft d
 amiant "println $4"; # startet ein weiteres Programm, das die Zahl 4 auf der Konsole ausgibt
 ```
 
-Es ist wichtig zu beachten, dass es sich hierbei nicht um eine Multithreading-Lösung handelt! Der Programmfluss stoppt an dieser Stelle, bis das Unterprogramm seine Ausführung beendet hat. Aber mit einer geeigneten Implementierung einer Threading-Bibliothek über die Native-Schnittstelle ist die Auslagerung in einen separaten Thread ohne Probleme möglich. Da das innere Programm keinen Zugriff auf das äußere Programm hat, kann es dort nicht zu problematischen Interaktionen kommen. Umgekehrt besteht zwar kein direkter Zugriff, wohl aber ein indirekter: Daten können in das Programm gebracht werden, in dem sie in den String des Programmcodes beispielsweise als Variablen geschrieben werden. Da das äußere Programm den Programmcode des inneren Programmes besitzt, kann der eben so angepasst werden, dass bestimmte Informationen vor dem Start des inneren Programms eben direkt einprogrammiert werden.
-Es ist darauf hinzuweisen, dass trotz dieser Abkapselung es nicht zu einem Starten einer neuen und eigenständigen AVM kommt! Intern läuft weiterhin nur eine einzige AVM, die sich jedoch rekursiv verwenden kann. Das schlägt sich beispielsweise in den internen Speicherstatistiken wieder. Ein äußeres und ein inneres Programm tragen gleichermaßen zu den selben Statistiken bei. Auch das Akquirieren neuen Speichers erfolgt über die exakt gleichen Funktionen. Diese Fähigkeit von Amiant erleichtert es, eine AVM in einem Kernel (oder als Proto-Kernel) laufen zu lassen, die dann wiederum Unterprogramme starten kann, jedoch nur eine Stelle besitzt, an der der gesamte Speicher verwaltet werden muss.
+Es ist wichtig zu beachten, dass es sich hierbei nicht um eine Multithreading-Lösung handelt! Der Programmfluss stoppt an dieser Stelle, bis das Unterprogramm seine Ausführung beendet hat. Aber mit einer geeigneten Implementierung einer Threading-Bibliothek über die Native-Schnittstelle ist die Auslagerung in einen separaten Thread ohne Probleme möglich. Da das innere Programm keinen Zugriff auf das äußere hat, kann es dort nicht zu problematischen Interaktionen kommen. Umgekehrt besteht zwar kein direkter Zugriff, wohl aber ein indirekter: Daten können in das Programm gebracht werden, in dem sie in den String des Programmcodes beispielsweise als Variablen geschrieben werden. Da das äußere Programm den Programmcode des inneren Programmes besitzt, kann der eben so angepasst werden, dass bestimmte Informationen vor dem Start des inneren Programms eben direkt einprogrammiert werden.
+Es ist darauf hinzuweisen, dass trotz dieser Abkapselung es _nicht_ zu einem Starten einer neuen und eigenständigen AVM kommt! Intern läuft weiterhin nur eine einzige AVM, die sich jedoch rekursiv verwenden kann. Das schlägt sich beispielsweise in den internen Speicherstatistiken wieder. Ein äußeres und ein inneres Programm tragen gleichermaßen zu den selben Statistiken bei. Auch das Akquirieren neuen Speichers erfolgt über die exakt gleichen Funktionen. Diese Fähigkeit von Amiant erleichtert es, eine AVM in einem Kernel (oder als Proto-Kernel) laufen zu lassen, die dann wiederum Unterprogramme starten kann - jedoch nur eine Stelle besitzt, an der der gesamte Speicher verwaltet werden muss.
 
 Jedes Amiant-Programm kann sofort beendet werden, in dem das `exit`-Keyword genutzt wird. Dabei wird nur das lokale Amiant-Programm beendet. Wenn ein Unterprogramm `exit` aufruft, so wird nur das Unterprogramm beendet, und das Oberprogramm setzt die Ausführung fort. Sollte das oberste Programm ein `exit` ausführen, so beendet sich die komplette AVM.
 
-Es ist möglich, zur Laufzeit herauszufinden, in welchem Level der aktuelle Code ausgeführt wird. Als Level wird die Stufe in der Hierarchie der Programme und Unterprogramme bezeichnet. Das oberste Programm läuft auf Level 0. Wenn dieses Programm mithilfe des `amiant`-Keywords ein Unterprogramm startet, so liefe dieses Unterprogramm auf Level 1, usw. Den numerischen Wert des aktuellen Programmausführungslevels kann mit `level` zurückgegeben werden.
+Es ist möglich, zur Laufzeit herauszufinden, in welchem Level der aktuelle Code ausgeführt wird. Als _Level_ wird die Stufe in der Hierarchie der Programme und Unterprogramme bezeichnet. Das oberste Programm läuft auf Level 0. Wenn dieses Programm mithilfe des `amiant`-Keywords ein Unterprogramm startet, so liefe dieses Unterprogramm auf Level 1, usw. Den numerischen Wert des aktuellen Programmausführungslevels kann mit `level` zurückgegeben werden.
 
 Hinweis: während es mehrere Programme auf Level 1, 2, ... geben kann, gibt es immer nur ein einziges Programm auf Level 0!
 
 ### If-Verzweigungen
 
-Bedingte Verzweigungen werden durch den `if`-Operator realisiert. Die allgemeinen Formen einer if-Abzweigung und if-Else-Abzweigung sehen folgendermaßen aus:
+Bedingte Verzweigungen werden durch den `if`-Operator realisiert. Verzweigungen öffnen Scopes! Die allgemeinen Formen einer if-Abzweigung und if-Else-Abzweigung sehen folgendermaßen aus:
 
 If-Abzweigung:
 ```
@@ -317,7 +316,7 @@ println if (> i $5) {
 ```
 
 ### Schleifen
-In Amiant gibt es zwei Schleifentypen. Zunächst gibt es die bedingte Schleife, die in C-ähnlichen Sprachen auch while-Schleife gennant wird:
+In Amiant gibt es einen Schleifentyp, der in C-ähnlichen Sprachen auch while-Schleife gennant wird:
 
 ```
 while condition {
@@ -328,21 +327,14 @@ Anstelle des Keywords `while` ist auch das Keyword `loop` für diese Operation b
 
 Jeder Schleifenkörper stellt einen eigenen Scope für die Variablen bereit.
 
-```
-foreach elementName in list {
-    # Code here
-};
-```
-
 ### Konsole I
 
-Ausgaben auf dem Standardoutput können mit dem `println`-Operator durchgeführt werden. Hierbei werden Strings und Zahlen wie sie sind ausgegeben. Listen werden mit dem Typ und ihrer Größe ausgegeben, z.B. `[list size=1]`. Für Maps gilt das gleiche wie bei Listen. Matrizen werden formatiert auf der Konsole ausgegeben. Somit nehmen Matrizen bei Bedarf mehrere Zeilen an Platz in der Konsole ein, je nach dem wie groß sie sind. Null wird als `[null]` und Any als `[any]` ausgegeben. Booleans werden mit ihrem Stringäquivalent ausgegeben: `true` und `false`.
+Ausgaben auf dem Standardoutput können mit dem `println`-Operator durchgeführt werden. Hierbei werden Strings und Zahlen wie sie sind ausgegeben. Listen werden mit dem Typ und ihrer Größe ausgegeben, z.B. `[List size=1]`. Für Maps gilt das gleiche wie bei Listen. Null wird als `[Null]` und Any als `[Any]` ausgegeben. Booleans werden mit ihrem Stringäquivalent ausgegeben: `true` bzw. `false`.
 
 
 ### Mathematische Operationen
 
-Die AVM stellt Grundrechenarten zur Verfügung, die intern und nicht in der Sprache selbst implementiert wurden, um die Geschwindigkeit der Operationen zu erhöhen.
-Zudem stehen diese Operationen auf allen Plattformen zur Verfügung, da die Implementierung dieser Rechenoperationen ohne Mithilfe von externen Bibliotheken erfolgt.
+Die AVM stellt Grundrechenarten zur Verfügung, die intern und nicht in der Sprache selbst implementiert wurden, um die Geschwindigkeit der Operationen zu erhöhen, sowie eine Plattformunabhängigkeit zu garantieren.
 
 | Operator | Bedeutung      |
 |   :---:  |     :---:      |
@@ -365,14 +357,14 @@ Amiant stellt eigene Implementierungen der mathematischen Operationen bereit (au
 
 ### Error Handling und Fehlercodes
 
-Die AVM speichert immer nur den
-
-Der letzte geworfene Fehler kann mit `(error)` geholt werden. Das gibt den Typ des Fehlers als String zurück.
+Der letzte geworfene Fehler kann mit `(error)` geholt werden. Das gibt den Typ des Fehlers als Number zurück.
 
 | Operation             | Bedeutung                                                              |
 |   :---:               |     :---:                                                              |
 |     `(error line)`    | gibt die Zeilennummer als Zahl zurück, an der der letzte Fehler auftrat|
 |     `(error)`         | gibt den letzten Fehlercode in der aktuellen Funktion zurück           |
+|`(throw errorCodeNumber)`| wirft einen eigenen Fehlercode (Zahl ist ganzrational)               |
+|`(catch errorCodeNumber catchBlockExpr)` | Fängt einen geworfenen Fehlercode ab, und führt den Ausdruck dann aus (wichtig: dieser Ausdruck steht __nicht in einem neuen Scope!__)               |
 
 Es gibt folgende Fehlertypen:
 
@@ -407,6 +399,12 @@ if (= (~fetchData) "404") {
 
 if(= (error) $404) {
     # Fehlerbehandlung
+};
+
+# oder eleganter
+
+catch $404 {
+    # Fehlerbehandlung (aber kein separater Scope!)
 };
 
 ```
