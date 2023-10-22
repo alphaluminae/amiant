@@ -42,6 +42,80 @@ Diese Deklaration kann auch in strikter S-Notation (also ohne `;` erfolgen):
 ```
 Es ist gut zu erkennen, wie das Semikolon jeweils ein `()`-Paar ersetzen kann. Der jeweils letzte Ausdruck benötigt kein Semikolon, da keine Abtrennung zum nächsten Ausdruck nötig ist.
 
+### Keywords
+
+Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet werden:
+
+1. function/func
+2. print
+3. println
+4. string
+5. number
+6. trim
+7. contains
+8. startswith
+9. var/let
+10. yield
+11. this
+12. defined
+13. if
+14. else
+15. while
+16. loop
+17. break
+18. return
+19. exit
+20. get
+21. put
+22. null/nullptr
+23. assign/varset/assign
+24. native
+25. factorial
+26. sqrt
+27. error
+28. throw
+29. catch
+30. avm
+31. amiant
+32. assert
+33. contract
+34. exit
+35. copy
+36. const
+37. struct
+38. list
+39. number
+40. sin
+41. cos
+42. tan
+43. random
+44. modulo
+45. log
+46. ln
+47. exp
+48. ipow
+49. line
+50. mount
+51. unmount
+52. call
+53. level
+54. memory
+55. async
+56. await
+57. Null
+58. Number
+59. Boolean
+60. String
+61. List
+62. Function
+63. Struct
+64. ByteSequence
+65. Any
+66. pi
+67. e
+68. true
+69. false
+
 ### Blöcke
 
 Ein durch Klammern abgegrenzter Bereich wird Block genannt. Ein Block hat folgende Eigenschaften:
