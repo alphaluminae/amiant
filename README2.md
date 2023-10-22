@@ -2,20 +2,20 @@
 
 /Die Power einer LowLevel-Programmierung in einer sicheren Umgebung/
 
-Amiant ist eine Programmiersprache, welche die Syntax von LISP modernisiert, auf keinen externen Headerdateien beruht, und Low-Level agiert.
+Amiant ist eine Programmiersprache, welche die Syntax von LISP modernisiert, auf keinen externen Headerdateien beruht, und Low-Level agieren kann.
 
 ### Ideen und Hello World
 
 Kernfunktionen der Sprache sind:
-- Die gesamte Laufzeitumgebung ist in plain-C geschrieben (es gibt keine Abhängigkeiten von irgendwelchen Header-Dateien - nichtmal den CXX Bibliotheken), was sie für neue Plattformen und Embedded-Systeme attraktiv macht 
-- Die AVM besitzt eine hohe Geschwindigkeit, die mit nativen Erweiterungsmöglichkeiten erhöht werden kann
+- Die gesamte Laufzeitumgebung ist in plain-C geschrieben (es gibt keine Abhängigkeiten von irgendwelchen Header-Dateien - nichtmal den CXX Bibliotheken), was sie für neue Plattformen und Embedded-Systeme attraktiv macht
+- Die AVM besitzt eine hohe Geschwindigkeit, die mit nativen Erweiterungsmöglichkeiten weiter erhöht werden kann
 - Die freie S-Syntax erlaubt es, die bei LISP häufig unnötigen und unübersichtlichen Klammern zu überwinden, ohne dabei beim Parsing einen Geschwindigkeitsnachteil zu erhalten
-- Amiant besitzt einen ARC-GC, sodass keine Speicherlecks entstehen, und die Wahrscheinlichkeit für Segfaults bei Null liegt. Zusätzlich besitzt man keine Halts, die beim Einsetzen eines GC entstehen, und die Performance verringern
-- Amiant ist hochreflektiv. Ein Amiant-Programm kann sich während der Laufzeit komplett umprogrammieren, ohne neu gestartet werden zu müssen. Zusätzlich kann mit den MetaVMs dynamisch neuer Code im Programm ausgeführt werden
+- Amiant besitzt einen ARC-GC, sodass keine Speicherprobleme und Segfaults entstehen. Zusätzlich besitzt die AVM keine Halts, die beim Einsetzen eines GC entstehen, und die Performance verringern
+- Amiant ist hochreflektiv: ein Amiant-Programm kann sich während der Laufzeit komplett umprogrammieren, ohne neu gestartet werden zu müssen. Zusätzlich kann mit den MetaVMs dynamisch neuer Code im Programm ausgeführt werden
 - Amiant bietet eine Unterstützung für paralleles Arbeiten mithilfe von Async-Await (sollte eine Threadimplementierung vorliegen)
-- String interning sorgt für eine reduzierte Speichernutzung bei der Verwendung von literalen Strings
+- String-interning sorgt für eine reduzierte Speichernutzung bei der Verwendung von literalen Strings
 - Ein einfaches Error-System erlaubt die Möglichkeit der Fehlerbehandlung ohne Overhead oder unkontrolloliertem Control-Flow
-- Listen und Structs sind beides Containertypen, die per Referenz übertragen werden.
+- Listen und Structs sind beides Containertypen, die per Referenz übertragen werden
 
 Ein Hello World Programm in Amiant:
 ```
@@ -24,7 +24,7 @@ println "Hello World!";
 
 ### Syntax
 
-Ambient besitzt eine freie S-Notation. Eine S-Notation verlangt eine explizite Klammerung von Ausdrücken: `(expression)` oder `(expression1 expression2)`. Ausdrücke können geschachtelt werden: `(expression1 (expression2 expression3))`. Die Besonderheit bei Amiant ist, dass der Klammertyp frei gewählt werden kann. Hierbei stehen drei Typen zur Verfügung: `()`, `{}`, `[]`. Es gibt keine Beschränkungen, die angeben, welcher Klammertyp benutzt werden soll. In der Verwendung können die Klammertypen auch gemischt verwendet werden. Es gibt hierbei nur eine Restriktion: jede geöffnete Klammer benötigt eine geschlossene Klammer gleichen Typs! Folgender Ausdruck ist also ungültig: `(expression}`, während dieser hier korrekt wäre: `(expression1 {expression2 [expression3]})`. Zu der freien Wahl des Klammertyps kommt zusätzlich das Semikolon `;` hinzu, welches eine geöffnete und geschlossene Klammer ersetzt. Der Ausdruck `(expression1)` wäre auch folgendermaßen korrekt: `expression1;`. Semikolons können auch innerhalb von Klammerungen genutzt werden. Ein gutes Beispiel ist die Definition einer Funktion: 
+Amiant besitzt eine freie S-Notation. Eine S-Notation verlangt eine explizite Klammerung von Ausdrücken: `(expression)` oder `(expression1 expression2)`. Ausdrücke können geschachtelt werden: `(expression1 (expression2 expression3))`. Die Besonderheit bei Amiant ist, dass der Klammertyp frei gewählt werden darf. Hierbei stehen drei Typen zur Verfügung: `()`, `{}`, `[]`. Es gibt keine Beschränkungen, die angeben, welcher Klammertyp wann benutzt werden soll. In der Verwendung können die Klammertypen auch gemischt verwendet werden. Es gibt hierbei nur eine Restriktion: jede geöffnete Klammer benötigt eine geschlossene Klammer gleichen Typs! Folgender Ausdruck ist also ungültig: `(expression}`, während dieser hier korrekt wäre: `(expression1 {expression2 [expression3]})`. Zu der freien Wahl des Klammertyps kommt zusätzlich das Semikolon `;` hinzu, welches eine geöffnete und geschlossene Klammer auf einer Ebene ersetzt. Der Ausdruck `(expression1)` wäre auch folgendermaßen korrekt: `expression1;`. Semikolons können auch innerhalb von Klammerungen genutzt werden. Ein gutes Beispiel ist die Definition einer Funktion: 
 ```
 function foo {
     print "Hello "; # ohne Zeilenumbruch, danach mit
@@ -46,7 +46,7 @@ Es ist gut zu erkennen, wie das Semikolon jeweils ein `()`-Paar ersetzen kann. D
 
 Ein durch Klammern abgegrenzter Bereich wird Block genannt. Ein Block hat folgende Eigenschaften:
 
-1. Ein Block besitzt keinen eigenen Scope!
+1. Ein Block besitzt grundsätzlich __keinen__ eigenen Scope!
 2. Steht nur ein Ausdruck in diesem Block, so ist der Rückgabewert dieses Blockes genau der Wert des enthaltenden Ausdrucks:
 
 ```
@@ -82,7 +82,7 @@ var j {
 println i; # i ist hier plötzlich definiert, da ein Block keinen eigenen Scope besitzt (Eigenschaft 1).
 ```
 
-Wichtig: Auch wenn es so aussieht, als würde man sich bei der Wertzuweisung der Variable j in einem neuen Scope befinden, ist es nicht so. Die Klammerung legt nur einen Block fest, und Blöcke haben keinen eigenen Scope - nur Funktionen, Schleifen, Async etc. haben einen. Noch wichtiger ist die Tatsache, dass Expressions, die nach der yield-Expression stehen, nicht erreicht werden können!
+Wichtig: Auch wenn es so aussieht, als würde man sich bei der Wertzuweisung der Variable j in einem neuen Scope befinden, ist es nicht so. Die Klammerung legt nur einen Block fest, und Blöcke haben keinen eigenen Scope - __nur Funktionen, Schleifen, Verzweigungen, Async__ etc. haben einen. Noch wichtiger ist die Tatsache, dass Expressions, die nach der yield-Expression stehen, nicht erreicht werden können!
 
 ### Kommentare
 Zeilenkommentare können mit dem Symbol `#` gestartet werden, und gehen bis ans Ende der Zeile. Mehrzeilige Kommentare gibt es nicht. Für diesen Fall muss jede Zeile des Kommentars mit dem Kommentarzeichen beginnen:
@@ -95,12 +95,16 @@ Zeilenkommentare können mit dem Symbol `#` gestartet werden, und gehen bis ans 
 
 | Datentyp | Bedeutung                   |
 | :---:    |     :---:                   |
+| Null     | Null (keine Daten)          |
 | Number   | Zahlen jeden Typs           |
-| String   | Zeichenketten               |
-| List     | Liste                       |
+| Boolean  | true oder false             |
+| String   | Zeichenketten (ASCII!)      |
+| Function | Funktion(-spointer)         |
+| ByteSequence | Rohe Daten              |
 | Struct   | Container (Key-Value-Pairs) |
+| List     | Liste                       |
 
-Zahlen sind der einzige Datentyp, der bei Übertragungen kopiert wird! Bei allen anderen Datentypen wird eine Referenz kopiert. Diese Referenz sorgt dafür, dass Amiant weniger Speicher verbraucht. Der Operator `copy` veranlasst bei der AVM eine Kopie der übergebenen Daten anzufertigen:
+_Number_ ist der einzige Datentyp, der bei Übertragungen kopiert wird! Bei allen anderen Datentypen wird eine _Referenz_ kopiert. Diese Referenz sorgt dafür, dass Amiant weniger Speicher verbraucht. Der Operator `copy` veranlasst bei der AVM eine Kopie der übergebenen Daten anzufertigen:
 
 ```
 var name1 "Booktitle";
@@ -113,13 +117,27 @@ assign name2 copy name1; # name1 und name2 weisen auf unterschiedliche Stellen i
 
 ```
 
-### Konstanten
+### Konstanten und Typkonstanten
 Folgende Keywords sind als Konstanten reserviert, und können deshalb nicht außerhalb ihres Kontextes gebraucht werden:
 
 | Keyword | Bedeutung     |
 | :---:   |     :---:     |
 | pi      | 3.14159...    |
 | eul     | 2.71828...    |
+
+Typkonstanten enthalten den Datentypnamen als String.
+
+| Typkonstante | Bedeutung     |
+| :---:        |     :---:     |
+| Null         | "Null"        |
+| Number       | "Number"      |
+| Boolean      | "Boolean"     |
+| String       | "String"      |
+| List         | "List"        |
+| Function     | "Function"    |
+| Struct       | "Struct"      |
+| ByteSequence | "ByteSequence"|
+| Any          | "Any"         |
 
 ### Zahlen
 Number-Literals müssen im Code mit einem `$` vorgeschrieben werden. Ansonsten wird die Zahl als fieldname gewertet. Mehr zu den fieldnames findet sich im Kapitel zu den Variablen. Folgende Ausdrücke resultieren nicht in Zahlen: `40`, `-5.2`. Korrekt müsste es heißen: `$40`, `$-5.2`. Sollte ein fehlerhafter Ausdruck hinter dem `$` erkannt werden, wird dieser Ausdruck als Zahl `0` gewertet. Es ist ausschließlich die Notation in Dezimalzahlen möglich.
