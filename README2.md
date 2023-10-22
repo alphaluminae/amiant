@@ -2,7 +2,7 @@
 
 /Die Power einer LowLevel-Programmierung in einer sicheren Umgebung/
 
-Amiant ist eine Programmiersprache, welche die Syntax von LISP modernisiert, auf keinen externen Headerdateien beruht, und Low-Level agieren kann.
+Amiant ist eine Programmiersprache, welche die Syntax von LISP modernisiert, auf keine externen Headerdateien beruht, und Low-Level agieren kann.
 
 ### Ideen und Hello World
 
