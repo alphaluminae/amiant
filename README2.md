@@ -17,7 +17,7 @@ Kernfunktionen der Sprache sind:
 - Ein einfaches Error-System erlaubt die Möglichkeit der Fehlerbehandlung ohne Overhead oder unkontrolloliertem Control-Flow
 - Listen und Structs sind beides Containertypen, die per Referenz übertragen werden
 
-Ein Hello World Programm in Amiant:
+Ein Hallo-Welt-Programm in Amiant:
 ```
 println "Hello World!";
 ```
