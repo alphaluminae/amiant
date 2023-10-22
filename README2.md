@@ -68,7 +68,7 @@ Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet
 20. get
 21. put
 22. null/nullptr
-23. assign/varset/assign
+23. assign/varset/mutate
 24. native
 25. factorial
 26. sqrt
