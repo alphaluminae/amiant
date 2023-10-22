@@ -44,7 +44,7 @@ Es ist gut zu erkennen, wie das Semikolon jeweils ein `()`-Paar ersetzen kann. D
 
 ### Keywords
 
-Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet werden:
+Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet werden. Die hinter einem / stehenden Keywörter sind alternative Belegungen, die allerdings intern auf die gleiche Funktionalität verweisen:
 
 1. function/func
 2. print
