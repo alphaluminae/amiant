@@ -2,11 +2,11 @@
 
 /Die Power einer LowLevel-Programmierung in einer sicheren Umgebung/
 
-Amiant ist eine Programmiersprache, welche die Syntax von LISP modernisiert, auf keine externen Headerdateien beruht, und Low-Level agieren kann.
+Amiant ist eine modernisierte LISP-ähnliche Programmiersprache, die auf keinerlei externer Headerdateien beruht, ausschließlich in (ANSI-)C entwickelt wurde, Low-Level agieren kann, und eine kleine CodeBase besitzt.
 
-### Ideen und Hello World
+### Konzept und Hello World
 
-Kernfunktionen der Sprache sind:
+Die Kernfunktionen der Sprache lassen sich folgendermaßen beschreiben:
 - Die gesamte Laufzeitumgebung ist in plain-C geschrieben (es gibt keine Abhängigkeiten von irgendwelchen Header-Dateien - nichtmal den CXX Bibliotheken), was sie für neue Plattformen und Embedded-Systeme attraktiv macht
 - Die AVM besitzt eine hohe Geschwindigkeit, die mit nativen Erweiterungsmöglichkeiten weiter erhöht werden kann
 - Die freie S-Syntax erlaubt es, die bei LISP häufig unnötigen und unübersichtlichen Klammern zu überwinden, ohne dabei beim Parsing einen Geschwindigkeitsnachteil zu erhalten
@@ -16,6 +16,7 @@ Kernfunktionen der Sprache sind:
 - String-interning sorgt für eine reduzierte Speichernutzung bei der Verwendung von literalen Strings
 - Ein einfaches Error-System erlaubt die Möglichkeit der Fehlerbehandlung ohne Overhead oder unkontrolloliertem Control-Flow
 - Listen und Structs sind beides Containertypen, die per Referenz übertragen werden
+- Der Datentyp VNumber erlaubt beliebig präzise Grundrechenoperatoren.
 
 Ein Hallo-Welt-Programm in Amiant:
 ```
@@ -24,7 +25,7 @@ println "Hello World!";
 
 ### Syntax
 
-Amiant besitzt eine freie S-Notation. Eine S-Notation verlangt eine explizite Klammerung von Ausdrücken: `(expression)` oder `(expression1 expression2)`. Ausdrücke können geschachtelt werden: `(expression1 (expression2 expression3))`. Die Besonderheit bei Amiant ist, dass der Klammertyp frei gewählt werden darf. Hierbei stehen drei Typen zur Verfügung: `()`, `{}`, `[]`. Es gibt keine Beschränkungen, die angeben, welcher Klammertyp wann benutzt werden soll. In der Verwendung können die Klammertypen auch gemischt verwendet werden. Es gibt hierbei nur eine Restriktion: jede geöffnete Klammer benötigt eine geschlossene Klammer gleichen Typs! Folgender Ausdruck ist also ungültig: `(expression}`, während dieser hier korrekt wäre: `(expression1 {expression2 [expression3]})`. Zu der freien Wahl des Klammertyps kommt zusätzlich das Semikolon `;` hinzu, welches eine geöffnete und geschlossene Klammer auf einer Ebene ersetzt. Der Ausdruck `(expression1)` wäre auch folgendermaßen korrekt: `expression1;`. Semikolons können auch innerhalb von Klammerungen genutzt werden. Ein gutes Beispiel ist die Definition einer Funktion: 
+Amiant besitzt eine freie S-Notation. Eine S-Notation verlangt für gewöhnlich eine explizite Klammerung von Ausdrücken: `(expression)` oder `(expression1 expression2)`. Ausdrücke können hierbei auch geschachtelt werden: `(expression1 (expression2 expression3))`. Die Besonderheit von Amiant ist, dass der Klammertyp frei gewählt werden darf. Es stehen drei Typen zur Verfügung: `()`, `{}`, `[]`, die keinerlei Beschränkungen in ihrer Verwendung besitzen. Die Klammertypen können auch gemischt verwendet werden, wobei es nur eine Restriktion gibt: __jede geöffnete Klammer benötigt eine geschlossene Klammer gleichen Typs__! Folgender Ausdruck ist also ungültig: `(expression}`, während dieser hier korrekt wäre: `(expression1 {expression2 [expression3]})`. Zu der freien Wahl des Klammertyps kommt zusätzlich das Semikolon `;` hinzu, welches eine geöffnete und geschlossene Klammer auf einer Ebene ersetzt. Der Ausdruck `(expression1)` wäre auch folgendermaßen korrekt: `expression1;`. Semikolons können auch innerhalb von Klammerungen genutzt werden. Ein gutes Beispiel ist die Definition einer Funktion: 
 ```
 function foo {
     print "Hello "; # ohne Zeilenumbruch, danach mit
@@ -40,11 +41,11 @@ Diese Deklaration kann auch in strikter S-Notation (also ohne `;` erfolgen):
     (println "World")
 ))
 ```
-Es ist gut zu erkennen, wie das Semikolon jeweils ein `()`-Paar ersetzen kann. Der jeweils letzte Ausdruck benötigt kein Semikolon, da keine Abtrennung zum nächsten Ausdruck nötig ist.
+Es ist gut zu erkennen, wie das Semikolon jeweils ein `()`-Paar ersetzen kann. Der allerletze Ausdruck benötigt kein Semikolon, da keine Abtrennung zum nächsten Ausdruck nötig ist.
 
 ### Keywords
 
-Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet werden. Die hinter einem / stehenden Keywörter sind alternative Belegungen, die allerdings intern auf die gleiche Funktionalität verweisen:
+Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet werden. Die hinter einem `/` stehenden Keywörter sind alternative Belegungen, die allerdings intern auf die gleiche Funktionalität verweisen:
 
 1. function/func
 2. print
@@ -67,7 +68,7 @@ Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet
 19. exit
 20. get
 21. put
-22. null/nullptr
+22. null
 23. assign/varset/mutate
 24. native
 25. factorial
@@ -85,43 +86,46 @@ Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet
 37. struct
 38. list
 39. number
-40. sin
-41. cos
-42. tan
-43. random
-44. modulo
-45. log
-46. ln
-47. exp
-48. ipow
-49. line
-50. mount
-51. unmount
-52. call
-53. level
-54. memory
-55. async
-56. await
-57. Null
-58. Number
-59. Boolean
-60. String
-61. List
-62. Function
-63. Struct
-64. ByteSequence
-65. Any
-66. pi
-67. e
-68. true
-69. false
+40. vnumber
+41. sin
+42. cos
+43. tan
+44. random
+45. modulo
+46. log
+47. ln
+48. exp
+49. ipow
+50. round
+51. line
+52. mount
+53. unmount
+54. call
+55. level
+56. memory
+57. refs
+58. async
+59. await
+60. Null
+61. Number
+62. Boolean
+63. String
+64. List
+65. Function
+66. Struct
+67. ByteSequence
+68. Any
+69. PI
+70. EUL
+71. true
+72. false
 
 ### Blöcke
 
-Ein durch Klammern abgegrenzter Bereich wird Block genannt. Ein Block hat folgende Eigenschaften:
+Ein durch Klammern abgegrenzter Bereich wird _Block_ genannt. Ein Block hat folgende Eigenschaften:
 
 1. Ein Block besitzt grundsätzlich __keinen__ eigenen Scope!
-2. Steht nur ein Ausdruck in diesem Block, so ist der Rückgabewert dieses Blockes genau der Wert des enthaltenden Ausdrucks:
+2. Steht nur ein einzelner Ausdruck in diesem Block, so ist der Rückgabewert dieses Blockes genau der Wert des enthaltenden Ausdrucks:
 
 ```
 println ("Hallo Welt"); # Diese beiden Ausgaben...
@@ -171,6 +175,7 @@ Zeilenkommentare können mit dem Symbol `#` gestartet werden, und gehen bis ans 
 | :---:    |     :---:                   |
 | Null     | Null (keine Daten)          |
 | Number   | Zahlen jeden Typs           |
+| VNumber  | Virtuelle Zahlen            |
 | Boolean  | true oder false             |
 | String   | Zeichenketten (ASCII!)      |
 | Function | Funktion(-spointer)         |
@@ -178,7 +183,7 @@ Zeilenkommentare können mit dem Symbol `#` gestartet werden, und gehen bis ans 
 | Struct   | Container (Key-Value-Pairs) |
 | List     | Liste                       |
 
-_Number_ ist der einzige Datentyp, der bei Übertragungen kopiert wird! Bei allen anderen Datentypen wird eine _Referenz_ kopiert. Diese Referenz sorgt dafür, dass Amiant weniger Speicher verbraucht. Der Operator `copy` veranlasst bei der AVM eine Kopie der übergebenen Daten anzufertigen:
+_Number_ ist der einzige Datentyp, der bei Übertragungen vollständig kopiert wird! Bei allen anderen Datentypen wird lediglich eine _Referenz_ kopiert. Diese Referenz sorgt dafür, dass Amiant weniger Speicher benötigt. Der Operator `copy` veranlasst bei der AVM allerding eine Kopie der übergebenen Daten anzufertigen:
 
 ```
 var name1 "Booktitle";
@@ -196,15 +201,16 @@ Folgende Keywords sind als Konstanten reserviert, und können deshalb nicht auß
 
 | Keyword | Bedeutung     |
 | :---:   |     :---:     |
-| pi      | 3.14159...    |
-| eul     | 2.71828...    |
+| PI      | 3.14159...    |
+| EUL     | 2.71828...    |
 
-Typkonstanten enthalten den Datentypnamen als String. Typkonstanten werden immer groß geschrieben.
+Typkonstanten enthalten den Datentypnamen als String. Sie werden immer groß geschrieben.
 
 | Typkonstante | Bedeutung     |
 | :---:        |     :---:     |
 | Null         | "Null"        |
 | Number       | "Number"      |
+| VNumber      | "VNumber"     |
 | Boolean      | "Boolean"     |
 | String       | "String"      |
 | List         | "List"        |
@@ -216,8 +222,11 @@ Typkonstanten enthalten den Datentypnamen als String. Typkonstanten werden immer
 ### Zahlen
 Number-Literals müssen im Code mit einem `$` vorgeschrieben werden. Ansonsten wird die Zahl als Feldname gewertet. Mehr zu den Feldnamen findet sich im Kapitel zu den Variablen. Folgende Ausdrücke resultieren nicht in Zahlen: `40`, `-5.2`. Korrekt müsste es heißen: `$40`, `$-5.2`. Sollte ein fehlerhafter Ausdruck hinter dem `$` erkannt werden, wird dieser Ausdruck als Zahl `0` gewertet. Es ist __ausschließlich__ die Notation in Dezimalzahlen möglich!
 
+### Virtuelle Zahlen
+Eine Besonderheit von Amiant ist der Datentyp `VNumber`, der virtuelle Zahlen definiert. Dieser Datentyp erlaubt eine beliebig hohe Präzision bei den Grundrechenarten zu erreichen. Während der Datentyp `Number` intern auf den Gleitkommadatentypen `float` und `double` basiert, ist dieser von Rundungsfehlern, Ungenauigkeiten bei gewöhnlichen Rechenoperationen (vor allem der Division), und der damit einhergehenden Uneignung für exakte und vergleichbare Rechnungen auf unterschiedlichen Plattformen betroffen. Dieses grundlegende Problem wird durch virtuelle Zahlen überwiegend gelöst. Sie erlauben das Arbeiten mit genauer Präzision, sowie die Handhabung von sehr großen und sehr kleinen exakten Zahlendarstellungen. Die gewonnene Genauigkeit wird allerdings durch eine etwas langsamere Verarbeitung und einen erhöhten Speicherbedarf bezahlt. Für Rechnungen, die keine hohe Genauigkeit bedürfen, wird der Umgang mit dem Datentyp `number` empfohlen.
+
 ### String
-Strings werden im Code mit Anführungszeichen markiert. Zeichenketten müssen also folgendermaßen gekapselt werden: `"Hallo Welt!"`. Zeilenumbrüche innerhalb des Strings werden mit gewertet. Somit sind mehrzeilige Strings problemlos möglich. Wenn das `"`-Symbol Teil des Strings werden soll, muss es escaped werden: `"\""`.
+Strings werden im Code mit Anführungszeichen markiert. Zeichenketten müssen also folgendermaßen gekapselt werden: `"Hallo Welt!"`. Zeilenumbrüche innerhalb des Strings werden __auch__ gewertet. Somit sind mehrzeilige Strings problemlos möglich. Wenn das `"`-Symbol Teil des Strings werden soll, muss es escaped werden: `"\""`.
 Ein einzeiliger String: `"Diese Zeichenkette liegt auf einer Zeile."`
 Ein mehrzeiliger String:
 
@@ -226,7 +235,7 @@ Ein mehrzeiliger String:
   auf
 mehreren Zeilen."
 ```
-Bei den mehrzeiligen Strings werden alle Zeichen zwischen den `"` beachtet! Somit werden die drei Leerzeichen vor `auf` auch gewertet.
+Bei den mehrzeiligen Strings werden alle Zeichen zwischen den `"` beachtet! Somit werden die drei Leerzeichen vor dem Wort `auf` auch gewertet.
 
 ### Liste
 Listen können mit dem `list`-Keyword erzeugt werden: `list $1 $2 $3` ergibt eine Liste, die die Zahlen `1`, `2` und `3` enthält. Listen __dürfen keine__ Listen oder Structs als Inhalt besitzen! Allerdings kann eine Liste Objekte unterschiedlicher Datentypen enthalten, solange sie primitiv sind (eine Liste kann auch Typen mischen). Zugriff auf die in der Liste befindlichen Objekte bekommt man über den `get`-Operator. Der Index einer Liste beginnt bei Null.
@@ -234,7 +243,7 @@ Der Ausdruck `get (list $2 $4 $6 $8) $2` gibt den Wert `6` zurück. Man kann nac
 
 ### Struct
 
-Ein Struct ist eine Art Map, die unter ein Keyword Daten speichert und über das Keyword wieder zurückgeben kann. Structs in Amiant unterscheiden sich deshalb erheblich von denen in C oder C++. In Amiant ist ein Struct schlicht ein Container, und __nicht__ ein Typ, der sich aus seinen Subtypen zusammensetzt. Ein Struct darf auch leer sein! Daten können aus einem Struct nicht entfernt werden, allerdings werden die alten Daten gelöscht, sollten sie unter einem bestehenden Keyword neu abgelegt. Das Keyword darf jeden Wert jeder Primitiven annehmen. So sind `null`, `$4`, `"value1"` allesamt gültige Keywords. In einem Struct wird garantiert, dass unter einem Keyword immer nur einmal Daten liegen. Doppelt besetzte Keywords sind __nicht__ möglich. Ein Struct wird folgend erzeugt und verwendet:
+Ein Struct ist eine Art Map, die unter ein Keyword zugehörige Daten speichert und über eben jenes Keyword wieder zurückgeben kann. Structs in Amiant unterscheiden sich deshalb erheblich von denen in C oder C++. In Amiant ist ein Struct schlicht ein Container, und __nicht__ ein Typ, der sich aus seinen Subtypen zusammensetzt. Ein Struct darf auch leer sein! Daten können aus einem Struct nicht entfernt werden, allerdings werden die alten Daten gelöscht, sollten sie unter einem bestehenden Keyword neu abgelegt werden. Das Keyword darf jeden Wert jeder Primitiven annehmen. So sind `null`, `$4`, `"value1"` allesamt gültige Keywords. In einem Struct wird garantiert, dass unter einem Keyword immer nur einmal Daten liegen. Doppelt besetzte Keywords sind __nicht__ möglich. Ein Struct wird folgend erzeugt und verwendet:
 
 ```
 var data struct; # erzeugt ein leeres Struct und speichert es in die Variable data
@@ -245,28 +254,28 @@ println get data "age_joe"; # gibt die Daten aus dem Struct zurück
 
 ```
 
-Es fällt auf, dass sowohl Listen als auch Structs die gleichen Keywörter `put` und `get` verwenden. Bei Structs erwartet der put-Operator logischerweise ein Argument mehr als bei einer Liste. Diese generischen Accessoren werden in einem späteren Kapitel noch einmal behandelt 
+Es fällt auf, dass sowohl Listen als auch Structs die gleichen Keywörter `put` und `get` verwenden. Bei Structs erwartet der put-Operator logischerweise ein Argument mehr als bei einer Liste. Diese generischen Accessoren werden in einem späteren Kapitel noch einmal behandelt.
 
 ### Generische Accessoren
 
 ### Typumwandlungen
-Bisher können Zahlen in Strings und Strings in Zahlen umgewandelt werden. Um einen Datentyp in eine Zahl umzuwandeln, wird das `number`-Keyword genutzt. Um einen Datentyp in einen String umzuwandeln das Keyword `string`.
+In Amiant können Zahlen in Strings und Strings in Zahlen problemlos umgewandelt werden. Um einen Datentyp in eine Zahl umzuwandeln, wird das `number`-Keyword genutzt. Um einen Datentyp in einen String umzuwandeln das Keyword `string`. Auch VNumbers können auf diese Art und Weise in einen String umgewandelt werden. Der durch `string` erhaltende Dezimaldarstellung der VNumber besitzt dadurch keine exakte Genauigkeit.
 
 ### Variablen und Konstanten
 In jedem Scope kann eine Variable gleichen Namens immer __nur ein Mal__ definiert werden. Die Scopes sind hierarchisch organisiert. Eine Variable wird mit dem Keyword `var` erzeugt:
 ```
-var i $0;
+var i $4;
 ```
 Hierbei wird eine Variable mit dem Namen `i` erzeugt, die den Wert `4` enthält und vom Typ `Number` ist.
 
-Auf Variablen kann mit ihrem Namen zugegriffen werden.
+Auf Variablen kann über den Namen zugegriffen werden.
 ```
 println i; # gibt den Wert von i auf der Konsole aus
 ```
 
 Variablen können mit dem `assign`-Operator überschrieben werden:
 `(assign i $5)` weist der Variable `i` den Wert `5` zu.
-Wenn eine Variable einen Typ während der Initialisierung angenommen hat, so darf man diese Variable __nur mit einem Wert gleichen Typs__ überschreiben. Die einzige Ausnahme ist der Typ Null. Eine Variable, die den Wert `null` besitzt, gilt als _Typuninitialisiert_, und kann mithilfe eines Assigns auf einen festen Typ gebracht werden. Uninitialisierte Variablen können auf zwei Arten erstellt werden:
+Wenn eine Variable einen Typ während der Initialisierung angenommen hat, so darf man diese Variable __nur mit einem Wert gleichen Typs__ überschreiben. Die einzige Ausnahme ist der Typ Null. Eine Variable, die den Wert `null` besitzt, gilt als _Typuninitialisiert_, und kann mithilfe eines Assigns auf einen festen Typ gebracht werden. Uninitialisierte Variablen werden auf zwei Arten erstellt:
 
 ```
 var uninitialized; # Beide Variablen gelten als ..
@@ -275,7 +284,7 @@ var uninitialized2 null; # .. uninitialisiert!
 
 Amiant verwaltet den Speicher und löscht ungenutzte Variablen, sobald keine Referenzen mehr auf sie zeigen. Variablen müssen also __nicht von Hand freigegeben__ werden. Der `delete`-Operator ist dennoch implementiert, um zur Laufzeit einige Optimierungen des Programmierers zuzulassen.
 
-Eine Variable kann im Nachhinein als konstant markiert werden, sodass ein nachträgliches Bearbeiten des Wertes nicht mehr möglich ist:
+Eine Variable kann im Nachhinein als _konstant_ markiert werden, sodass ein nachträgliches Bearbeiten des Wertes nicht mehr möglich ist:
 
 ```
 var x $4; # normale Variable
@@ -285,7 +294,7 @@ constant x; # jetzt kann x nicht mehr bearbeitet werden
 
 ### Funktionen I - Allgemeines
 
-Funktionen können in Amiant mit dem Funktionsoperator (`function`) erzeugt werden. Sie werden dabei in dem aktuellen Scope erstellt, und sind auch nur dort und hierarchisch tiefer aufrufbar. Wenn eine Funktion bereits in dem Scope definiert wurde, kann sie nicht erstellt werden, und es wird ein Fehler geworfen. Beim Funktionsaufruf wird zunächst im aktuellen Scope nach der aufzurufenden Funktion suchen, ehe hieriarchisch nach oben gesucht wird. Funktionen gehören zu den wenigen Konstruktionen in Amiant, __die einen neuen Scope__ im letzten Argument erstellen!
+Funktionen können in Amiant mit dem Funktionsoperator (`function`) erzeugt werden. Sie werden dabei in dem aktuellen Scope erstellt, und sind auch nur dort und hierarchisch tiefer aufrufbar. Wenn eine Funktion bereits in dem Scope definiert wurde, kann sie nicht erstellt werden, und es wird ein Fehler geworfen. Beim Funktionsaufruf wird zunächst im aktuellen Scope nach der aufzurufenden Funktion gesucht, ehe hieriarchisch nach oben gegangen wird. Funktionen gehören zu den wenigen Konstruktionen in Amiant, __die einen neuen Scope__ im letzten Argument erstellen!
 
 Funktionsdefinition:
 ```
@@ -302,33 +311,33 @@ function add {
 
 ~add n:$4 m:$5;
 ```
-Funktionen können mit dem Operator `~` und dem dazugehörigen Namen aufgerufen werden. Der Funktion kann beim Aufruf Argumente übergeben werden. Diese müssen __immer__ mit einem Parameter-Label markiert sein! Die übergebenen Werte werden der Funktion als lokale Variablen während des Aufrufes zur Verfügung gestellt. Die add-Funktion benötigt `n` und `m` im Funktionskörper. Deshalb müssen diese explizit beim Aufruf übergeben werden. __Die Reihenfolge ist dabei beliebig__. Wenn sie nicht übergeben werden, wird die Funktion _trotzdem_ ausgeführt, und an der entsprechenden Stelle wird es zu einem Fehler kommen.
+Funktionen sind mit dem Operator `~` und dem dazugehörigen Namen aufrufbar. Der Funktion können beim Aufruf Argumente übergeben werden. Diese müssen __immer__ mit einem Parameter-Label markiert sein! Die übergebenen Werte werden der Funktion als lokale Variablen während des Aufrufes zur Verfügung gestellt. Die obige add-Funktion benötigt beispielsweise `n` und `m` im Funktionskörper. Deshalb müssen diese explizit beim Aufruf übergeben werden. __Die Reihenfolge ist dabei beliebig__, da die Parameter-Label die Eindeutigkeit der Variablennamen festsetzen. Wenn sie nicht übergeben werden, wird die Funktion _trotzdem_ ausgeführt, und an der entsprechenden Stelle wird es zu einem Fehler kommen.
 
 Mit dem Keyword `return` kann die Funktionsausführung an dieser Stelle beendet werden. Man kann mit oder ohne Wert eine Funktion abbrechen. Eine Funktion, die keinen expliziten Wert zurückgibt, gibt implizit den Wert `null` zurück.
 
-Sollte es innerhalb einer Funktion zu einem Fehler kommt, so wird mit Standardwerten weiter gearbeitet. Die Funktion bricht ihre Ausführung __nicht__ ab.
+Sollte es innerhalb einer Funktion zu einem Fehler kommen, wird mit Standardwerten weiter gearbeitet. Die Funktion bricht ihre Ausführung also __nicht__ ab.
 
 ### Funktionen II - Contacts und Debugging
 
-Da Amiant eine Sprache ist, die LowLevel-Scripting bereit stellt, ist das Thema Sicherheit von großer Bedeutung. Fehler können während der Laufzeit auftauchen, und sie werden intern so gehandhabt, dass ein Absturz der AVM in jedem Falle auszuschließen ist. _Aus diesem Grunde wird ein Fehler nicht zum Abbruch des Programmes führen, sondern zum Weiterarbeiten mit Standardwerten_. In manchen Situationen ist das Arbeiten mit solchen Standardwerten kritisch oder gar gefährlich. Dazu gibt Amiant zwei Möglichkeiten der Überprüfung:
+Da Amiant eine Sprache ist, die LowLevel-Scripting bereitstellt, ist das Thema Sicherheit von großer Bedeutung. Fehler können während der Laufzeit auftauchen, und sie werden intern so gehandhabt, dass ein Absturz der AVM in jedem Falle auszuschließen ist. _Aus diesem Grunde wird ein Fehler nicht zum Abbruch des Programmes führen, sondern zum Weiterarbeiten mit Standardwerten_. In manchen Situationen ist das Arbeiten mit solchen Standardwerten kritisch oder gar gefährlich. Dazu gibt Amiant zwei Möglichkeiten der Überprüfung und Handhabung:
 
 1) Assert:
 
-Das Keyword `assert` prüft, ob ein bestimmter Ausdruck wahr ist. Sollte er wahr sein, läuft das Programm einfach weiter. Sollte der Ausdruck falsch sein, bricht das gesamte Programm an dieser Stelle mit einer Fehlermeldung ab. Ein Assert kann also das Weiterlaufen eines fehlerhaften Programmes verhindern. Dabei wird die gesamte VM (bzw. MetaVM) unterbrochen!
+Das Keyword `assert` prüft, ob ein bestimmter Ausdruck wahr ist. Sollte er wahr sein, läuft das Programm einfach weiter. Sollte der Ausdruck falsch sein, bricht das gesamte Programm an dieser Stelle mit einer Fehlermeldung ab. Ein Assert kann also das Weiterlaufen eines fehlerhaften Programmes verhindern. Dabei wird die gesamte VM (und MetaVM) unterbrochen!
 
 2) Contract:
 
 Ein weiterer Schlüssel in der Sicherheitsarchitektur Amiants ist das Nutzen von Contracts. Contracts verweisen auf eine Eigenschaft von Funktionen innerhalb der AVM: eine Funktion kann frei sein, oder unter "Vertrag" stehen. Eine freie Funktion ist eine gewöhnliche Funktion, die bei Aufruf ihren Code ausführt. Sollte es innerhalb der Funktion zu Fehlern kommen, so wird die Funktion mit Standardwerten weiterarbeiten, ganz gleich was das Ergebnis davon ist. Sollte eine Funktion jedoch unter Vertrag stehen, ist sie verpflichtet, für die Richtigkeit der in ihr generierten Daten die Verantwortung zu übernehmen. Sollten die Daten allesamt korrekt sein, so wird diese Funktion schlicht ihren Code ausführen. Sollten die Daten inkorrekt sein, so liegt eine "Vertragsverletzung" in Bezug zur AVM vor, sodass die AVM diese Funktion dann __sperrt__. Die Funktion bricht an dem Keyword sofort ab, und kann danach __während der aktuellen Laufzeit des Programmes nicht mehr aufgerufen werden__. Sollte sie dennoch irgendwo aufgerufen werden, so wird mit null an dieser Stelle abgebrochen, und ein Fehler geworfen. Ein Ausführen der Funktion ist somit _unmöglich_. Diese Architektur erlaubt es, fehlerhafte Codeabschnitte zur Laufzeit zu entfernen, sodass zu jedem Zeitpunkt ein fehlerfreies Programm garantiert werden kann. Voraussetzung dafür ist das konsequente Nutzen von Contracts.
 
 ```
-contract > i $0; # garantiert der AVM, dass der Wert der Variablen immer größer Null ist
+contract > i $0; # garantiert der AVM, dass der Wert der Variablen i ab diesem Zeitpunkt immer größer 0 ist
 ```
 
 Die Sicherheit des Codes kann damit zur Laufzeit erhöht werden, in dem fehlerbehaftete Äste innerhalb des Programms nach und nach deaktiviert werden. Eine gesperrte Funktion kann durch einen mount über den gleichen Namen jedoch wieder nutzbar gemacht werden (siehe Reflection). Eine Verletzung des Contracts in der _globalen Funktion_ (globaler Scope) führt allerdings _nicht_ zu einer Sperrung. Die obersten Funktionen (async-Blöcke, MetaVM globaler Scope) sind somit immun gegen Contracts.
 
 ### Funktionen III - Funktionale Programmierung
 
-In Amiant sind Funktionen first-class-objects. Funktionen können selbst als Wert übergeben werden, sodass man sie durch das Programm bewegen kann. Um eine Variable zu erstellen, die einen Pointer auf eine Funktion enthält, muss man den Function-Pointer-Operator `\` nutzen. Dieser sucht im aktuellen Scope nach der Funktion, und gibt einen Zeiger darauf zurück. Sollte die Funktion nicht gefunden werden, wird `null` zurückgegeben. Der `~` Operator erwartet ein Fieldname und keine Expression, sodass man die Funktion, die man als Pointer besitzt, nur dann ausführen kann, wenn man den Pointer vorher in eine Variable legt, und diese dann hinter dem `~` Operator schreibt:
+In Amiant sind Funktionen first-class-objects. Funktionen können selbst als Wert übergeben werden, sodass man sie durch das Programm bewegen kann. Um eine Variable zu erstellen, die einen Pointer auf eine Funktion enthält, muss man den Function-Pointer-Operator `\` nutzen. Dieser sucht im aktuellen Scope nach der Funktion, und gibt einen Zeiger darauf zurück. Sollte die Funktion nicht gefunden werden, wird `null` zurückgegeben. Der `~` Operator erwartet ein Fieldname und keine Expression, sodass man die Funktion, die man als Pointer besitzt, nur dann ausführen kann, wenn man den Pointer vorher in eine Variable legt, und diese dann hinter dem `~` Operator schreibt. Wichtig ist die Reihenfolge der Definition! Der `~` Operator sucht erst nach einer Funktion im Scope und hierarchisch darüber, ehe nach Variablen mit gleichem Namen vom Typ eines Funktionspointers gesucht wird! Deshalb sollte die Variable nicht den gleichen Namen besitzen, wie die Funktion - sollte sie im aktuellen Scope überhaupt erreichbar sein.
 
 ```
 function add {
@@ -342,18 +351,18 @@ println ~addFunc n:$4; # gibt 8 auf der Konsole aus
 
 ### Amiant-MetaVM
 
-Die AVM ist in der Lage, dynamisch neuen Code auszuführen. Dieser Code läuft dann in einem gesonderten Bereich, sodass Zugriffe in andere Bereiche nicht möglich sind. Um innerhalb eines laufenden Programms weiteren Amiant-Code auszuführen, muss dieser Code lediglich als String vorliegen, und mithilfe des Keywords `amiant` ausgeführt werden.
+Die AVM ist in der Lage, dynamisch neuen Code auszuführen. Dieser Code läuft dann in einem gesonderten Bereich, sodass Zugriffe in andere Bereiche nicht möglich sind (Sandboxing). Um innerhalb eines laufenden Programms weiteren Amiant-Code auszuführen, muss dieser Code lediglich als String vorliegen, und mithilfe des Keywords `amiant` ausgeführt werden.
 
 ```
 amiant "println $4"; # startet ein weiteres Programm, das die Zahl 4 auf der Konsole ausgibt
 ```
 
-Es ist wichtig zu beachten, dass es sich hierbei nicht um eine Multithreading-Lösung handelt! Der Programmfluss stoppt an dieser Stelle, bis das Unterprogramm seine Ausführung beendet hat. Aber mit einer geeigneten Implementierung einer Threading-Bibliothek über die Native-Schnittstelle ist die Auslagerung in einen separaten Thread ohne Probleme möglich. Da das innere Programm keinen Zugriff auf das äußere hat, kann es dort nicht zu problematischen Interaktionen kommen. Umgekehrt besteht zwar kein direkter Zugriff, wohl aber ein indirekter: Daten können in das Programm gebracht werden, in dem sie in den String des Programmcodes beispielsweise als Variablen geschrieben werden. Da das äußere Programm den Programmcode des inneren Programmes besitzt, kann der eben so angepasst werden, dass bestimmte Informationen vor dem Start des inneren Programms eben direkt einprogrammiert werden.
+Es ist wichtig zu beachten, dass es sich hierbei nicht um eine Multithreading-Lösung handelt! Der Programmfluss __stoppt__ an dieser Stelle, bis das Unterprogramm seine Ausführung beendet hat. Aber mit einer geeigneten Implementierung einer Threading-Bibliothek über die Native-Schnittstelle ist die Auslagerung in einen separaten Thread ohne Probleme möglich. Da das innere Programm keinen Zugriff auf das äußere hat, kann es dort nicht zu problematischen Interaktionen kommen. Umgekehrt besteht zwar kein direkter Zugriff, wohl aber ein indirekter: Daten können in das Programm gebracht werden, in dem sie in den String des Programmcodes beispielsweise als Variablen geschrieben werden. Da das äußere Programm den Programmcode des inneren Programmes besitzt, können bestimmte Informationen vor dem Start des inneren Programms direkt einprogrammiert werden.
 Es ist darauf hinzuweisen, dass trotz dieser Abkapselung es _nicht_ zu einem Starten einer neuen und eigenständigen AVM kommt! Intern läuft weiterhin nur eine einzige AVM, die sich jedoch rekursiv verwenden kann. Das schlägt sich beispielsweise in den internen Speicherstatistiken wieder. Ein äußeres und ein inneres Programm tragen gleichermaßen zu den selben Statistiken bei. Auch das Akquirieren neuen Speichers erfolgt über die exakt gleichen Funktionen. Diese Fähigkeit von Amiant erleichtert es, eine AVM in einem Kernel (oder als Proto-Kernel) laufen zu lassen, die dann wiederum Unterprogramme starten kann - jedoch nur eine Stelle besitzt, an der der gesamte Speicher verwaltet werden muss.
 
-Jedes Amiant-Programm kann sofort beendet werden, in dem das `exit`-Keyword genutzt wird. Dabei wird nur das lokale Amiant-Programm beendet. Wenn ein Unterprogramm `exit` aufruft, so wird nur das Unterprogramm beendet, und das Oberprogramm setzt die Ausführung fort. Sollte das oberste Programm ein `exit` ausführen, so beendet sich die komplette AVM.
+Jedes Amiant-Programm kann sofort beendet werden, in dem das `exit`-Keyword genutzt wird. Dabei wird nur das _lokale Amiant-Programm_ beendet. Wenn ein Unterprogramm `exit` aufruft, so wird nur das Unterprogramm beendet, und das Oberprogramm setzt die Ausführung fort. Sollte das oberste Programm ein `exit` ausführen, so beendet sich die komplette AVM mit allen Unterprogrammen.
 
-Es ist möglich, zur Laufzeit herauszufinden, in welchem Level der aktuelle Code ausgeführt wird. Als _Level_ wird die Stufe in der Hierarchie der Programme und Unterprogramme bezeichnet. Das oberste Programm läuft auf Level 0. Wenn dieses Programm mithilfe des `amiant`-Keywords ein Unterprogramm startet, so liefe dieses Unterprogramm auf Level 1, usw. Den numerischen Wert des aktuellen Programmausführungslevels kann mit `level` zurückgegeben werden.
+Es ist möglich zur Laufzeit herauszufinden, in welchem Level der aktuelle Code ausgeführt wird. Als _Level_ wird die Stufe in der Hierarchie der Programme und Unterprogramme bezeichnet. Das oberste Programm läuft auf Level 0. Wenn dieses Programm mithilfe des `amiant`-Keywords ein Unterprogramm startet, so liefe dieses Unterprogramm auf Level 1, usw. Den numerischen Wert des aktuellen Programmausführungslevels kann mit `level` zurückgegeben werden.
 
 Hinweis: während es mehrere Programme auf Level 1, 2, ... geben kann, gibt es immer nur ein einziges Programm auf Level 0!
 
@@ -426,8 +435,9 @@ Die AVM stellt Grundrechenarten zur Verfügung, die intern und nicht in der Spra
 |factorial | Fakultät       |
 |   exp    | E hoch         |
 |   ipow   | n hoch integer |
+|   round  | rundet (Präz.) |
 
-Amiant stellt eigene Implementierungen der mathematischen Operationen bereit (außer für +,-,*,/,modulo). Diese funktionieren teilweise gut, allerdings können die Berechnungen - gerade bei Logarithmen - mit großen Zahlen langsam und sehr ungenau werden. Alternativ kann über die Native Bridge eine systemeigene Implementierung diese mathematischen Operationen bereitgestellt werden.
+Amiant stellt eigene Implementierungen der mathematischen Operationen bereit (außer für +,-,*,/,modulo), die teilweise gut funktionieren, allerdings können die Berechnungen - gerade bei Logarithmen - mit großen Zahlen langsam und sehr ungenau werden. Alternativ kann über die Native Bridge eine systemeigene Implementierung dieser mathematischen Operationen bereitgestellt werden.
 
 ### Error Handling und Fehlercodes
 
@@ -461,7 +471,7 @@ Es gibt folgende Fehlertypen:
 |    14      | Es wurde versucht, eine durch contract gesperrte Funktion aufzurufen            |
 |    15      | Interner schwerwiegender Fehler                                                 |
 
-In Amiant ist es möglich, eigene Fehlercodes zu setzen. Das geschieht mit dem `throw`-Keyword, das schlicht einen Ausdruck erwartet, der eine Zahl enthält - eben den Fehlercode. Throw unterbricht allerdings nicht den Codeflow! Die Ausführung wird fortgesetzt. Dennoch kann man damit eigene Fehlerroutinen implementieren, und auf Fehler reagieren. Fehlercodes sind ganze Zahlen - sie können auch negativ sein, und auch die obigen Fehlercodezahlen mitnutzen. Davon wird der Übersichtlichkeit wegen und wegen der großen Zahl an freien Fehlercodes abgeraten.
+In Amiant ist es möglich, eigene Fehlercodes zu setzen. Das geschieht mit dem `throw`-Keyword, das schlicht einen Ausdruck erwartet, der eine Zahl enthält - eben den Fehlercode. Throw unterbricht allerdings nicht den Codeflow! Die Ausführung wird fortgesetzt. Dennoch kann man damit eigene Fehlerroutinen implementieren, und auf eventuelle Fehler reagieren. Fehlercodes sind ganze Zahlen - sie können auch negativ sein, und auch die obigen Fehlercodezahlen mitnutzen. Davon wird der Übersichtlichkeit wegen und wegen der großen Zahl an freien Fehlercodes abgeraten.
 
 ```
 
@@ -485,7 +495,7 @@ catch $404 {
 
 ### Reflection
 
-Amiant erhält während der Ausführung die vollständige Programmstruktur. Somit ist es möglich, Informationen dieser Struktur zur Laufzeit zu bekommen, aber auch dynamische Zugriffe in ihr zu erlauben, sie zu verändern.
+Amiant erhält während der Ausführung die vollständige Programmstruktur aufrecht. Somit ist es möglich, Informationen dieser Struktur zur Laufzeit zu bekommen, aber auch dynamische Zugriffe in ihr zu erlauben, und sie zu verändern.
 
 `this` gibt den Namen der Funktion als String zurück, in der dieses Keyword steht.
 `call <str>` ruft eine Funktion in diesem Scope über den Namen auf, und gibt das Ergebnis der Funktion zurück. Wichtig: Dieses Keyword kann keine Argumente an die Funktion übergeben!
@@ -493,6 +503,7 @@ Amiant erhält während der Ausführung die vollständige Programmstruktur. Somi
 `mount <str> <str>` hängt eine neue Funktion unter dem Namen und unter dem übergebenen Code in die AVM an dieser Stelle im Scope ein. Somit können partielle Codeerweiterungen problemlos erfolgen, ohne direkt eine Meta-VM starten zu müssen.
 `unmount <str>` löscht eine Funktion aus dem aktuellen Scope. Ihr Aufruf ist danach nicht mehr möglich.
 `defined <fieldName>` prüft, ob eine Variable in diesem Scope definiert wurde (gibt einen Boolean zurück)
+`refs <expr>` gibt die Anzahl an Referenzen auf ein Objekt zurück (die aktuelle Referenz für diesen Befehl ist da mit dabei!)
 
 Folgendes Beispielprogramm erzeugt eine Funktion und tauscht sie während der Laufzeit wieder aus:
 
@@ -515,20 +526,20 @@ mount "reflectionTest" "print $5"; # hängt eine neue Funktion unter dem gleiche
 
 Hinweise:
 
-1) Reflection ist ein mächtiges Werkzeug. Es werden generell __keine Überprüfungen__ im Bezug auf doppelte oder falsche Benennungen durchgeführt! Das resultiert jedoch in keine Speicherprobleme innerhalb der AVM. Allerdings ist dann nicht eindeutig definiert, welche Funktion aufgerufen wird, wenn es Mehrfachbenennungen durch Reflection gibt! Die Überprüfung der Namensdopplung gibt es nur in der normalen Funktionsdefinition über das `function`-Keyword, aber nicht bei Refelction.
+1) Reflection ist ein mächtiges Werkzeug. Es werden generell __keine Überprüfungen__ im Bezug auf doppelte oder falsche Benennungen durchgeführt! Das resultiert jedoch in keinerlei Speicherprobleme innerhalb der AVM. Allerdings ist dann nicht eindeutig definiert, welche Funktion aufgerufen wird, wenn es Mehrfachbenennungen durch Reflection gibt! Die Überprüfung der Namensdopplung gibt es nur in der normalen Funktionsdefinition über das `function`-Keyword, aber nicht bei Refelction.
 
-2) Das Hinzufügen von Funktionen ist eine große Operation, da der übergebene String völlig neu geparst und verarbeitet werden muss. Es wird also von einem übermäßigen Gebrauch abgeraten.
+2) Das Hinzufügen von Funktionen ist eine ressourcenintensive Operation, da der übergebene String völlig neu geparst und verarbeitet werden muss. Es wird also von einem übermäßigen Gebrauch abgeraten.
 
 
 ### Async Await I - Konzept und Nutzung
 
-Die AVM unterstützt paralleles Ausführen von Code mithilfe von Async-Await.
+Die AVM unterstützt übersichtliches paralleles Ausführen von Code mithilfe einer Async-Await-Syntax.
 
-`async asyncVarName arg1:capture1 arg2:capture2 ... argn:capturen asyncExpression;`
+`async asyncVarName arg1:capture1 arg2:capture2 ... argN:captureN asyncExpression;`
 
-Die Variable, auf die mit asyncVarName verwiesen wird, muss vom Typ Null sein (also uninitialisiert), damit der async-Block in der Lage ist, ihren Wert mit beliebigen Typen zu überschreiben!
+Die Variable, auf die mit asyncVarName verwiesen wird, __muss vom Typ Null__ sein (also uninitialisiert), damit der async-Block in der Lage ist, ihren Wert mit beliebigen Typen zu überschreiben!
 
-Hier ist ein kleines Beispiel, wie man Async Await in Amiant nutzen könnte:
+Hier ist ein kleines Beispiel, wie man Async-Await in Amiant nutzen könnte:
 
 ```
 var loginToken "12345";
@@ -549,10 +560,10 @@ println string "Vorname: " (await firstName) " Nachname: " await lastName; # hie
 
 ```
 
-Async erwartet als erstes Argument ein fieldName zu einer Variable, die am Ende der Ausführung des Async-Codes das Ergebnis eben dieses Codes enthalten soll. Die Variable wird als async markiert, und kann dann __nicht zeitgleich von einem anderen async-Keywort genutzt werden__. Das geht nur wieder, sobald der async-Block fertig ist, und die Variable wieder freigibt. Auf eine asynchrone Variable kann immer zugegriffen werden. Greift man ohne `await` auf eine asynchrone Variable zu, so wird ihr _aktueller_ Wert zurückgegeben, der nicht unbedingt der Rückgabewert des asynchronen Codes sein muss (dieser kann schließlich noch arbeiten). Um nun den Rückgabewert des asynchronen Blocks zu bekommen, muss man bei der Verwendung der Variable schlicht das Keyword `await` davor setzen. Der Codefluss __wartet__ an der Stelle, bis die Variable vom async-Code freigegeben wurde. Danach wird ihr Wert erst aufgelöst.
+Async erwartet als erstes Argument ein fieldName zu einer Variable, die am Ende der Ausführung des Async-Codes das Ergebnis eben dieses Codes enthalten soll. Die Variable wird als async markiert, und kann dann __nicht zeitgleich von einem anderen async-Keywort genutzt werden__. Das geht nur wieder, sobald der async-Block fertig ist, und die Variable wieder freigibt. Auf eine asynchrone Variable kann immer zugegriffen werden. Greift man ohne `await` auf eine asynchrone Variable zu, so wird ihr _aktueller_ Wert zurückgegeben, der nicht unbedingt der Rückgabewert des asynchronen Codes sein muss (dieser kann schließlich noch arbeiten). Um nun den echten Rückgabewert des asynchronen Blocks zu bekommen, muss man bei der Verwendung der Variable schlicht das Keyword `await` davor setzen. Der Codefluss __wartet__ an der Stelle, bis die Variable vom async-Code freigegeben wurde. Danach wird ihr Wert erst aufgelöst.
 
 Innerhalb der Async-Blöcke hat man keinen Zugriff auf außenstehende Funktionen oder Variablen! Allerdings bleibt der Zugriff auf alle Funktionen, die mit der Native-Bridge eingebunden sind, bestehen! Um dennoch Funktionen von außerhalb zu nutzen, kann man diese via Funktionspointer in die Captureliste vom async-Block setzen.
-Jeder aynchrone Codeblock läuft auf dem AVM-Level 2, sodass Zugriffe auf _restart_ von dort aus __nicht__ möglich sind. Sie sind untergeordnet zum Hauptprogramm auf Level 1!
+Jeder asynchrone Codeblock läuft auf dem AVM-Level 2, sodass Zugriffe auf _restart_ von dort aus __nicht__ möglich sind. Sie sind untergeordnet zum Hauptprogramm auf Level 1!
 
 Die asyncVar enthält dann das Ergebnis des asynchronen Abarbeitens. Der Wert der Variable wird vom async-Block verändert. Wichtig: __auch Konstanten können als async-Variable verwendet werden!__ Wenn man auf eine async-Var zugreift, während sie vom async verwendet wird, wird sie immer `null` zurückgeben! Nur das await-Keyword kann auf den richtigen und fertigen Wert warten. Sobald die Variable wieder freigegeben ist, kann man sie wieder normal nutzen.
 
@@ -568,7 +579,7 @@ Wenn keine pthread.h zur Verfügung steht (beispielsweise unter Windows) muss in
 ### Kompilierung der AVM
 
 Der gesamte C-Code soll in einer einzigen Compilation-Unit verarbeitet werden, weshalb sämtliche Funktionalitäten in Header-Dateien abgelegt sind. Dies ist unüblich, gibt allerdings den Vorteil einer einfacheren Kompilierung. Die `amiant.h` enthält alle Includes in der richtigen Reihenfolge. Es ist also nur notwendig, die `amiant.h` erfolgreich einzubinden.
-Es wird empfohlen, die AVM unter C11 oder höher zu kompilieren. In Versionen niedriger als C11 funktioniert die gesamte AVM wie gehabt, nur das Statistik-Modul (das außschließlich zu Debugzwecken verwendet werden sollte), kann dort aufgrund fehlender Atomics unter Race-Conditions leiden. Das hat allerdings __keinen__ Einfluss auf die Speichersicherheit der AVM! Diese bleibt unverändert funktionstüchtig!
+Es wird empfohlen, die AVM unter C11 oder höher zu kompilieren. In Versionen niedriger als C11 funktioniert die gesamte AVM wie gehabt, nur das Statistik-Modul (das außschließlich zu Debugzwecken verwendet werden sollte), kann dort aufgrund fehlender Atomics unter Race-Conditions leiden. Das hat allerdings __keinen__ Einfluss auf die Speichersicherheit der AVM! Diese bleibt unverändert funktionstüchtig.
 
 Folgender Befehl unter gcc sollte verwendet werden, um keine Warnungen zu erhalten:
 
@@ -587,23 +598,23 @@ gcc main.c -o avm
 Amiant unterstützt das Aufrufen von C-Funktionen. Diese Funktionen müssen mit in die AVM kompiliert werden. Dabei geht man folgendermaßen vor:
 
 1. Die Funktion, die von Amiant aufgerufen werden soll, muss folgende Signatur besitzen: `void LIST* functionName(struct LIST* data)`.
-2. Die Funktion muss in einer .h definiert sein
+2. Die Funktion muss in einer .h definiert sein.
 3. Diese Header-Datei wird in der native_bridge.h von Amiant in der "INCLUDE-SEKTION FÜR DIE STANDARDBIBLIOTHEK HEADER FILES" includiert.
-4. In der darunter liegenden Funktion `standardLibraryGetFunctions()` müssen die C-Funktionen für Amiant registriert werden. Das geschieht mithilfe folgender Zeile code: `standardLibraryAddStandardFunction(libraryFunctionsList, "funcName", 8, false, &functionName);` Dabei gibt es folgendes zu beachten: Der String "functionName" gibt an, unter welchem Namen die C-Funktion innerhalb von Amiant aus aufrufbar ist. Dieser Name muss nicht deckungsgleich mit dem Namen der C-Funktion sein. Die Zahl hinter dem String (in diesem Fall die 8) gibt an, wie viele Zeichen der Name lang ist. "funcName" besitzt 8 Buchstaben, also 8 Zeichen. Der Funktionsname für Amiant darf nur Zahlen und Buchstaben enthalten, ansonsten ist die Funktion nicht aufrufbar! Als letztes Argument muss der Funktionspointer zu der C-Funktion übergeben werden.
+4. In der darunter liegenden Funktion `standardLibraryGetFunctions()` müssen die C-Funktionen für Amiant registriert werden. Das geschieht mithilfe folgender Zeile Code: `standardLibraryAddStandardFunction(libraryFunctionsList, "funcName", 8, false, &functionName);` Dabei gibt es folgendes zu beachten: Der String "functionName" gibt an, unter welchem Namen die C-Funktion _innerhalb von Amiant_ aus aufrufbar ist. Dieser Name muss nicht deckungsgleich mit dem Namen der C-Funktion sein. Die Zahl hinter dem String (in diesem Fall die 8) gibt an, wie viele Zeichen der Name lang ist. "funcName" besitzt 8 Buchstaben, also 8 Zeichen. Der Funktionsname für Amiant darf nur Zahlen und Buchstaben enthalten, ansonsten ist die Funktion nicht aufrufbar! Als letztes Argument muss der Funktionspointer zu der zugehörigen C-Funktion übergeben werden.
 
 Es ist auch möglich C-Funktionen aufzurufen, die nicht mit in die AVM kompiliert wurden. Diese Funktionen müssen dann anderweitig in den Speicher geladen werden, und können dann mit `native fieldName functionPointerExpr` eingehangen werden. Dabei muss der fieldName der Name der Funktion sein, wie sie in Amiant benutzt werden kann, und die functionPointerExpr muss ein Ausdruck sein, der eine Zahl zurück gibt: die Adresse der C-Funktion. Die C-Funktion muss dabei wieder die obige Signatur `void LIST* functionName(struct LIST* data)` besitzen!
 
-Beim Aufrufen von nativen C-Funktionen kann Amiant dieser Argumente übergeben. Diese Argumente verlieren bei der Übertragung allerdings ihren Namen, sodass nur noch die Daten an sich und ihre Reihenfolge garantiert werden kann. Die Datenliste data besitzt alle Amiant Pointer zu den übergebenen Daten. Weder die Liste noch die Pointer dürfen von der C-Funktion gelöscht oder Verändert werden! Die Datenhoheit besitzt weiterhin die AVM. Als Rückgabewert kann NULL zurückgegeben werden, oder allerdings eine eigene Datenliste. Es ist darauf zu achten, dass Pointer, die man in diese Rückgabeliste legt, nach dem Hinzufügen auch wieder freigibt, damit die Liste die einzige Datenhoheit über die Rückgabedaten besitzt. Es sollte darauf verzichtet werden, Pointer der data-Liste in die return Liste zu legen.
+Beim Aufrufen von nativen C-Funktionen kann Amiant dieser auch Argumente übergeben. Solche Argumente verlieren bei der Übertragung allerdings ihren Namen, sodass nur noch die Daten an sich und ihre Reihenfolge garantiert werden kann, da in C die Funktionsvariablen eine feste Reihenfolge benötigen. Die Datenliste `data` besitzt alle Amiant-Pointer zu den übergebenen Daten. __Weder die Liste noch die Pointer dürfen von der C-Funktion gelöscht oder Verändert werden!__ Die Datenhoheit besitzt weiterhin die AVM. Als Rückgabewert kann NULL zurückgegeben werden, oder allerdings eine eigene Datenliste. Es ist darauf zu achten, dass Pointer, die man in diese Rückgabeliste legt nach dem Hinzufügen auch wieder freigibt, damit die Liste die einzige Datenhoheit über die Rückgabedaten besitzt. Es sollte darauf verzichtet werden, Pointer der data-Liste in die return-Liste zu legen, da es sonst zu zyklischen Referenzen kommt, und Amiant die Listen nicht mehr freigeben kann.
 
 ### Einstellungen und Informationen der AVM
 
-Das Keyword `avm` gibt einen internen Zugriff auf die Amiant Virtual Machine (AVM). Hierbei kann auf die verwendete Version zugegriffen werden
+Das Keyword `avm` gibt einen internen Zugriff auf die Amiant Virtual Machine (AVM).
 
 `avm version` gibt die aktuelle Version der AVM als Zahl zurück.
-`avm restart` beendet alle Meta-AVMs und startet das gesamte Programm neu. Dabei wird allerdings kein neuer Code eingelesen, sondern der vorhandene schlicht neu gestartet! Alle mit Reflections vorgenommene Änderungen am Code bleiben dabei erhalten! Diese Funktion steht nur der obersten AVM zur Verfügung (level 1), und kann von Meta-AVMs nicht genutzt werden.
+`avm restart` beendet alle Meta-AVMs und startet das gesamte Programm neu. Dabei wird allerdings kein neuer Code eingelesen, sondern der vorhandene schlicht neu gestartet! Alle mit Reflections vorgenommene Änderungen am Code bleiben dabei erhalten! Diese Funktion steht nur der obersten AVM zur Verfügung (Level 0), und kann von Meta-AVMs nicht genutzt werden.
 `avm compver` gibt die Version des verwendeten C-Standards bei der Kompilierung zurück. Hierbei werden die offiziellen Versionsnamen verwendet. Bei C89/90 und tiefer wird standardmäßig `198901L` zurückgegeben, auch wenn es diese Versionsnummer offiziell nie gegeben hat.
 `memory` gibt den gesamten aktuell genutzten Arbeitsspeicher aller (Unter-)AVMs zurück. Wichtig: __bei C99 und tiefer kann es durch die Verwendung von async-await zu falschen Werten kommen.__ Das Statistikmodul benötigt Atomics, die bei C99 und tiefer allerdings nicht vorhanden waren. 
 
 ### Hinweise an LISP-Nutzer
 
-Amiant ist kein LISP, sondern nutzt nur die Idee der Klammerung, erweitert sie, und fügt modernere Keywords ein. Zudem ist es nicht möglich, neue Sprachkonstruktionen in Amiant einzuführen, wie es bei LISP der übliche Fall ist.
+Amiant ist kein LISP, sondern nutzt nur die Idee der Klammerung, erweitert sie, und fügt modernere Keywords ein. Zudem ist es nicht möglich, neue Sprachkonstruktionen in Amiant mithilfe von Makro-Strukturen einzuführen, wie es bei LISP der übliche Fall ist.
