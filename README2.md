@@ -323,7 +323,7 @@ function printMessageFrom expect sender message {
 };
 ```
 
-Im Beispiel ist zu sehen, wie eine Fehlerquelle vorzubeugen ist. Der entsprechende Code wird nur dann aufgerufen, wenn die Variablen auch existieren. Und das kann lokal passieren (der Funktion werden die Variablen beim Aufruf übergeben), oder global bereits verfügbar. Genaueres zu den Funktionen findet sich im entsprechenden Kapitel.
+Im Beispiel ist zu sehen, wie eine Fehlerquelle vorzubeugen ist. Der entsprechende Code wird nur dann aufgerufen, wenn die Variablen (in diesem Falle *sender* und *message* auch beide existieren. Und das kann lokal sein (der Funktion werden die Variablen beim Aufruf übergeben), oder global bereits verfügbar. Genaueres zu den Funktionen findet sich im entsprechenden Kapitel.
 Expect kann aber auch in jedem anderen Kontext verwendet werden, da es sich um ein eigenständiges Keyword handelt, das an keine Codestruktur gebunden ist (anders als das else-Keyword, das fest an if-Verzweigungen geknüpft ist). So lässt es sich mit Verzweigungen und Loops kombinieren. Aber auch im regulären Codefluss, zu Modulbeginn, oder anderen entscheidenen Punkten im Programm kann so eine Abfrage wichtig sein.
 
 ## Funktionen
