@@ -237,13 +237,15 @@ mehreren Zeilen."
 ```
 Bei den mehrzeiligen Strings werden alle Zeichen zwischen den `"` beachtet! Somit werden die drei Leerzeichen vor dem Wort `auf` auch gewertet.
 
+## Komplexe Datentypen
+
 ### Liste
-Listen können mit dem `list`-Keyword erzeugt werden: `list $1 $2 $3` ergibt eine Liste, die die Zahlen `1`, `2` und `3` enthält. Listen __dürfen keine__ Listen oder Structs als Inhalt besitzen! Allerdings kann eine Liste Objekte unterschiedlicher Datentypen enthalten, solange sie primitiv sind (eine Liste kann auch Typen mischen). Zugriff auf die in der Liste befindlichen Objekte bekommt man über den `get`-Operator. Der Index einer Liste beginnt bei Null.
+Listen können mit dem `list`-Keyword erzeugt werden: `list $1 $2 $3` ergibt eine Liste, die die Zahlen `1`, `2` und `3` enthält. Eine Liste kann Objekte __unterschiedlicher__ Datentypen enthalten (eine Liste kann auch Typen mischen). Zugriff auf die in der Liste befindlichen Objekte bekommt man über den `get`-Operator. Der Index einer Liste beginnt bei Null.
 Der Ausdruck `get (list $2 $4 $6 $8) $2` gibt den Wert `6` zurück. Man kann nach der Erzeugung Daten an eine bestehende Liste anhängen, indem man das `put`-Keyword verwendet: `put (list $4 $5 $6) $7`
 
 ### Struct
 
-Ein Struct ist eine Art Map, die unter ein Keyword zugehörige Daten speichert und über eben jenes Keyword wieder zurückgeben kann. Structs in Amiant unterscheiden sich deshalb erheblich von denen in C oder C++. In Amiant ist ein Struct schlicht ein Container, und __nicht__ ein Typ, der sich aus seinen Subtypen zusammensetzt. Ein Struct darf auch leer sein! Daten können aus einem Struct nicht entfernt werden, allerdings werden die alten Daten gelöscht, sollten sie unter einem bestehenden Keyword neu abgelegt werden. Das Keyword darf jeden Wert jeder Primitiven annehmen. So sind `null`, `$4`, `"value1"` allesamt gültige Keywords. In einem Struct wird garantiert, dass unter einem Keyword immer nur einmal Daten liegen. Doppelt besetzte Keywords sind __nicht__ möglich. Ein Struct wird folgend erzeugt und verwendet:
+Ein Struct ist eine Art Map, die unter ein Keyword zugehörige Daten speichert und über eben jenes Keyword wieder zurückgeben kann. Structs in Amiant unterscheiden sich deshalb erheblich von denen in C oder C++. In Amiant ist ein Struct schlicht ein Container, und __nicht__ ein Typ, der sich aus seinen Subtypen zusammensetzt. Ein Struct darf auch leer sein! Daten können aus einem Struct nicht entfernt werden, allerdings werden die alten Daten gelöscht, sollten sie unter einem bestehenden Keyword neu abgelegt werden. Das Keyword darf jeden Wert jeder __Primitiven__ annehmen. So sind `null`, `$4`, `"value1"` allesamt gültige Keywords. In einem Struct wird garantiert, dass unter einem Keyword immer nur einmal Daten liegen. Doppelt besetzte Keywords sind __nicht__ möglich. Ein Struct wird folgend erzeugt und verwendet:
 
 ```
 var data struct; # erzeugt ein leeres Struct und speichert es in die Variable data
