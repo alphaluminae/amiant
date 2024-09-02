@@ -387,7 +387,7 @@ println ~addFunc n:$4; # gibt 8 auf der Konsole aus
 
 ## Operatoren
 
-Amiant besitzt eine Vielzahl von Operatoren, die unterschiedliche Aufgaben erfüllen, und verschiedenste Voraussetzungen haben. Ein Operator unterscheidet sich von anderen Fieldnames nur durch das Aussehen - es gibt also auch ausschließlich Präfixoperatoren!
+Amiant besitzt eine Vielzahl von Operatoren, die unterschiedliche Aufgaben erfüllen, und verschiedenste Voraussetzungen haben. Ein Operator unterscheidet sich von anderen Fieldnames nur durch das Aussehen - es gibt also auch ausschließlich Präfixoperatoren! Einige Operatoren wurden bereits vorgestellt - hier sei dennoch eine vollständige Auflistung:
 
 | Operator | Bedeutung                                 |
 | :---:    |     :---:                                 |
@@ -540,7 +540,7 @@ if (= (~fetchData) "404") {
 ...
 
 if(= (error) $404) {
-    # Fehlerbehandlung
+    # Fehlerbehandlung (im neuen Scope der Verzweigung)
 };
 
 # oder eleganter
