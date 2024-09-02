@@ -279,7 +279,7 @@ In Amiant können Zahlen in Strings und Strings in Zahlen problemlos umgewandelt
 ## Variablen und Konstanten
 
 ### Deklaration und Scope
-In jedem Scope kann eine Variable gleichen Namens immer __nur ein Mal__ definiert werden. Die Scopes sind hierarchisch organisiert. Eine Variable wird mit dem Keyword `var` erzeugt:
+Die Benennung von Variablen ist beliebig, solange sie nicht mit belegten Keywords übereinstimmt. Der Name darf - anders als in vielen anderen C-ähnlichen Sprachen - auch mit einer Ziffer beginnen, und auch nur aus solchen bestehen. In jedem Scope kann eine Variable gleichen Namens immer __nur ein Mal__ definiert werden. Die Scopes sind hierarchisch organisiert. Eine Variable wird mit dem Keyword `var` erzeugt:
 ```
 var i $4;
 ```
