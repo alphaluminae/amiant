@@ -282,6 +282,7 @@ var uninitialized; # Beide Variablen gelten als ..
 var uninitialized2 null; # .. uninitialisiert!
 ```
 
+Sobald eine Variable mit einem Typ initialisiert ist, kann man sie nicht mehr auf null setzen.
 Amiant verwaltet den Speicher und löscht ungenutzte Variablen, sobald keine Referenzen mehr auf sie zeigen. Variablen müssen also __nicht von Hand freigegeben__ werden. Der `delete`-Operator ist dennoch implementiert, um zur Laufzeit einige Optimierungen des Programmierers zuzulassen.
 
 Eine Variable kann im Nachhinein als _konstant_ markiert werden, sodass ein nachträgliches Bearbeiten des Wertes nicht mehr möglich ist:
