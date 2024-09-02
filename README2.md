@@ -499,11 +499,17 @@ catch $404 {
 Amiant erhält während der Ausführung die vollständige Programmstruktur aufrecht. Somit ist es möglich, Informationen dieser Struktur zur Laufzeit zu bekommen, aber auch dynamische Zugriffe in ihr zu erlauben, und sie zu verändern.
 
 `this` gibt den Namen der Funktion als String zurück, in der dieses Keyword steht.
+
 `call <str>` ruft eine Funktion in diesem Scope über den Namen auf, und gibt das Ergebnis der Funktion zurück. Wichtig: Dieses Keyword kann keine Argumente an die Funktion übergeben!
+
 `line` gibt die aktuelle Zeilennummer, in der dieses Keyword steht, als Zahl zurück. Die Zählung beginnt bei 1!
+
 `mount <str> <str>` hängt eine neue Funktion unter dem Namen und unter dem übergebenen Code in die AVM an dieser Stelle im Scope ein. Somit können partielle Codeerweiterungen problemlos erfolgen, ohne direkt eine Meta-VM starten zu müssen.
+
 `unmount <str>` löscht eine Funktion aus dem aktuellen Scope. Ihr Aufruf ist danach nicht mehr möglich.
+
 `defined <fieldName>` prüft, ob eine Variable in diesem Scope definiert wurde (gibt einen Boolean zurück)
+
 `refs <expr>` gibt die Anzahl an Referenzen auf ein Objekt zurück (die aktuelle Referenz für diesen Befehl ist da mit dabei!)
 
 Folgendes Beispielprogramm erzeugt eine Funktion und tauscht sie während der Laufzeit wieder aus:
@@ -523,6 +529,9 @@ mount "reflectionTest" "print $5"; # hängt eine neue Funktion unter dem gleiche
 
 ~reflectionTest; # nun wird die Zahl 5 auf der Konsole ausgegeben (die Funktion wurde ausgetauscht)
 
+var myVar $4;
+
+println defined myVar; # gibt true auf der Konsole aus
 ```
 
 Hinweise:
