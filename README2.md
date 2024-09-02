@@ -116,13 +116,12 @@ Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet
 65. Function
 66. Struct
 67. ByteSequence
-68. Any
-69. PI
-70. EUL
-71. true
-72. false
-73. weak
-74. expect
+68. PI
+69. EUL
+70. true
+71. false
+72. weak
+73. expect
 
 ### Blöcke
 
@@ -224,7 +223,6 @@ Typkonstanten enthalten den Datentypnamen als String. Sie werden immer groß ges
 | Function     | "Function"    |
 | Struct       | "Struct"      |
 | ByteSequence | "ByteSequence"|
-| Any          | "Any"         |
 
 ## Primitive Datentypen
 
@@ -387,6 +385,7 @@ println ~addFunc n:$4; # gibt 8 auf der Konsole aus
 
 ## Operatoren
 
+### Übersicht
 Amiant besitzt eine Vielzahl von Operatoren, die unterschiedliche Aufgaben erfüllen, und verschiedenste Voraussetzungen haben. Ein Operator unterscheidet sich von anderen Fieldnames nur durch das Aussehen - es gibt also auch ausschließlich Präfixoperatoren! Einige Operatoren wurden bereits vorgestellt - hier sei dennoch eine vollständige Auflistung:
 
 | Operator | Bedeutung                                 |
@@ -401,11 +400,27 @@ Amiant besitzt eine Vielzahl von Operatoren, die unterschiedliche Aufgaben erfü
 | \|       | Logisches Oder                            |
 | !        | Logisches Nicht                           |
 | =        | Vergleich (für alle Datentypen)           |
-| @        | Datenpointer (Any) an eine Speicherstelle |
+| @        | Datenpointer (ByteSequence) an eine Speicherstelle |
 | ?        | Typname als String                        |
-| ^        | *-unbelegt aber reserviert-*              |
+| ^        | Bitbearbeitung (bei ByteSequence)         |
 | \        | Funktionspointer                          |
 | %        | Gibt die Speicheradresse der Daten zurück |
+
+### Bitbearbeitung und ByteSequence
+
+Manchmal ist es notwendig, bestimmte Bytes im Speicher direkt zu bearbeiten. Das kann beispielsweise bei der Verwendung vom Videospeicher der Fall sein, oder beim Setzen bestimmter Einstellungen. Amiant kann mithilfe vom @-Operator beliebige Speicherstellen anvisieren und als ByteSequence nutzen. Es gibt dabei __keinerlei__ Überprüfung vonseiten der AVM. Es ist problemlos möglich, auf verbotene Adressen außerhalb der AVM zuzugreifen (beispielsweise oftmals die Null), und damit einen Segmentation-Fault oder andere unvorhersehbare Probleme zu provozieren! Der Speicherbereich, den Amiant über den @-Operator ergreift, wird nicht vom Speichermanager bereinigt. Nur der Container selbst wird bei fehlender Notwendigkeit gelöscht. Um bestimmte Bytes zu ändern, wird folgende Syntax genutzt:
+
+```
+var unsafeVar @$0 $10; # legt eine 10 Byte lange Sequence ab der Adresse 0 an (Adresse 0-9)
+
+^ unsafeVar $8 $1; # schreibt an die Adresse 0+8 das Byte 0b00000001
+
+var unsafeVar2 @$12 $20;
+
+^ unsafeVar2 $10 $0; # schreibt an die Adresse 12+10 das Byte 0b00000000
+```
+
+Hierbei sollte immer beachtet werden, dass Amiant ausschließlich Dezimaldarstellungen von Zahlen erlaubt. Wenn man das Byte 0b00000010 schreiben möchte, dann muss man die entsprechende Dezimalzahl $2 nutzen! Es ist nicht möglich außerhalb des in der Deklaration einer ByteSequence festgelegten Adressbereichs zu schreiben. Amiant wirft in diesem Moment einen OutOfIndex-Fehler. Damit wird - vorausgesetzt der anvisierte Adressbereich ist erreichbar - eine minimale Sicherheit gewährleistet. Einen Schutz vor Segmentation-Faults gibt es dabei allerdings nie.
 
 ## Amiant-MetaVM
 
@@ -470,7 +485,7 @@ Jeder Schleifenkörper stellt einen eigenen Scope für die Variablen bereit.
 
 ## Konsole I
 
-Ausgaben auf dem Standardoutput können mit dem `println`-Operator durchgeführt werden. Hierbei werden Strings und Zahlen wie sie sind ausgegeben. Listen werden mit dem Typ und ihrer Größe ausgegeben, z.B. `[List size=1]`. Für Maps gilt das gleiche wie bei Listen. Null wird als `[Null]` und Any als `[Any]` ausgegeben. Booleans werden mit ihrem Stringäquivalent ausgegeben: `true` bzw. `false`.
+Ausgaben auf dem Standardoutput können mit dem `println`-Operator durchgeführt werden. Hierbei werden Strings und Zahlen wie sie sind ausgegeben. Listen werden mit dem Typ und ihrer Größe ausgegeben, z.B. `[List size=1]`. Für Maps gilt das gleiche wie bei Listen. Null wird als `[Null]` und ByteSequence als `[ByteSequence@addressNumber size=size]` ausgegeben. Booleans werden mit ihrem Stringäquivalent ausgegeben: `true` bzw. `false`.
 
 
 ## Mathematische Operationen
