@@ -418,6 +418,8 @@ var unsafeVar @$0 $10; # legt eine 10 Byte lange Sequence ab der Adresse 0 an (A
 var unsafeVar2 @$12 $20;
 
 ^ unsafeVar2 $10 $0; # schreibt an die Adresse 12+10 das Byte 0b00000000
+
+var byteAt8 get unsafeVar $8; # gibt das Byte an Adresse 0+8 zurück (als Dezimalzahl!)
 ```
 
 Hierbei sollte immer beachtet werden, dass Amiant ausschließlich Dezimaldarstellungen von Zahlen erlaubt. Wenn man das Byte 0b00000010 schreiben möchte, dann muss man die entsprechende Dezimalzahl $2 nutzen! Es ist nicht möglich außerhalb des in der Deklaration einer ByteSequence festgelegten Adressbereichs zu schreiben. Amiant wirft in diesem Moment einen OutOfIndex-Fehler. Damit wird - vorausgesetzt der anvisierte Adressbereich ist erreichbar - eine minimale Sicherheit gewährleistet. Einen Schutz vor Segmentation-Faults gibt es dabei allerdings nie.
