@@ -399,11 +399,11 @@ Amiant besitzt eine Vielzahl von Operatoren, die unterschiedliche Aufgaben erfü
 | <        | Kleiner als                               |
 | &        | Logisches Und                             |
 | \|       | Logisches Oder                            |
-| !        | logisches Nicht                           |
+| !        | Logisches Nicht                           |
 | =        | Vergleich (für alle Datentypen)           |
 | @        | Datenpointer (Any) an eine Speicherstelle |
 | ?        | Typname als String                        |
-| ^        | unbelegt aber reserviert                  |
+| ^        | *-unbelegt aber reserviert-*              |
 | \        | Funktionspointer                          |
 | %        | Gibt die Speicheradresse der Daten zurück |
 
