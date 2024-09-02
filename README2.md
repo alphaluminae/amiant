@@ -385,6 +385,28 @@ var addFunc \add;
 println ~addFunc n:$4; # gibt 8 auf der Konsole aus
 ```
 
+## Operatoren
+
+Amiant besitzt eine Vielzahl von Operatoren, die unterschiedliche Aufgaben erfüllen, und verschiedenste Voraussetzungen haben. Ein Operator unterscheidet sich von anderen Fieldnames nur durch das Aussehen - es gibt also auch ausschließlich Präfixoperatoren!
+
+| Operator | Bedeutung                                 |
+| :---:    |     :---:                                 |
+| +        | Addition (number, vnumber)                |
+| -        | Subtraktion (number, vnumber)             |
+| *        | Multiplikation (number, vnumber)          |
+| /        | Division (number, vnumber)                |
+| >        | Größer als                                |
+| <        | Kleiner als                               |
+| &        | Logisches Und                             |
+| \|       | Logisches Oder                            |
+| !        | logisches Nicht                           |
+| =        | Vergleich (für alle Datentypen)           |
+| @        | Datenpointer (Any) an eine Speicherstelle |
+| ?        | Typname als String                        |
+| ^        | unbelegt aber reserviert                  |
+| \        | Funktionspointer                          |
+| %        | Gibt die Speicheradresse der Daten zurück |
+
 ## Amiant-MetaVM
 
 Die AVM ist in der Lage, dynamisch neuen Code auszuführen. Dieser Code läuft dann in einem gesonderten Bereich, sodass Zugriffe in andere Bereiche nicht möglich sind (Sandboxing). Um innerhalb eines laufenden Programms weiteren Amiant-Code auszuführen, muss dieser Code lediglich als String vorliegen, und mithilfe des Keywords `amiant` ausgeführt werden.
