@@ -186,7 +186,7 @@ Zeilenkommentare können mit dem Symbol `#` gestartet werden, und gehen bis ans 
 | Boolean  | true oder false             |
 | String   | Zeichenketten (ASCII!)      |
 | Function | Funktion(-spointer)         |
-| ByteSequence | Rohe Daten              |
+| ByteSequence | Rohdaten (Bytes)        |
 | Struct   | Container (Key-Value-Pairs) |
 | List     | Liste                       |
 
