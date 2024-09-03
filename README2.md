@@ -190,18 +190,7 @@ Zeilenkommentare können mit dem Symbol `#` gestartet werden, und gehen bis ans 
 | Struct   | Container (Key-Value-Pairs) |
 | List     | Liste                       |
 
-_Number_ ist der einzige Datentyp, der bei Übertragungen vollständig kopiert wird! Bei allen anderen Datentypen wird lediglich eine _Referenz_ kopiert. Diese Referenz sorgt dafür, dass Amiant weniger Speicher benötigt. Der Operator `copy` veranlasst bei der AVM allerding eine Kopie der übergebenen Daten anzufertigen:
-
-```
-var name1 "Booktitle";
-var name2 name1; # name1 und name2 weisen auf den gleichen String im Speicher
-     # der String "Booktitle" existiert nur ein Mal im Speicher!
-
-assign name2 copy name1; # name1 und name2 weisen auf unterschiedliche Stellen im Speicher
-
-     # Nun existiert der String "Booktitle" zwei Male im Speicher
-
-```
+_Number_ ist der einzige Datentyp, der bei Übertragungen vollständig kopiert wird! Bei allen anderen Datentypen wird lediglich eine _Referenz_ kopiert. Diese Referenz sorgt dafür, dass Amiant weniger Speicher benötigt.
 
 ### Konstanten und Typkonstanten
 Folgende Keywords sind als Konstanten reserviert, und können deshalb nicht außerhalb ihres Kontextes gebraucht werden:
@@ -434,6 +423,20 @@ Es ist problemlos möglich, eigende ByteSequence-Objekte benutzerdefinierter Lä
 ```
 var myByteSequence new $64; # erzeugt eine 64-Byte lange ByteSequence
 ```
+
+### Copy-Operator
+
+Der Operator `copy` veranlasst die AVM dazu bestimmte Bytes einer ByteSequence in eine zweite zu kopieren. Dabei müssen _immer_ der Offset des Anfangs und des Ziels angegeben werden. Der erste Offset gibt an, wie viele Bytes man von der Quelle überspringen möchte, und der zweite gibt an, an welche Stelle der zweiten ByteSequence die Daten eingefügt werden sollen. 
+
+```
+var bsq1 new $20; # 20 Byte lange ByteSequence
+var bsq2 new $40; # 40 Byte lange ByteSequence
+
+copy bsq1 bsq2 $0 $10 $20; # kopiert von Byte 0 an der ersten ByteSequence 20 Bytes in die zweite ByteSequence - dort ab dem Index 10 eingefügt
+
+```
+
+Der `copy` Operator gibt true oder false zurück - je nach dem ob der Kopiervorgang erfolgreich war, oder nicht. Fehlerhafte Kopiervorgänge sind zu große Offsets, eine Size von kleiner 1, oder ein interner Kopierfehler. Falsche Typen im Operator werfen allerdings einen Error und geben Null zurück!
 
 ## Amiant-MetaVM
 
