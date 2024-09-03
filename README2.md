@@ -122,6 +122,7 @@ Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet
 71. false
 72. weak
 73. expect
+74. new
 
 ### Blöcke
 
@@ -383,7 +384,7 @@ var addFunc \add;
 println ~addFunc n:$4; # gibt 8 auf der Konsole aus
 ```
 
-## Operatorsymbole und Bitbearbeitung
+## Operatorsymbole
 
 ### Übersicht
 Amiant besitzt eine Vielzahl von Operatoren, die unterschiedliche Aufgaben erfüllen, und verschiedenste Voraussetzungen haben. Ein Operator unterscheidet sich von anderen Fieldnames nur durch das Aussehen - es gibt also auch ausschließlich Präfixoperatoren! Einige Operatoren wurden bereits vorgestellt - hier sei dennoch eine vollständige Auflistung:
@@ -406,7 +407,9 @@ Amiant besitzt eine Vielzahl von Operatoren, die unterschiedliche Aufgaben erfü
 | \        | Funktionspointer                          |
 | %        | Gibt die Speicheradresse der Daten zurück |
 
-### Bitbearbeitung und ByteSequence
+## ByteSequence
+
+### Bitbearbeitung
 
 Manchmal ist es notwendig, bestimmte Bytes im Speicher direkt zu bearbeiten. Das kann beispielsweise bei der Verwendung vom Videospeicher der Fall sein, oder beim Setzen bestimmter Einstellungen. Amiant kann mithilfe vom @-Operator beliebige Speicherstellen anvisieren und als ByteSequence nutzen. Es gibt dabei __keinerlei__ Überprüfung vonseiten der AVM. Es ist problemlos möglich, auf verbotene Adressen außerhalb der AVM zuzugreifen (beispielsweise oftmals die Null), und damit einen Segmentation-Fault oder andere unvorhersehbare Probleme zu provozieren! Der Speicherbereich, den Amiant über den @-Operator ergreift, wird nicht vom Speichermanager bereinigt. Nur der Container selbst wird bei fehlender Notwendigkeit gelöscht. Um bestimmte Bytes zu ändern, wird folgende Syntax genutzt:
 
@@ -423,6 +426,14 @@ var byteAt8 get unsafeVar $8; # gibt das Byte an Adresse 0+8 zurück (als Dezima
 ```
 
 Hierbei sollte immer beachtet werden, dass Amiant ausschließlich Dezimaldarstellungen von Zahlen erlaubt. Wenn man das Byte 0b00000010 schreiben möchte, dann muss man die entsprechende Dezimalzahl $2 nutzen! Es ist nicht möglich außerhalb des in der Deklaration einer ByteSequence festgelegten Adressbereichs zu schreiben. Amiant wirft in diesem Moment einen OutOfIndex-Fehler. Damit wird - vorausgesetzt der anvisierte Adressbereich ist erreichbar - eine minimale Sicherheit gewährleistet. Einen Schutz vor Segmentation-Faults gibt es dabei allerdings nie.
+
+### New-Operator
+
+Es ist problemlos möglich, eigende ByteSequence-Objekte benutzerdefinierter Länge zu erzeugen. Dafür ist der `new` Operator vprgesehen, der einen Speicherbereich bestimmter Länge reserviert. Dieser gehört dann allerdings zur AVM und wird freigegeben, sobald keine Referenz mehr auf sie zeigt - anders als bei der ByteSequence, die durch den `@` Operator erzeugt wurde!
+
+```
+var myByteSequence new $64; # erzeugt eine 64-Byte lange ByteSequence
+```
 
 ## Amiant-MetaVM
 
