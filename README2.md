@@ -1,4 +1,4 @@
-# AmiantRuntimeEnvironment v0.9.9 (02.09.2024)
+# AmiantRuntimeEnvironment v0.9.9 (03.09.2024)
 
 /Die Power einer LowLevel-Programmierung in einer sicheren Umgebung/
 
@@ -237,7 +237,7 @@ Bei den mehrzeiligen Strings werden alle Zeichen zwischen den `"` beachtet! Somi
 ## Komplexe Datentypen
 
 ### Liste
-Listen können mit dem `list`-Keyword erzeugt werden: `list $1 $2 $3` ergibt eine Liste, die die Zahlen `1`, `2` und `3` enthält. Eine Liste kann Objekte __unterschiedlicher__ Datentypen enthalten (eine Liste kann auch Typen mischen). Zugriff auf die in der Liste befindlichen Objekte bekommt man über den `get`-Operator. Der Index einer Liste beginnt bei Null.
+Listen können mit dem `list`-Keyword erzeugt werden: `list $1 $2 $3` ergibt eine Liste, die die Zahlen `1`, `2` und `3` enthält. Eine Liste kann Objekte __unterschiedlicher__ Datentypen enthalten (eine Liste kann auch Typen mischen). Zugriff auf die in der Liste befindlichen Objekte bekommt man über den `get` Operator. Der Index einer Liste beginnt bei Null.
 Der Ausdruck `get (list $2 $4 $6 $8) $2` gibt den Wert `6` zurück. Man kann nach der Erzeugung Daten an eine bestehende Liste anhängen, indem man das `put`-Keyword verwendet: `put (list $4 $5 $6) $7`
 
 ### Struct
@@ -261,6 +261,8 @@ Listen und Structs dürfen standardmäßig ausschließlich primitive Datentypen 
 
 ### Generische Accessoren
 
+Es gibt in Amiant einen generischen Accessor, der ´get´ Operator. Dieser hat die Eigenschaft, auf alle Objekte, die das ermöglichen, zuzugreifen. Somit ist er in der Lage, Daten aus Listen, Structs und sogar ByteSequences abzurufen. Die get-Syntax hat aber auch einen Nachteil: bei unachtsamer Anwendung kann versehentlich auf einen falschen Typ zugegriffen werden. Man sollte also nicht durcheinander kommen.
+
 ### Typumwandlungen
 In Amiant können Zahlen in Strings und Strings in Zahlen problemlos umgewandelt werden. Um einen Datentyp in eine Zahl umzuwandeln, wird das `number`-Keyword genutzt. Um einen Datentyp in einen String umzuwandeln das Keyword `string`. Auch VNumbers können auf diese Art und Weise in einen String umgewandelt werden. Der durch `string` erhaltende Dezimaldarstellung der VNumber besitzt dadurch keine exakte Genauigkeit.
 
@@ -278,7 +280,7 @@ Auf Variablen kann über den Namen zugegriffen werden.
 println i; # gibt den Wert von i auf der Konsole aus
 ```
 
-Variablen können mit dem `assign`-Operator überschrieben werden:
+Variablen können mit dem `assign` Operator überschrieben werden:
 `(assign i $5)` weist der Variable `i` den Wert `5` zu.
 Wenn eine Variable einen Typ während der Initialisierung angenommen hat, so darf man diese Variable __nur mit einem Wert gleichen Typs__ überschreiben. Die einzige Ausnahme ist der Typ Null. Eine Variable, die den Wert `null` besitzt, gilt als _Typuninitialisiert_, und kann mithilfe eines Assigns auf einen festen Typ gebracht werden. Uninitialisierte Variablen werden auf zwei Arten erstellt:
 
@@ -288,7 +290,7 @@ var uninitialized2 null; # .. uninitialisiert!
 ```
 
 Sobald eine Variable mit einem Typ initialisiert ist, kann man sie nicht mehr auf null setzen.
-Amiant verwaltet den Speicher und löscht ungenutzte Variablen, sobald keine Referenzen mehr auf sie zeigen. Variablen müssen also __nicht von Hand freigegeben__ werden. Der `delete`-Operator ist dennoch implementiert, um zur Laufzeit einige Optimierungen des Programmierers zuzulassen.
+Amiant verwaltet den Speicher und löscht ungenutzte Variablen, sobald keine Referenzen mehr auf sie zeigen. Variablen müssen also __nicht von Hand freigegeben__ werden. Der `delete` Operator ist dennoch implementiert, um zur Laufzeit einige Optimierungen des Programmierers zuzulassen.
 
 Eine Variable kann im Nachhinein als _konstant_ markiert werden, sodass ein nachträgliches Bearbeiten des Wertes nicht mehr möglich ist:
 
@@ -400,7 +402,7 @@ Amiant besitzt eine Vielzahl von Operatoren, die unterschiedliche Aufgaben erfü
 
 ### Bitbearbeitung
 
-Manchmal ist es notwendig, bestimmte Bytes im Speicher direkt zu bearbeiten. Das kann beispielsweise bei der Verwendung vom Videospeicher der Fall sein, oder beim Setzen bestimmter Einstellungen. Amiant kann mithilfe vom @-Operator beliebige Speicherstellen anvisieren und als ByteSequence nutzen. Es gibt dabei __keinerlei__ Überprüfung vonseiten der AVM. Es ist problemlos möglich, auf verbotene Adressen außerhalb der AVM zuzugreifen (beispielsweise oftmals die Null), und damit einen Segmentation-Fault oder andere unvorhersehbare Probleme zu provozieren! Der Speicherbereich, den Amiant über den @-Operator ergreift, wird nicht vom Speichermanager bereinigt. Nur der Container selbst wird bei fehlender Notwendigkeit gelöscht. Um bestimmte Bytes zu ändern, wird folgende Syntax genutzt:
+Manchmal ist es notwendig, bestimmte Bytes im Speicher direkt zu bearbeiten. Das kann beispielsweise bei der Verwendung vom Videospeicher der Fall sein, oder beim Setzen bestimmter Einstellungen. Amiant kann mithilfe vom `@` Operator beliebige Speicherstellen anvisieren und als ByteSequence nutzen. Es gibt dabei __keinerlei__ Überprüfung vonseiten der AVM. Es ist problemlos möglich, auf verbotene Adressen außerhalb der AVM zuzugreifen (beispielsweise oftmals die Null), und damit einen Segmentation-Fault oder andere unvorhersehbare Probleme zu provozieren! Der Speicherbereich, den Amiant über den `@` Operator ergreift, wird nicht vom Speichermanager bereinigt. Nur der Container selbst wird bei fehlender Notwendigkeit gelöscht. Um bestimmte Bytes zu ändern, wird folgende Syntax genutzt:
 
 ```
 var unsafeVar @$0 $10; # legt eine 10 Byte lange Sequence ab der Adresse 0 an (Adresse 0-9)
@@ -418,7 +420,7 @@ Hierbei sollte immer beachtet werden, dass Amiant ausschließlich Dezimaldarstel
 
 ### New-Operator
 
-Es ist problemlos möglich, eigende ByteSequence-Objekte benutzerdefinierter Länge zu erzeugen. Dafür ist der `new` Operator vprgesehen, der einen Speicherbereich bestimmter Länge reserviert. Dieser gehört dann allerdings zur AVM und wird freigegeben, sobald keine Referenz mehr auf sie zeigt - anders als bei der ByteSequence, die durch den `@` Operator erzeugt wurde!
+Es ist problemlos möglich, eigene ByteSequence-Objekte benutzerdefinierter Länge zu erzeugen. Dafür ist der `new` Operator vprgesehen, der einen Speicherbereich bestimmter Länge reserviert. Dieser gehört dann allerdings zur AVM und wird freigegeben, sobald keine Referenz mehr auf sie zeigt - anders als bei der ByteSequence, die durch den `@` Operator erzeugt wurde!
 
 ```
 var myByteSequence new $64; # erzeugt eine 64-Byte lange ByteSequence
@@ -457,7 +459,7 @@ Hinweis: während es mehrere Programme auf Level 1, 2, ... geben kann, gibt es i
 
 ## If-Verzweigungen
 
-Bedingte Verzweigungen werden durch den `if`-Operator realisiert. Verzweigungen öffnen Scopes! Die allgemeinen Formen einer if-Abzweigung und if-Else-Abzweigung sehen folgendermaßen aus:
+Bedingte Verzweigungen werden durch den `if` Operator realisiert. Verzweigungen öffnen Scopes! Die allgemeinen Formen einer if-Abzweigung und if-Else-Abzweigung sehen folgendermaßen aus:
 
 If-Abzweigung:
 ```
@@ -501,7 +503,7 @@ Jeder Schleifenkörper stellt einen eigenen Scope für die Variablen bereit.
 
 ## Konsole I
 
-Ausgaben auf dem Standardoutput können mit dem `println`-Operator durchgeführt werden. Hierbei werden Strings und Zahlen wie sie sind ausgegeben. Listen werden mit dem Typ und ihrer Größe ausgegeben, z.B. `[List size=1]`. Für Maps gilt das gleiche wie bei Listen. Null wird als `[Null]` und ByteSequence als `[ByteSequence@addressNumber size=size]` ausgegeben. Booleans werden mit ihrem Stringäquivalent ausgegeben: `true` bzw. `false`.
+Ausgaben auf dem Standardoutput können mit dem `println` Operator durchgeführt werden. Hierbei werden Strings und Zahlen wie sie sind ausgegeben. Listen werden mit dem Typ und ihrer Größe ausgegeben, z.B. `[List size=1]`. Für Maps gilt das gleiche wie bei Listen. Null wird als `[Null]` und ByteSequence als `[ByteSequence@addressNumber size=size]` ausgegeben. Booleans werden mit ihrem Stringäquivalent ausgegeben: `true` bzw. `false`.
 
 
 ## Mathematische Operationen
