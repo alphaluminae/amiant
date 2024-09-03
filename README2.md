@@ -267,7 +267,7 @@ Es fällt auf, dass sowohl Listen als auch Structs die gleichen Keywörter `put`
 
 ### Weak
 
-Listen und Structs dürfen standardmäßig ausschließlich primitive Datentypen als Daten enthalten. Damit garantiert Amiant, dass nicht genutzter Speicher bereinigt werden kann, und es keine Zugriffe in bereits bereinigte Speicherbereiche gibt. Diese Regel ist für einige Anwendungsfälle jedoch zu stark. Manchmal ist es durchaus sinnvoll, komplexe Datentypen ineinander zu schachteln. Aus diesem Grunde gibt es das `weak` Keyword. Structs und Listen können als *weak* markiert werden, die Umkehrung ist nicht möglich. Als weak markierte Datentypen dürfen auch komplexe Datentypen enthalten. Die Speicherbereinigung kann in diesen Fällen allerdings nicht garantieren, dass der Speicher auch korrekt freigegeben wird (Retain Cycle). Amiant kann in diesem Falle nur garantieren, dass jeder Zugriff auf diese Objekte korrekt sind - Segmentation Faults sind immer ausgeschlossen, Speicherleaks allerdings nicht! Ein Retain Cycle muss manuell verhindert werden, in dem besonderes Augenmerk auf die Speicherstruktur gelegt werden.
+Listen und Structs dürfen standardmäßig ausschließlich primitive Datentypen als Daten enthalten. Damit garantiert Amiant, dass nicht genutzter Speicher bereinigt werden kann, und es keine Zugriffe in bereits bereinigte Speicherbereiche gibt. Diese Regel ist für einige Anwendungsfälle jedoch zu stark. Manchmal ist es durchaus sinnvoll, komplexe Datentypen ineinander zu schachteln. Aus diesem Grunde gibt es das `weak` Keyword. Structs und Listen können als *weak* markiert werden, die Umkehrung ist nicht möglich. Als weak markierte Datentypen dürfen auch komplexe Datentypen enthalten. Die Speicherbereinigung kann in diesen Fällen allerdings nicht garantieren, dass der Speicher auch korrekt freigegeben wird (Retain Cycle). Amiant kann in diesem Falle nur garantieren, dass jeder Zugriff auf diese Objekte korrekt ist - Segmentation Faults sind immer ausgeschlossen, Speicherleaks allerdings nicht! Ein Retain Cycle muss manuell verhindert werden, in dem besonderes Augenmerk auf die Speicherstruktur gelegt werden muss.
 
 ### Generische Accessoren
 
@@ -383,7 +383,7 @@ var addFunc \add;
 println ~addFunc n:$4; # gibt 8 auf der Konsole aus
 ```
 
-## Operatoren
+## Operatorsymbole und Bitbearbeitung
 
 ### Übersicht
 Amiant besitzt eine Vielzahl von Operatoren, die unterschiedliche Aufgaben erfüllen, und verschiedenste Voraussetzungen haben. Ein Operator unterscheidet sich von anderen Fieldnames nur durch das Aussehen - es gibt also auch ausschließlich Präfixoperatoren! Einige Operatoren wurden bereits vorgestellt - hier sei dennoch eine vollständige Auflistung:
