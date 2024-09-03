@@ -1,4 +1,4 @@
-# AmiantRuntimeEnvironment v0.9.9 (03.09.2024)
+# AmiantRuntimeEnvironment v0.9.8 (03.09.2024)
 
 /Die Power einer LowLevel-Programmierung in einer sicheren Umgebung/
 
