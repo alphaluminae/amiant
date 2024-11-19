@@ -290,7 +290,7 @@ println get myWebSite .url;
 
 ```
 
-Jetzt ist deutlich und leserlich zwischen "wichtigen" String-Daten (in diesem Fall die Webadresse), und dem Key unterschieden. Die Quick-String-Syntax hat folgende Einschränkungen: sie gilt nur für einwortige-Strings (ohne Whitespaces)!
+Jetzt ist deutlich und leserlich zwischen "wichtigen" String-Daten (in diesem Falle die Webadresse), und dem Key unterschieden. Die Quick-String-Syntax hat folgende Einschränkungen: sie gilt nur für einwortige-Strings (ohne Whitespaces)!
 
 ```
 println "Hey"; # gleicher Output
@@ -435,7 +435,7 @@ Amiant besitzt eine Vielzahl von Operatoren, die unterschiedliche Aufgaben erfü
 | &        | Logisches Und                             |
 | \|       | Logisches Oder                            |
 | !        | Logisches Nicht                           |
-| =        | Vergleich (für alle Datentypen)           |
+| =        | Vergleich (für alle Datentypen) / Identität        |
 | @        | Datenpointer (ByteSequence) an eine Speicherstelle |
 | ?        | Typname als String                        |
 | ^        | Bitbearbeitung (bei ByteSequence)         |
@@ -483,6 +483,18 @@ copy bsq1 bsq2 $0 $10 $20; # kopiert von Byte 0 an der ersten ByteSequence 20 By
 ```
 
 Der `copy` Operator gibt true oder false zurück - je nach dem ob der Kopiervorgang erfolgreich war, oder nicht. Fehlerhafte Kopiervorgänge sind zu große Offsets, eine Size von kleiner 1, oder ein interner Kopierfehler. Falsche Typen im Operator werfen allerdings einen Error und geben Null zurück!
+
+### Identitätsoperator
+
+Um die Übersichtlichkeit zu erhöhen, und den Umstieg von C-ähnlichen Programmiersprachen nach Amiant zu erleichtern, gibt es den Identitätsoperator. Dieser ist auf das Symbol `=` gelegt, was mit dem Vergleichsoperator zusammenfällt. Wenn der Vergleichsoperator genutzt werden soll, werden mindestens zwei Argumente benötigt. Wird dem `=`-Operator allerdings nur ein Argument übergeben, so verhält er sich wie die Identität. Der Operator gibt also genau das zurück, was ihm übergeben wurde, ohne daran Änderungen durchzuführen. Die Identität reicht das Objekt weiter nach oben, und hat somit keinerlei Einfluss auf die Programmlogik. Allerdings sind mit ihm bestimmte Syntaxen übersichtlicher, beispielsweise die Deklaration einer Variable:
+
+```
+var weather "rain"; # erzeugt eine Variable ohne Identitätsoperator
+
+var weather2 = "snowy"; # erzeugt eine Variable mit Identitätsoperator
+```
+
+Die Verwendung des Identitätsoperators ergibt eine Syntax die der von vielen C-ähnlichen Programmiersprachen (Java, JavaScript, C#) völlig gleicht. Zusätzlich ist zwischen Name und Argument optisch besser unterschieden.
 
 ## Amiant-MetaVM
 
