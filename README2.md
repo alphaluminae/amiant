@@ -266,6 +266,50 @@ Es gibt in Amiant einen generischen Accessor, der ´get´ Operator. Dieser hat d
 ### Typumwandlungen
 In Amiant können Zahlen in Strings und Strings in Zahlen problemlos umgewandelt werden. Um einen Datentyp in eine Zahl umzuwandeln, wird das `number`-Keyword genutzt. Um einen Datentyp in einen String umzuwandeln das Keyword `string`. Auch VNumbers können auf diese Art und Weise in einen String umgewandelt werden. Der durch `string` erhaltende Dezimaldarstellung der VNumber besitzt dadurch keine exakte Genauigkeit.
 
+## Quick-String Syntax
+
+Das oben eingeführte Struct wird in vielen Fällen als Container von Eigenschaften genutzt werden, wobei einzelne Eigenschaften als String-Key ansprechbar sind. Hieraus resultiert folgende Syntax, die einige Nachteile bietet: unter Anderem wird der Anschein erweckt, als sei der Key an sich auch ein relevanter Datenwert, dabei ist er nur Mittel zum Zweck.
+
+```
+var myWebSite struct;
+
+put myWebSite "url" "www.myWebSite.com";
+
+println get myWebSite "url";
+
+```
+
+Die Quick-String-Syntax vereinfacht den Code folgendermaßen:
+
+```
+var myWebSite struct;
+
+put myWebSite .url "www.myWebSite.com";
+
+println get myWebSite .url;
+
+```
+
+Jetzt ist deutlich und leserlich zwischen "wichtigen" String-Daten (in diesem Fall die Webadresse), und dem Key unterschieden. Die Quick-String-Syntax hat folgende Einschränkungen: sie gilt nur für einwortige-Strings (ohne Whitespaces)!
+
+```
+println "Hey"; # gleicher Output
+println .Hey; # wie hier
+
+println = "Test" .Test; # gibt true aus
+
+```
+
+Es ist unbedingt zu beachten, dass die Punkt-Syntax das darauffolgende Fieldname als String auswertet und nicht als Variable!
+
+```
+var color "red";
+
+println .color; # gibt "color" auf der Konsole aus
+println color; # gibt "red" auf der Konsole aus.
+
+```
+
 ## Variablen und Konstanten
 
 ### Deklaration und Scope
