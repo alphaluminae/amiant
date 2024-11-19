@@ -18,7 +18,8 @@ Die Kernfunktionen der Sprache lassen sich folgendermaßen beschreiben:
 - String-interning sorgt für eine reduzierte Speichernutzung bei der Verwendung von literalen Strings
 - Ein einfaches Error-System erlaubt die Möglichkeit der Fehlerbehandlung ohne Overhead oder unkontrolloliertem Control-Flow
 - Listen und Structs sind beides Containertypen, die per Referenz übertragen werden
-- Der Datentyp VNumber erlaubt beliebig präzise Grundrechenoperatoren.
+- Der Datentyp VNumber erlaubt beliebig präzise Grundrechenoperatoren
+- Duck-Typing erlaubt eine typisierte Programmierung
 
 Ein Hallo-Welt-Programm in Amiant:
 ```
@@ -123,6 +124,7 @@ Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet
 72. weak
 73. expect
 74. new
+75. type
 
 ### Blöcke
 
@@ -242,7 +244,9 @@ Der Ausdruck `get (list $2 $4 $6 $8) $2` gibt den Wert `6` zurück. Man kann nac
 
 ### Struct
 
-Ein Struct ist eine Art Map, die unter ein Keyword zugehörige Daten speichert und über eben jenes Keyword wieder zurückgeben kann. Structs in Amiant unterscheiden sich deshalb erheblich von denen in C oder C++. In Amiant ist ein Struct schlicht ein Container, und __nicht__ ein Typ, der sich aus seinen Subtypen zusammensetzt. Ein Struct darf auch leer sein! Daten können aus einem Struct nicht entfernt werden, allerdings werden die alten Daten gelöscht, sollten sie unter einem bestehenden Keyword neu abgelegt werden. Das Keyword darf jeden Wert jeder __Primitiven__ annehmen. So sind `null`, `$4`, `"value1"` allesamt gültige Keywords. In einem Struct wird garantiert, dass unter einem Keyword immer nur einmal Daten liegen. Doppelt besetzte Keywords sind __nicht__ möglich. Ein Struct wird folgend erzeugt und verwendet:
+#### Definition und Anwendung
+
+Ein Struct ist eine Art Map, die unter ein Keyword zugehörige Daten speichert und über eben jenes Keyword wieder zurückgeben kann. Structs in Amiant unterscheiden sich deshalb erheblich von denen in C oder C++. In Amiant ist ein Struct schlicht ein Container, und __nicht__ ein Typ im gewohnten Sinne, der sich aus seinen Subtypen zusammensetzt. Ein Struct darf auch leer sein! Daten können aus einem Struct nicht entfernt werden, allerdings werden die alten Daten gelöscht, sollten sie unter einem bestehenden Keyword neu abgelegt werden. Das Keyword darf jeden Wert jeder __Primitiven__ annehmen. So sind `null`, `$4`, `"value1"` allesamt gültige Keywords. In einem Struct wird garantiert, dass unter einem Keyword immer nur einmal Daten liegen. Doppelt besetzte Keywords sind __nicht__ möglich. Ein Struct wird folgend erzeugt und verwendet:
 
 ```
 var data struct; # erzeugt ein leeres Struct und speichert es in die Variable data
@@ -250,10 +254,35 @@ var data struct; # erzeugt ein leeres Struct und speichert es in die Variable da
 put data "age_joe" $4; # legt Daten in das Struct
 
 println get data "age_joe"; # gibt die Daten aus dem Struct zurück
-
 ```
 
 Es fällt auf, dass sowohl Listen als auch Structs die gleichen Keywörter `put` und `get` verwenden. Bei Structs erwartet der put-Operator logischerweise ein Argument mehr als bei einer Liste. Diese generischen Accessoren werden in einem späteren Kapitel noch einmal behandelt.
+
+
+#### Typsignaturen
+
+Trotzdessen Structs an sich keine Typen definieren, können sie dennoch eine Typsignatur aufweisen. Diese Signatur ist eine ganze Zahl, die sich aus den im Struct hinterlegten String-Keys zusammensetzt. Dabei spielt die Reihenfolge der Hinterlegungen keine Rolle, nur ihr konkreter Inhalt. Amiant garantiert gleiche Typsignaturen für gleiche Keybelegungen. Da intern ein Hash-System verwendet wird, könnte es theoretisch zu Kollisionen kommen. Die Typsignatur eines Structs kann mithilfe des `type`-Keywords gewonnen werden:
+
+
+```
+var person1 struct;
+
+put person1 .age = $25;
+put person1 .name = "Robert"; 
+put person1 .heigth = $1.85;
+
+var person2 struct;
+
+put person2 .heigth = $1.62;
+put person2 .name = "Willy"; 
+put person2 .age = $31;
+put person2 $4 = $5; # irgendeine zusätzliche Eigenschaft der person2, die allerdings keinen String-Key besitzt
+
+println = person1 person2; # gibt false aus, da die Structs offenkundig nicht das gleiche Objekt repräsentieren
+println = (type person1) type person2; # gibt true aus, da beide die gleichen definierten String-Keys haben
+```
+Mithilfe der Typsignaturen können innerhalb von Amiant schwach typisierte Anwendungen geschrieben werden, die auf das Duck-Typing-Prinzip beruhen. Das ist auch der Grund dafür, warum das Struct nicht als Map in die Sprache eingeführt wurde.
+
 
 ### Weak
 
