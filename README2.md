@@ -305,7 +305,6 @@ var myWebSite struct;
 put myWebSite "url" "www.myWebSite.com";
 
 println get myWebSite "url";
-
 ```
 
 Die Quick-String-Syntax vereinfacht den Code folgendermaßen:
@@ -316,7 +315,6 @@ var myWebSite struct;
 put myWebSite .url "www.myWebSite.com";
 
 println get myWebSite .url;
-
 ```
 
 Jetzt ist deutlich und leserlich zwischen "wichtigen" String-Daten (in diesem Falle die Webadresse), und dem Key unterschieden. Die Quick-String-Syntax hat folgende Einschränkungen: sie gilt nur für einwortige-Strings (ohne Whitespaces)!
@@ -326,7 +324,6 @@ println "Hey"; # gleicher Output
 println .Hey; # wie hier
 
 println = "Test" .Test; # gibt true aus
-
 ```
 
 Es ist unbedingt zu beachten, dass die Punkt-Syntax das darauffolgende Fieldname als String auswertet und nicht als Variable!
@@ -336,7 +333,6 @@ var color "red";
 
 println .color; # gibt "color" auf der Konsole aus
 println color; # gibt "red" auf der Konsole aus.
-
 ```
 
 ## Variablen und Konstanten
@@ -370,7 +366,6 @@ Eine Variable kann im Nachhinein als _konstant_ markiert werden, sodass ein nach
 ```
 var x $4; # normale Variable
 constant x; # jetzt kann x nicht mehr bearbeitet werden
-
 ```
 
 ### Expect
@@ -416,7 +411,7 @@ Mit dem Keyword `return` kann die Funktionsausführung an dieser Stelle beendet 
 
 Sollte es innerhalb einer Funktion zu einem Fehler kommen, wird mit Standardwerten weiter gearbeitet. Die Funktion bricht ihre Ausführung also __nicht__ ab.
 
-### Contacts und Debugging
+### Contracts und Debugging
 
 Da Amiant eine Sprache ist, die LowLevel-Scripting bereitstellt, ist das Thema Sicherheit von großer Bedeutung. Fehler können während der Laufzeit auftauchen, und sie werden intern so gehandhabt, dass ein Absturz der AVM in jedem Falle auszuschließen ist. _Aus diesem Grunde wird ein Fehler nicht zum Abbruch des Programmes führen, sondern zum Weiterarbeiten mit Standardwerten_. In manchen Situationen ist das Arbeiten mit solchen Standardwerten kritisch oder gar gefährlich. Dazu gibt Amiant zwei Möglichkeiten der Überprüfung und Handhabung:
 
@@ -508,7 +503,6 @@ var bsq1 new $20; # 20 Byte lange ByteSequence
 var bsq2 new $40; # 40 Byte lange ByteSequence
 
 copy bsq1 bsq2 $0 $10 $20; # kopiert von Byte 0 an der ersten ByteSequence 20 Bytes in die zweite ByteSequence - dort ab dem Index 10 eingefügt
-
 ```
 
 Der `copy` Operator gibt true oder false zurück - je nach dem ob der Kopiervorgang erfolgreich war, oder nicht. Fehlerhafte Kopiervorgänge sind zu große Offsets, eine Size von kleiner 1, oder ein interner Kopierfehler. Falsche Typen im Operator werfen allerdings einen Error und geben Null zurück!
@@ -650,7 +644,6 @@ Es gibt folgende Fehlertypen:
 In Amiant ist es möglich, eigene Fehlercodes zu setzen. Das geschieht mit dem `throw`-Keyword, das schlicht einen Ausdruck erwartet, der eine Zahl enthält - eben den Fehlercode. Throw unterbricht allerdings nicht den Codeflow! Die Ausführung wird fortgesetzt. Dennoch kann man damit eigene Fehlerroutinen implementieren, und auf eventuelle Fehler reagieren. Fehlercodes sind ganze Zahlen - sie können auch negativ sein, und auch die obigen Fehlercodezahlen mitnutzen. Davon wird der Übersichtlichkeit wegen und wegen der großen Zahl an freien Fehlercodes abgeraten.
 
 ```
-
 if (= (~fetchData) "404") {
     throw $404; # Fehler werfen
 };
@@ -666,7 +659,6 @@ if(= (error) $404) {
 catch $404 {
     # Fehlerbehandlung (aber kein separater Scope!)
 };
-
 ```
 
 ## Reflection
@@ -744,7 +736,6 @@ async lastName token:loginToken key:secureKey { # die Ausführung schreitet sofo
 };
 
 println string "Vorname: " (await firstName) " Nachname: " await lastName; # hier wird auf die Ergebnisse der einzelnen Operationen gewartet
-
 ```
 
 Async erwartet als erstes Argument ein fieldName zu einer Variable, die am Ende der Ausführung des Async-Codes das Ergebnis eben dieses Codes enthalten soll. Die Variable wird als async markiert, und kann dann __nicht zeitgleich von einem anderen async-Keywort genutzt werden__. Das geht nur wieder, sobald der async-Block fertig ist, und die Variable wieder freigibt. Auf eine asynchrone Variable kann immer zugegriffen werden. Greift man ohne `await` auf eine asynchrone Variable zu, so wird ihr _aktueller_ Wert zurückgegeben, der nicht unbedingt der Rückgabewert des asynchronen Codes sein muss (dieser kann schließlich noch arbeiten). Um nun den echten Rückgabewert des asynchronen Blocks zu bekommen, muss man bei der Verwendung der Variable schlicht das Keyword `await` davor setzen. Der Codefluss __wartet__ an der Stelle, bis die Variable vom async-Code freigegeben wurde. Danach wird ihr Wert erst aufgelöst.
