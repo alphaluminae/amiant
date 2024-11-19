@@ -289,7 +289,7 @@ Listen und Structs dürfen standardmäßig ausschließlich primitive Datentypen 
 
 ### Generische Accessoren
 
-Es gibt in Amiant einen generischen Accessor, der ´get´ Operator. Dieser hat die Eigenschaft, auf alle Objekte, die das ermöglichen, zuzugreifen. Somit ist er in der Lage, Daten aus Listen, Structs und sogar ByteSequences abzurufen. Die get-Syntax hat aber auch einen Nachteil: bei unachtsamer Anwendung kann versehentlich auf einen falschen Typ zugegriffen werden. Man sollte also nicht durcheinander kommen.
+Es gibt in Amiant einen generischen Accessor, der `get` Operator. Dieser hat die Eigenschaft, auf alle Objekte, die das ermöglichen, zuzugreifen. Somit ist er in der Lage, Daten aus Listen, Structs und sogar ByteSequences abzurufen. Die get-Syntax hat aber auch einen Nachteil: bei unachtsamer Anwendung kann versehentlich auf einen falschen Typ zugegriffen werden. Man sollte also nicht durcheinander kommen.
 
 ### Typumwandlungen
 In Amiant können Zahlen in Strings und Strings in Zahlen problemlos umgewandelt werden. Um einen Datentyp in eine Zahl umzuwandeln, wird das `number`-Keyword genutzt. Um einen Datentyp in einen String umzuwandeln das Keyword `string`. Auch VNumbers können auf diese Art und Weise in einen String umgewandelt werden. Der durch `string` erhaltende Dezimaldarstellung der VNumber besitzt dadurch keine exakte Genauigkeit.
