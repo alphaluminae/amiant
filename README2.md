@@ -124,7 +124,7 @@ Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet
 72. weak
 73. expect
 74. new
-75. type
+75. signature
 
 ### Blöcke
 
@@ -261,7 +261,7 @@ Es fällt auf, dass sowohl Listen als auch Structs die gleichen Keywörter `put`
 
 #### Typsignaturen
 
-Trotzdessen Structs an sich keine Typen definieren, können sie dennoch eine Typsignatur aufweisen. Diese Signatur ist eine ganze Zahl, die sich aus den im Struct hinterlegten String-Keys zusammensetzt. Dabei spielt die Reihenfolge der Hinterlegungen keine Rolle, nur ihr konkreter Inhalt. Amiant garantiert gleiche Typsignaturen für gleiche Keybelegungen. Da intern ein Hash-System verwendet wird, könnte es theoretisch zu Kollisionen kommen. Die Typsignatur eines Structs kann mithilfe des `type`-Keywords gewonnen werden:
+Trotzdessen Structs an sich keine Typen definieren, können sie dennoch eine Typsignatur aufweisen. Diese Signatur ist eine ganze Zahl, die sich aus den im Struct hinterlegten String-Keys zusammensetzt. Dabei spielt die Reihenfolge der Hinterlegungen keine Rolle, nur ihr konkreter Inhalt. Amiant garantiert gleiche Typsignaturen für gleiche Keybelegungen. Da intern ein Hash-System verwendet wird, könnte es theoretisch zu Kollisionen kommen. Die Typsignatur eines Structs kann mithilfe des `signature`-Keywords gewonnen werden:
 
 
 ```
@@ -279,7 +279,7 @@ put person2 .age = $31;
 put person2 $4 = $5; # irgendeine zusätzliche Eigenschaft der person2, die allerdings keinen String-Key besitzt
 
 println = person1 person2; # gibt false aus, da die Structs offenkundig nicht das gleiche Objekt repräsentieren
-println = (type person1) type person2; # gibt true aus, da beide die gleichen definierten String-Keys haben
+println = (signature person1) signature person2; # gibt true aus, da beide die gleichen definierten String-Keys haben
 ```
 Mithilfe der Typsignaturen können innerhalb von Amiant schwach typisierte Anwendungen geschrieben werden, die auf das Duck-Typing-Prinzip beruhen. Das ist auch der Grund dafür, warum das Struct nicht als Map in die Sprache eingeführt wurde.
 
@@ -334,7 +334,14 @@ println .color; # gibt "color" auf der Konsole aus
 println color; # gibt "red" auf der Konsole aus.
 ```
 
-Es gilt eine weitere Unbedingtheit zu beachten: die Quick-String-Syntax funktioniert nur für Fieldnames, die **nicht** als Operator bereits in Amiant belegt sind! (Vielleicht mit Tabellen zu lösen?)
+Die Quick-String-Syntax wird vom Lexer aufgelöst, sodass bei ihrer Nutzung keinerlei Einbußen in der Geschwindigkeit des Programmes in Kauf genommen werden muss. Der `.` ist dabei **kein** Operator, sondern ein lexikalischer Hinweisgeber. Aus diesem Grunde muss ein String, der durch die Quick-String-Syntax definiert wurde, nicht extra geklammert werden, wenn er als Parameter in einer Liste gilt!
+
+Es ist unbedingt darauf zu achten, dass *nach dem Punkt kein Whitespace (Leerzeichen, Tab, etc.) stehen darf*! Die Syntax ist ein lexikalischer Zusammenhang, das garantiert ein schnelles Lexing, und erhöht ganz nebenbei die Lesbarkeit.
+
+```
+println . Hello; # würde NICHT als Quick-String-Syntax interpretiert werden!
+println .Hello # das hier würde als Quick-String interpretiert werden
+```
 
 ## Variablen und Konstanten
 
