@@ -291,6 +291,8 @@ println = (signature person1) signature person2; # gibt true aus, da beide die g
 ```
 Mithilfe der Typsignaturen können innerhalb von Amiant schwach typisierte Anwendungen geschrieben werden, die auf das Duck-Typing-Prinzip beruhen. Das ist auch der Grund dafür, warum das Struct nicht als Map in die Sprache eingeführt wurde.
 
+Ein Struct, das keine String-Keys besitzt, hat immer die Typsignatur 0!
+
 ### Weak
 
 Listen und Structs dürfen standardmäßig ausschließlich primitive Datentypen als Daten enthalten. Damit garantiert Amiant, dass nicht genutzter Speicher bereinigt werden kann, und es keine Zugriffe in bereits bereinigte Speicherbereiche gibt. Diese Regel ist für einige Anwendungsfälle jedoch zu stark. Manchmal ist es durchaus sinnvoll, komplexe Datentypen ineinander zu schachteln. Aus diesem Grunde gibt es das `weak` Keyword. Structs und Listen können als *weak* markiert werden, die Umkehrung ist nicht möglich. Als weak markierte Datentypen dürfen auch komplexe Datentypen enthalten. Die Speicherbereinigung kann in diesen Fällen allerdings nicht garantieren, dass der Speicher auch korrekt freigegeben wird (Retain Cycle). Amiant kann in diesem Falle nur garantieren, dass jeder Zugriff auf diese Objekte korrekt ist - Segmentation Faults sind immer ausgeschlossen, Speicherleaks allerdings nicht! Ein Retain Cycle muss manuell verhindert werden, in dem besonderes Augenmerk auf die Speicherstruktur gelegt werden muss.
