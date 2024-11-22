@@ -197,10 +197,17 @@ _Number_ ist der einzige Datentyp, der bei Übertragungen vollständig kopiert w
 ### Konstanten und Typkonstanten
 Folgende Keywords sind als Konstanten reserviert, und können deshalb nicht außerhalb ihres Kontextes gebraucht werden:
 
-| Keyword | Bedeutung     |
-| :---:   |     :---:     |
-| PI      | 3.14159...    |
-| EUL     | 2.71828...    |
+| Keyword | Bedeutung     |  Bedeutung     |
+| :---:   |     :---:     |    :---:       |
+| PI      | 3.14159...    |    Kreiszahl   |
+| EUL     | 2.71828...    | Euler'sche Zahl|
+| PHI     | 1.61803...    |Goldener Schnitt|
+| TAU     | 6.28318...    |Vollwinkel 2*Pi(rad)|
+| LN2     | 0.69314...    |                |
+| LN10    | 2.30258...    |                |
+| SQRT2   | 1.41421...    |                |
+| SQRT3   | 1.73205...    |                |
+| SQRT2PI | 2.50662...    |                |
 
 Typkonstanten enthalten den Datentypnamen als String. Sie werden immer groß geschrieben.
 
@@ -526,6 +533,42 @@ var weather2 = "snowy"; # erzeugt eine Variable mit Identitätsoperator
 ```
 
 Die Verwendung des Identitätsoperators ergibt eine Syntax die der von vielen C-ähnlichen Programmiersprachen (Java, JavaScript, C#) völlig gleicht. Zusätzlich ist zwischen Name und Argument optisch besser unterschieden.
+
+### When-Operator & Expect-When-Syntax
+
+Das Keyword `when` hat in Amiant eine ähnliche Funktionsweise wie `expect`. Während letzteres prüft, ob eine Variable im Scope (und hierarchisch darüber) definiert wurde, agiert `when` wie eine Bedingungsüberprüfung. Falls alle Bedingungen, die vom Typ Boolean sein müssen, wahr sind, wird das letzte Argument ausgeführt. Dabei wird **kein neuer Scope erstellt**. Sollte eine Bedingung in der Kette false sein, wird die Ausführung abgebrochen, der Code im letzten Argument wird nicht ausgewertet, und *es werden alle übrigen Bedingungen ebenso nicht mehr ausgewertet*. In diesem Falle gibt der Operator schlicht null zurück. Sollten alle Bedingungen wahr sein, gibt der Operator das Ergebnis des Codes im letzten Argument zurück.
+
+```
+var isRaining = true;
+var isMonday = true;
+var isYear2024 = false;
+
+when isRaining isMonday println "It's a rainy monday!";
+
+var mood = when isRaining isMonday {
+   # kein neuer Scope!
+   yield "sad";
+};
+
+println mood; # gibt sad aus
+
+var result = when isMonday isYear2024 yield $4;
+println result; # es wird null ausgegeben, da when eine false-Bedingung gefunden hat
+```
+
+Neben den obigen Beispielanwendungen, die wie eine verkürte If-Schreibweise agieren, gibt es noch eine weitere Situation, in der diese Syntax vorteilhaft sein kann - bei Funktionsdefinitionen:
+
+```
+function safeLn2 expect a when (> a $0) {
+    return ln a;
+}
+
+println ~safeLn2 a:$1; # gibt 0 aus
+println ~safeLn2 b:$4; # gibt null aus
+println ~safeLn2 a:$-4; # gibt null aus
+```
+
+Diese expect-when-Syntax erlaubt die sichere Ausführung von Funktionen.
 
 ## Amiant-MetaVM
 
