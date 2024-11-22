@@ -123,8 +123,9 @@ Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet
 71. false
 72. weak
 73. expect
-74. new
-75. signature
+74. when
+75. new
+76. signature
 
 ### Blöcke
 
@@ -536,7 +537,7 @@ Die Verwendung des Identitätsoperators ergibt eine Syntax die der von vielen C-
 
 ### When-Operator & Expect-When-Syntax
 
-Das Keyword `when` hat in Amiant eine ähnliche Funktionsweise wie `expect`. Während letzteres prüft, ob eine Variable im Scope (und hierarchisch darüber) definiert wurde, agiert `when` wie eine Bedingungsüberprüfung. Falls alle Bedingungen, die vom Typ Boolean sein müssen, wahr sind, wird das letzte Argument ausgeführt. Dabei wird **kein neuer Scope erstellt**. Sollte eine Bedingung in der Kette false sein, wird die Ausführung abgebrochen, der Code im letzten Argument wird nicht ausgewertet, und *es werden alle übrigen Bedingungen ebenso nicht mehr ausgewertet*. In diesem Falle gibt der Operator schlicht null zurück. Sollten alle Bedingungen wahr sein, gibt der Operator das Ergebnis des Codes im letzten Argument zurück.
+Das Keyword `when` hat in Amiant eine ähnliche Funktionsweise wie `expect`. Während letzteres prüft, ob eine Variable im Scope (und hierarchisch darüber) definiert wurde, agiert `when` wie eine Bedingungsüberprüfung. Falls alle Bedingungen, die vom Typ Boolean sein müssen, wahr sind, wird das letzte Argument ausgeführt. Dabei wird **kein neuer Scope erstellt**. Sollte eine Bedingung in der Kette false sein, wird die Ausführung abgebrochen, der Code im letzten Argument wird nicht ausgewertet, und *es werden alle übrigen Bedingungen ebenso nicht mehr ausgewertet*. In diesem Falle gibt der Operator schlicht null zurück. Sollten alle Bedingungen wahr sein, gibt der Operator das Ergebnis des Codes im letzten Argument zurück. Sollte ein Ausdruck in der Bedingungsliste dabei sein, der versehentlich keinen Boolean zurück gibt, so wird ein Typ-Fehler geworfen, und der Operator bricht mit null ab. Eine Typverletzung wird also nicht ignoriert und übergangen!
 
 ```
 var isRaining = true;
@@ -556,7 +557,7 @@ var result = when isMonday isYear2024 yield $4;
 println result; # es wird null ausgegeben, da when eine false-Bedingung gefunden hat
 ```
 
-Neben den obigen Beispielanwendungen, die wie eine verkürte If-Schreibweise agieren, gibt es noch eine weitere Situation, in der diese Syntax vorteilhaft sein kann - bei Funktionsdefinitionen:
+Neben den obigen Beispielanwendungen, die wie eine verkürzte If-Schreibweise agieren, gibt es noch eine weitere Situation, in der diese Syntax vorteilhaft sein kann - bei Funktionsdefinitionen:
 
 ```
 function safeLn2 expect a when (> a $0) {
@@ -568,7 +569,7 @@ println ~safeLn2 b:$4; # gibt null aus
 println ~safeLn2 a:$-4; # gibt null aus
 ```
 
-Diese expect-when-Syntax erlaubt die sichere Ausführung von Funktionen.
+Diese expect-when-Syntax erlaubt die sichere Ausführung von Funktionen. Beispielsweise wird der Aufruf des natürlichen Logarithmus' durch diese Funktion geschützt, in dem das Argument begrenzt wird.
 
 ## Amiant-MetaVM
 
