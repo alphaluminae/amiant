@@ -109,16 +109,6 @@ Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet
 57. refs
 58. async
 59. await
-60. Null
-61. Number
-62. Boolean
-63. String
-64. List
-65. Function
-66. Struct
-67. ByteSequence
-68. PI
-69. EUL
 70. true
 71. false
 72. weak
