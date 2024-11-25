@@ -71,44 +71,45 @@ Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet
 19. exit
 20. get
 21. put
-22. null
-23. assign/varset/mutate
-24. native
-25. factorial
-26. sqrt
-27. error
-28. throw
-29. catch
-30. avm
-31. amiant
-32. assert
-33. contract
-34. exit
-35. copy
-36. const
-37. struct
-38. list
-39. number
-40. vnumber
-41. sin
-42. cos
-43. tan
-44. random
-45. modulo
-46. log
-47. ln
-48. exp
-49. ipow
-50. round
-51. line
-52. mount
-53. unmount
-54. call
-55. level
-56. memory
-57. refs
-58. async
-59. await
+22. select
+23. null
+24. assign/varset/mutate
+25. native
+26. factorial
+27. sqrt
+28. error
+29. throw
+30. catch
+31. avm
+32. amiant
+33. assert
+34. contract
+35. exit
+36. copy
+37. const
+38. struct
+39. list
+40. number
+41. vnumber
+42. sin
+43. cos
+44. tan
+45. random
+46. modulo
+47. log
+48. ln
+49. exp
+50. ipow
+51. round
+52. line
+53. mount
+54. unmount
+55. call
+56. level
+57. memory
+58. refs
+59. async
+60. await
 70. true
 71. false
 72. weak
@@ -279,9 +280,32 @@ put person2 $4 = $5; # irgendeine zusätzliche Eigenschaft der person2, die alle
 println = person1 person2; # gibt false aus, da die Structs offenkundig nicht das gleiche Objekt repräsentieren
 println = (signature person1) signature person2; # gibt true aus, da beide die gleichen definierten String-Keys haben
 ```
-Mithilfe der Typsignaturen können innerhalb von Amiant schwach typisierte Anwendungen geschrieben werden, die auf das Duck-Typing-Prinzip beruhen. Das ist auch der Grund dafür, warum das Struct nicht als Map in die Sprache eingeführt wurde.
+Mithilfe der Typsignaturen können innerhalb von Amiant schwach typisierte Anwendungen geschrieben werden, die auf das Duck-Typing-Prinzip beruhen. Das ist auch der Grund dafür, warum das Struct nicht als Map in die Sprache eingeführt wurde. Ein Struct, das keine String-Keys besitzt, hat immer die Typsignatur 0.
 
-Ein Struct, das keine String-Keys besitzt, hat immer die Typsignatur 0!
+#### Select
+
+Structs, die weak sind, enthalten bei Bedarf weitere Structs. Dadurch können struct-Hierarchien entstehen, um komplexe Eigenschaften zu modellieren. Um nun durch so einen Baum zu navigieren ist die get-Syntax eher unübersichtlich:
+
+```
+var person struct;
+weak person;
+var job struct;
+weak job;
+var company struct;
+
+put person .job job;
+put job .company company;
+put company .name "Amiant Ltd.";
+
+println get (get (get person .job) .company) .name; # gibt Amiant Ltd. auf der Konsole aus
+```
+Besser wäre die Verwendung der select-Syntax, die den hierarchischen Zugriff erleichtert, und potentielle Fehlerquellen durch falsche Klammerungen vorbeugt:
+
+```
+...
+
+println select person .job .company .name; # gibt auch Amiant Ltd. auf der Konsole aus
+```
 
 ### Weak
 
