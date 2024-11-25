@@ -284,7 +284,7 @@ Mithilfe der Typsignaturen können innerhalb von Amiant schwach typisierte Anwen
 
 #### Select
 
-Structs, die weak sind, enthalten bei Bedarf weitere Structs. Dadurch können struct-Hierarchien entstehen, um komplexe Eigenschaften zu modellieren. Um nun durch so einen Baum zu navigieren ist die get-Syntax eher unübersichtlich:
+Structs, die weak sind, enthalten bei Bedarf weitere Structs. Dadurch können struct-Hierarchien entstehen, die komplexe Eigenschaften  modellieren. Um nun durch so einen Baum zu navigieren, ist die get-Syntax eher unübersichtlich:
 
 ```
 var person struct;
@@ -306,6 +306,14 @@ Besser wäre die Verwendung der select-Syntax, die den hierarchischen Zugriff er
 
 println select person .job .company .name; # gibt auch Amiant Ltd. auf der Konsole aus
 ```
+Die get-Syntax stimmt also mit der select-Syntax, bei der nur ein Argument abgefragt wird, überein:
+
+```
+...
+
+println = (get person .job) (select person .job); # gibt true aus
+```
+
 
 ### Weak
 
