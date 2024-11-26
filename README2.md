@@ -324,8 +324,8 @@ if = (signature struct1) (signature struct2) { # prüft die Signaturgleichheit
 };
 ```
 
-Diese Syntax hat mehrere Nachteile: zunächst ist viel Boilerplate-Code nötig, um an die Signaturen zu gelangen, und man kann keine Subtypen damit abprüfen. Um beide Probleme zu lösen, besitzt Amiant den `has`- und `is`-Operator, deren Anwendung nur im Kontext von Structs und ihren Signaturen gültig ist.
-Der `is`-Operator hat zwei Verwendungsweisen: erstens kann er prüfen, ob zwei structs die gleiche Signatur haben, und zweitens kann er prüfen, ob die Signatur eines Structs einer beliebigen (möglicherweise sogar isolierten) Signatur entspricht:
+Diese Syntax hat mehrere Nachteile: zunächst ist viel Boilerplate-Code nötig, um an die Signaturen zu gelangen, und zweitens kann man keine Subtypen damit abprüfen. Um beide Probleme zu lösen, besitzt Amiant den `has`- und `is`-Operator, deren Anwendung nur im Kontext von Structs und ihren Signaturen gültig ist.
+Der `is`-Operator hat zwei Verwendungsweisen: erstens kann er prüfen, ob zwei Structs die gleiche Signatur haben, und zweitens kann er prüfen ob die Signatur eines Structs einer beliebigen (möglicherweise sogar isolierten) Signatur entspricht:
 
 ```
 var struct1 struct;
@@ -336,7 +336,7 @@ var mySignature = signature .name .height .color; # erstellt eine neue isolierte
 println is struct1 mySignature; # gibt false aus
 println is struct1 struct2; # gibt true aus
 ```
-Damit ist das Problem der eleganten Überprüfung von Signaturen gelöst. Um Subtypen abzuprüfen wird der `has`-Operator verwendet. Dieser prüft, ob ein Struct alle nachfolgenden Eigenschaften besitzt - also ob due Signatur eines Structs eine Subsignatur ist:
+Damit ist das Problem der eleganten Überprüfung von Signaturen gelöst. Um Subtypen abzuprüfen wird der `has`-Operator verwendet. Dieser prüft, ob ein Struct alle nachfolgenden Eigenschaften besitzt - also ob die Signatur eines Structs eine Subsignatur ist:
 
 ```
 var struct1 struct;
