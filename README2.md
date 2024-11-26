@@ -348,6 +348,8 @@ println has struct1 .name .height. age; # prüft, ob das Struct die Signatur bes
 ```
 Der has-Operator ist noch flexibler, da er nicht nur ein Struct als erstes Argument zulässt, sondern auch explizit eine Signatur. Als nachfolgende Argumente können entweder String-Eigenschaften oder ganze Signaturen übergeben werden. Diese werden wieder kombiniert, und dann wird die Abfrage durchgeführt.
 
+Der Unterschied zwischen `has` und `is` kann auf folgende einfache Form gebracht werden: `is` prüft, ob *alle* Eigenschaften übereinstimmen, und `has` ob die nachfolgenden Eigenschaften *auch* enthalten sind. Ersteres ist eine Art Typprüfung, und letzteres eine Subtypprüfung - wobei der Begriff *Typ* hier mit Vorsicht zu genießen ist.
+
 #### Signature vs. Type
 
 In Amiant besitzen Objekte einen Typ. So sind Strings vom Typ String, Zahlen vom Typ Number und Signaturen vom Typ Signature. Structs sind dabei immer vom Typ Struct! Sie werden im Amiant-Typsystem immer den gleichen Struct-Typ aufweisen. Die Signatur hingegen ist eine Verfeinerung des Struct-Typs, steht aber in keiner Relation zu den globalen Datentypen, wie sie bereits eingeführt wurden. Man sollte beide Beschreibungen nicht miteinander verwechseln!
@@ -448,6 +450,7 @@ Ein Punkt leitet zwar den Quick-String ein, beendet ihn allerdings nicht. Nur Wh
 ```
 println .a.b.c..; # gibt "a.b.c.." auf der Konsole aus 
 ```
+In der generellen Lexik des Punktes muss davor kein Whitespace stehen. Wenn zuvor ein Fieldname erkannt wurde, so hört dieses bei einem Punkt ohnehin auf, da Feldnamen keine Punkte enthalten dürfen. Dadurch entstehen keine Kollisionen mit der Quick-String-Syntax.
 
 ## Variablen und Konstanten
 
