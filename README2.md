@@ -348,6 +348,10 @@ println has struct1 .name .height. age; # prüft, ob das Struct die Signatur bes
 ```
 Der has-Operator ist noch flexibler, da er nicht nur ein Struct als erstes Argument zulässt, sondern auch explizit eine Signatur. Als nachfolgende Argumente können entweder String-Eigenschaften oder ganze Signaturen übergeben werden. Diese werden wieder kombiniert, und dann wird die Abfrage durchgeführt.
 
+#### Signature vs. Type
+
+In Amiant besitzen Objekte einen Typ. So sind Strings vom Typ String, Zahlen vom Typ Number und Signaturen vom Typ Signature. Structs sind dabei immer vom Typ Struct! Sie werden im Amiant-Typsystem immer den gleichen Struct-Typ aufweisen. Die Signatur hingegen ist eine Verfeinerung des Struct-Typs, steht aber in keiner Relation zu den globalen Datentypen, wie sie bereits eingeführt wurden. Man sollte beide Beschreibungen nicht miteinander verwechseln!
+
 #### Select
 
 Structs, die weak sind, enthalten bei Bedarf weitere Structs. Dadurch können struct-Hierarchien entstehen, die komplexe Eigenschaften  modellieren. Um nun durch so einen Baum zu navigieren, ist die get-Syntax eher unübersichtlich:
