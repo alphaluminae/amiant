@@ -117,6 +117,8 @@ Folgende Keywords sind belegt, und können deshalb nicht als Feldnamen verwendet
 74. when
 75. new
 76. signature
+77. is
+78. has
 
 ### Blöcke
 
@@ -183,6 +185,7 @@ Zeilenkommentare können mit dem Symbol `#` gestartet werden, und gehen bis ans 
 | ByteSequence | Rohdaten (Bytes)        |
 | Struct   | Container (Key-Value-Pairs) |
 | List     | Liste                       |
+| Signature| Signatur eines Structs      |
 
 _Number_ ist der einzige Datentyp, der bei Übertragungen vollständig kopiert wird! Bei allen anderen Datentypen wird lediglich eine _Referenz_ kopiert. Diese Referenz sorgt dafür, dass Amiant weniger Speicher benötigt.
 
@@ -214,6 +217,7 @@ Typkonstanten enthalten den Datentypnamen als String. Sie werden immer groß ges
 | Function     | "Function"    |
 | Struct       | "Struct"      |
 | ByteSequence | "ByteSequence"|
+| Signature    | "Signature"   |
 
 ## Primitive Datentypen
 
@@ -260,7 +264,7 @@ Es fällt auf, dass sowohl Listen als auch Structs die gleichen Keywörter `put`
 
 #### Typsignaturen
 
-Trotzdessen Structs an sich keine Typen definieren, können sie dennoch eine Typsignatur aufweisen. Diese Signatur ist eine ganze Zahl, die sich aus den im Struct hinterlegten String-Keys zusammensetzt. Dabei spielt die Reihenfolge der Hinterlegungen keine Rolle, nur ihr konkreter Inhalt. Amiant garantiert gleiche Typsignaturen für gleiche Keybelegungen. Da intern ein Hash-System verwendet wird, könnte es theoretisch zu Kollisionen kommen. Die Typsignatur eines Structs kann mithilfe des `signature`-Keywords gewonnen werden:
+Trotzdessen Structs an sich keine Typen definieren, können sie dennoch eine Typsignatur aufweisen. Diese Signatur ist ein eigenes Objekt, das sich aus den im Struct hinterlegten String-Keys zusammensetzt, und diese repräsentiert. Dabei spielt die Reihenfolge der Hinterlegungen keine Rolle, nur ihr konkreter Inhalt. Amiant garantiert gleiche Typsignaturen für gleiche Keybelegungen. Da intern ein Hash-System verwendet wird, könnte es theoretisch zu Kollisionen kommen. Die Typsignatur eines Structs kann mithilfe des `signature`-Keywords gewonnen werden:
 
 
 ```
@@ -280,7 +284,70 @@ put person2 $4 = $5; # irgendeine zusätzliche Eigenschaft der person2, die alle
 println = person1 person2; # gibt false aus, da die Structs offenkundig nicht das gleiche Objekt repräsentieren
 println = (signature person1) signature person2; # gibt true aus, da beide die gleichen definierten String-Keys haben
 ```
-Mithilfe der Typsignaturen können innerhalb von Amiant schwach typisierte Anwendungen geschrieben werden, die auf das Duck-Typing-Prinzip beruhen. Das ist auch der Grund dafür, warum das Struct nicht als Map in die Sprache eingeführt wurde. Ein Struct, das keine String-Keys besitzt, hat immer die Typsignatur 0.
+Mithilfe der Typsignaturen können innerhalb von Amiant schwach typisierte Anwendungen geschrieben werden, die auf das Duck-Typing-Prinzip beruhen. Das ist auch der Grund dafür, warum das Struct nicht als Map in die Sprache eingeführt wurde. Ein Struct, das keine String-Keys besitzt, besitzt dennoch eine Signatur - diese repräsentiert allerdings eine Leere.
+Das `Signature`-Keyword gibt eine Referenz auf die Signatur eines Structs zurück, sodass diese Signatur immer an das Struct gekoppelt ist: verändert sich das Struct, wird sich auch die Signatur ändern. Das Keyword kann auch dazu genutzt werden, um neue (entkoppelte) Signaturen zu erstellen:
+
+```
+var treeSignature signature .type .height .location; # erzeugt eine neue Signatur, die die angegebenen Eigenschaften repräsentiert
+
+var treeSignature2 signature "type "height" "location"; # zur Erinnerung: diese Syntax ist gleichwertig!
+```
+In diesem Falle erwartet der `signature`-Operator eine Reihe an String-Werten (oder andere Signaturen), die die zu repräsentierenden Eigenschaften angeben. Da diese Signatur nicht mehr an ein Struct gekoppelt ist, sondern nur für sich steht, wird sie *isolierte* Signatur genannt. Isolierte Signaturen können im Nachgang nicht verändert werden, aber sie können - genauso wie gekoppelte Signaturen - durch den `signature`-Operator miteinander zu neuen isolierten Signaturen verknüpft werden:
+
+```
+var treeSignature signature .type .height .location; # erzeugt eine neue Signatur, die die angegebenen Eigenschaften repräsentiert
+
+var plantSignature signature .bioname;
+
+var combinedSignature signature treeSignature plantSignature .age; # erzeugt eine kombinierte Signatur, die alle Eigenschaften der vorherigen beiden enthält, und noch eine zusätzliche hinzufügt
+```
+
+Bei der Kombination von Signaturen werden doppelt vorkommene String-Eigenschaften - wie in einer Menge - zu einer einzigen reduziert:
+
+```
+var doubleSignature .firstName .lastName .firstName; # diese Signatur ist trotzdem Repräsentant von zwei Eigenschaften - die dritte fällt mit der ersten zusammen
+```
+
+
+#### has-Operator und is-Operator
+
+Die zuvor eingeführten Signaturen erlauben eine schwache Typisierung von Structs, die helfen sollen, bestimmte Eigenschaftskonstellationen als solche festzulegen. Um die Signatur eines Structs abzufragen, könnten mit den bisherigen Kenntnissen if-Operatoren verwendet werden:
+
+
+```
+var struct1 struct;
+var struct2 struct;
+...
+
+if = (signature struct1) (signature struct2) { # prüft die Signaturgleichheit
+   # do something
+};
+```
+
+Diese Syntax hat mehrere Nachteile: zunächst ist viel Boilerplate-Code nötig, um an die Signaturen zu gelangen, und man kann keine Subtypen damit abprüfen. Um beide Probleme zu lösen, besitzt Amiant den `has`- und `is`-Operator, deren Anwendung nur im Kontext von Structs und ihren Signaturen gültig ist.
+Der `is`-Operator hat zwei Verwendungsweisen: erstens kann er prüfen, ob zwei structs die gleiche Signatur haben, und zweitens kann er prüfen, ob die Signatur eines Structs einer beliebigen (möglicherweise sogar isolierten) Signatur entspricht:
+
+```
+var struct1 struct;
+var struct2 struct;
+
+var mySignature = signature .name .height .color; # erstellt eine neue isolierte (also an kein Struct gekoppelte) Signatur
+
+println is struct1 mySignature; # gibt false aus
+println is struct1 struct2; # gibt true aus
+```
+Damit ist das Problem der eleganten Überprüfung von Signaturen gelöst. Um Subtypen abzuprüfen wird der `has`-Operator verwendet. Dieser prüft, ob ein Struct alle nachfolgenden Eigenschaften besitzt - also ob due Signatur eines Structs eine Subsignatur ist:
+
+```
+var struct1 struct;
+var struct2 struct;
+
+...
+
+println has struct1 struct2; # prüft, ob die Signatur des zweiten Structs in der Signatur des ersten Structs enthalten ist
+println has struct1 .name .height. age; # prüft, ob das Struct die Signatur besitzt, die aus den drei Eigenschaften besteht
+```
+Der has-Operator ist noch flexibler, da er nicht nur ein Struct als erstes Argument zulässt, sondern auch explizit eine Signatur. Als nachfolgende Argumente können entweder String-Eigenschaften oder ganze Signaturen übergeben werden. Diese werden wieder kombiniert, und dann wird die Abfrage durchgeführt.
 
 #### Select
 
@@ -373,6 +440,10 @@ Es ist unbedingt darauf zu achten, dass *nach dem Punkt kein Whitespace (Leerzei
 ```
 println . Hello; # würde NICHT als Quick-String-Syntax interpretiert werden!
 println .Hello # das hier würde als Quick-String interpretiert werden
+```
+Ein Punkt leitet zwar den Quick-String ein, beendet ihn allerdings nicht. Nur Whitespaces, Klammern und Semikolons können einen Quick-String beenden! Damit darf auch der Punkt als Symbol verwendet werden.
+```
+println .a.b.c..; # gibt "a.b.c.." auf der Konsole aus 
 ```
 
 ## Variablen und Konstanten
