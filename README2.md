@@ -249,7 +249,7 @@ Der Ausdruck `get (list $2 $4 $6 $8) $2` gibt den Wert `6` zurück. Man kann nac
 
 #### Definition und Anwendung
 
-Ein Struct ist eine Art Map, die unter ein Keyword zugehörige Daten speichert und über eben jenes Keyword wieder zurückgeben kann. Structs in Amiant unterscheiden sich deshalb erheblich von denen in C oder C++. In Amiant ist ein Struct schlicht ein Container, und __nicht__ ein Typ im gewohnten Sinne, der sich aus seinen Subtypen zusammensetzt. Ein Struct darf auch leer sein! Daten können aus einem Struct nicht entfernt werden, allerdings werden die alten Daten gelöscht, sollten sie unter einem bestehenden Keyword neu abgelegt werden. Das Keyword darf jeden Wert jeder __Primitiven__ annehmen. So sind `null`, `$4`, `"value1"` allesamt gültige Keywords. In einem Struct wird garantiert, dass unter einem Keyword immer nur einmal Daten liegen. Doppelt besetzte Keywords sind __nicht__ möglich. Ein Struct wird folgend erzeugt und verwendet:
+Ein Struct ist eine Art Map, die unter ein Keyword zugehörige Daten speichert und über eben jenes Keyword wieder zurückgeben kann. Structs in Amiant unterscheiden sich deshalb erheblich von denen in C oder C++. In Amiant ist ein Struct zunächst schlicht ein Container, und __nicht__ ein Typ im gewohnten Sinne, der sich aus seinen Subtypen zusammensetzt. Ein Struct darf auch leer sein! Daten können aus einem Struct nicht entfernt werden, allerdings werden die alten Daten gelöscht, sollten sie unter einem bestehenden Keyword neu abgelegt werden. Das Keyword darf jeden Wert jeder __Primitiven__ annehmen. So sind `null`, `$4`, `"value1"` allesamt gültige Keywords. In einem Struct wird garantiert, dass unter einem Keyword immer nur einmal Daten liegen. Doppelt besetzte Keywords sind __nicht__ möglich. Ein Struct wird folgend erzeugt und verwendet:
 
 ```
 var data struct; # erzeugt ein leeres Struct und speichert es in die Variable data
@@ -264,7 +264,7 @@ Es fällt auf, dass sowohl Listen als auch Structs die gleichen Keywörter `put`
 
 #### Typsignaturen
 
-Trotzdessen Structs an sich keine Typen definieren, können sie dennoch eine Typsignatur aufweisen. Diese Signatur ist ein eigenes Objekt, das sich aus den im Struct hinterlegten String-Keys zusammensetzt, und diese repräsentiert. Dabei spielt die Reihenfolge der Hinterlegungen keine Rolle, nur ihr konkreter Inhalt. Amiant garantiert gleiche Typsignaturen für gleiche Keybelegungen. Da intern ein Hash-System verwendet wird, könnte es theoretisch zu Kollisionen kommen. Die Typsignatur eines Structs kann mithilfe des `signature`-Keywords gewonnen werden:
+Trotzdessen Structs an sich keine Typen definieren, können sie dennoch eine Typsignatur aufweisen. Diese Signatur ist ein eigenes Objekt, das sich aus den im Struct hinterlegten String-Keys zusammensetzt, und diese repräsentiert. Dabei spielt die Reihenfolge der Hinterlegungen keine Rolle, nur ihr konkreter Inhalt. Amiant garantiert gleiche Typsignaturen für gleiche Keybelegungen. Da intern ein Hash-System verwendet wird, könnte es theoretisch zu Kollisionen kommen. Signaturen sind Repräsentanten der String-Key-Eigenschaften, die ein Struct enthält. Die Typsignatur eines Structs kann mithilfe des `signature`-Keywords gewonnen werden:
 
 
 ```
@@ -285,7 +285,7 @@ println = person1 person2; # gibt false aus, da die Structs offenkundig nicht da
 println = (signature person1) signature person2; # gibt true aus, da beide die gleichen definierten String-Keys haben
 ```
 Mithilfe der Typsignaturen können innerhalb von Amiant schwach typisierte Anwendungen geschrieben werden, die auf das Duck-Typing-Prinzip beruhen. Das ist auch der Grund dafür, warum das Struct nicht als Map in die Sprache eingeführt wurde. Ein Struct, das keine String-Keys besitzt, besitzt dennoch eine Signatur - diese repräsentiert allerdings eine Leere.
-Das `Signature`-Keyword gibt eine Referenz auf die Signatur eines Structs zurück, sodass diese Signatur immer an das Struct gekoppelt ist: verändert sich das Struct, wird sich auch die Signatur ändern. Das Keyword kann auch dazu genutzt werden, um neue (entkoppelte) Signaturen zu erstellen:
+Das `signature`-Keyword gibt eine Referenz auf die Signatur eines Structs zurück, sodass diese Signatur immer an das Struct gekoppelt ist: verändert sich das Struct, wird sich auch die Signatur ändern. Das Keyword kann allerdings auch dazu genutzt werden, um neue Signaturen zu erstellen:
 
 ```
 var treeSignature signature .type .height .location; # erzeugt eine neue Signatur, die die angegebenen Eigenschaften repräsentiert
@@ -312,7 +312,6 @@ var doubleSignature .firstName .lastName .firstName; # diese Signatur ist trotzd
 #### has-Operator und is-Operator
 
 Die zuvor eingeführten Signaturen erlauben eine schwache Typisierung von Structs, die helfen sollen, bestimmte Eigenschaftskonstellationen als solche festzulegen. Um die Signatur eines Structs abzufragen, könnten mit den bisherigen Kenntnissen if-Operatoren verwendet werden:
-
 
 ```
 var struct1 struct;
