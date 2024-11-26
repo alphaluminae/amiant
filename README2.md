@@ -383,7 +383,7 @@ Die get-Syntax stimmt also mit der select-Syntax, bei der nur ein Argument abgef
 
 println = (get person .job) (select person .job); # gibt true aus
 ```
-
+Da das `select`-Keyword nur für Structs definiert ist, handelt es sich *nicht* um einen genereischen Accessor, selbst wenn er im Spezialfall mit einem Argument mit dem `get`-Operator übereinstimmt.
 
 ### Weak
 
