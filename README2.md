@@ -487,7 +487,7 @@ constant x; # jetzt kann x nicht mehr bearbeitet werden
 
 ### Expect
 
-Um in Amiant einen Codeabschnitt nur dann auszuführen, wenn die darin verwendeten Variablen auch definiert sind, gibt es das `expect` Keyword. Hiermit lässt sich prüfen, ob Feldnamen im aktuellen Scope (lokal und hierarchisch darüber) definiert sind: sollte das der Fall sein, wird der entsprechende Ausdruck ausgeführt. Es ist wichtig anzumerken, dass das Expect-Keyword mindestens zwei Argumente benötigt, theoretisch aber beliebig viele haben darf. Das allerletzte Argument ist dabei immer der Code, der ausgeführt werden soll, falls alle angegebenen Feldnamen im Scope deklariert sind. Es wird __kein__ neuer Scope geöffnet!
+Um in Amiant einen Codeabschnitt nur dann auszuführen, wenn die darin verwendeten Variablen auch definiert sind (und **nicht null**), gibt es das `expect` Keyword. Hiermit lässt sich prüfen, ob Feldnamen im aktuellen Scope (lokal und hierarchisch darüber) definiert sind: sollte das der Fall sein, wird der entsprechende Ausdruck ausgeführt. Es ist wichtig anzumerken, dass das Expect-Keyword mindestens zwei Argumente benötigt, theoretisch aber beliebig viele haben darf. Das allerletzte Argument ist dabei immer der Code, der ausgeführt werden soll, falls alle angegebenen Feldnamen im Scope deklariert sind. Es wird __kein__ neuer Scope geöffnet!
 
 Hier ist ein Beispielcode, der das Expect-Keyword in Verbindung mit Funktionen nutzt, um dafür zu sorgen, dass der Code von Funktionen nur dann ausgeführt wird, wenn alle nötigen Variablen existieren.
 
@@ -500,6 +500,7 @@ function printMessageFrom expect sender message {
 
 Im Beispiel ist zu sehen, wie eine Fehlerquelle vorzubeugen ist. Der entsprechende Code wird nur dann aufgerufen, wenn die Variablen (in diesem Falle *sender* und *message* auch beide existieren. Und das kann lokal sein (der Funktion werden die Variablen beim Aufruf übergeben), oder global bereits verfügbar. Genaueres zu den Funktionen findet sich im entsprechenden Kapitel.
 Expect kann aber auch in jedem anderen Kontext verwendet werden, da es sich um ein eigenständiges Keyword handelt, das an keine Codestruktur gebunden ist (anders als das else-Keyword, das fest an if-Verzweigungen geknüpft ist). So lässt es sich mit Verzweigungen und Loops kombinieren. Aber auch im regulären Codefluss, zu Modulbeginn, oder anderen entscheidenen Punkten im Programm kann so eine Abfrage wichtig sein.
+Die durch Expect auf Existenz geprüften Variablen dürfen nicht null sein, da es keinen qualitativen Unterschied zwischen einer nicht definierten Variable und eine auf null gesetzte Variable gibt. Anderenfalls wäre die expact-Syntax überflüssig.
 
 ## Funktionen
 
