@@ -24,12 +24,12 @@
 | `~ >?< >?< <?> ..2`			|  `<?>`				|  Ruft eine Funktion über ihren Fieldname auf |
 | `~ <?:Function> >?< <?> ..2`		|  `<?>`				|  Ruft eine Funktion/Lambda über einen Funktionspointer auf |
 | `function/func >?< <'?>`			|  `<?>`				|  Erzeugt eine Funktion |
-| `return`					|  `<?>`				|  Bricht die Ausführung in der aktuellen Funktion mit null ab |
+| `return`					|  `<Null=null>`				|  Bricht die Ausführung in der aktuellen Funktion mit null ab |
 | `return <?>`				|  `<?>`				|  Bricht die Ausführung in der aktuellen Funktion ab |
 | `contract <?:Boolean>`			|  `<?>`				|  Notwendige Bedingung für die Möglichkeit der Funktionsausführung |
 | `assert <?:Boolean>`			|  `<?>`				|  Notwendige Bedingung für die Ausführung des gesamten Programmes |
 | `assert <?:Boolean> <?:String>`		|  `<?>`				|  Notwendige Bedingung für die Ausführung des gesamten Programmes mit Debugtext |
-| `lambda <?>`				|  `<Function>`			|  Erzeugt eine anonyme Funktion (Lambda) |
+| `lambda <'?>`				|  `<Function>`			|  Erzeugt eine anonyme Funktion (Lambda) |
 | `yield <?>`				|  `<?>`				|  Bricht in der aktuellen Klammerung mit einem Wert ab |
 | `when <?:Boolean> ... <?>`		|  `<?>`				|  Führt das letzte Argument nur dann aus, wenn alle Bedingungen wahr sind |
 | `expect >?< <?:String> ..2 <?>`		|  `<?>`				|  Führt das drittletzte Argument nur dann aus, wenn alle Variablen vom jeweiligen Typ existieren |
