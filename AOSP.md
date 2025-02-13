@@ -3,13 +3,13 @@
 | Operator				|  Rückgabetyp  		|  Erklärung |
 | ---             |  ---              | ---        |
 | `+ <?:Number> <?:Number> ...`		|  `<Number>`			|  Addiert mehrere Zahlen miteinander |
-| - <?:Number> <?:Number> ...		|  <Number>			|  Subtrahiert mehrere Zahlen miteinander |
-| * <?:Number> <?:Number> ...		|  <Number>			|  Multipliziert mehrere Zahlen miteinander |
-| / <?:Number> <?:Number> ...		|  <Number>			|  Dividiert mehrere Zahlen miteinander |
-| > <?:Number> <?:Number>			|  <Boolean>			|  Größer als |
-| < <?:Number> <?:Number>			|  <Boolean>			|  Kleiner als |
-| & <?:Boolean> <?:Boolean> ...		|  <Boolean>			|  Logisches Und |
-| \| <?:Boolean> <?:Boolean> ...		|  <Boolean>			|  Logisches Oder |
+| `- <?:Number> <?:Number> ...`		|  `<Number>`			|  Subtrahiert mehrere Zahlen miteinander |
+| `* <?:Number> <?:Number> ...`		|  `<Number>`			|  Multipliziert mehrere Zahlen miteinander |
+| `/ <?:Number> <?:Number> ...`		|  `<Number>`			|  Dividiert mehrere Zahlen miteinander |
+| `> <?:Number> <?:Number>`			|  `<Boolean>`			|  Größer als |
+| `< <?:Number> <?:Number>`			|  `<Boolean>`			|  Kleiner als |
+| `& <?:Boolean> <?:Boolean> ...`		|  `<Boolean>`			|  Logisches Und |
+| `\| <?:Boolean> <?:Boolean> ...`		|  `<Boolean>`			|  Logisches Oder |
 | ! <?:Boolean>				|  <Boolean>			|  Logisches Nicht |
 | = <?>					|  <?>				|  Identitätsoperator: Gibt genau das zurück, was ihm übergeben wurde |
 | = <?> <?> ...				|  <Boolean>			|  Vergleichsoperator |
