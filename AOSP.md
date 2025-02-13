@@ -1,11 +1,10 @@
 # Amiant Operator Specification (AOSP)
 
 | Operator				|  Rückgabetyp  		|  Erklärung |
-
-| + <?:Number> <?:Number> ...		|  <Number>			|  Addiert mehrere Zahlen miteinander|
-| - <?:Number> <?:Number> ...		|  <Number>			|  Subtrahiert mehrere Zahlen miteinander|
-| * <?:Number> <?:Number> ...		|  <Number>			|  Multipliziert mehrere Zahlen miteinander|
-| / <?:Number> <?:Number> ...		|  <Number>			|  Dividiert mehrere Zahlen miteinander|
+| + <?:Number> <?:Number> ...		|  <Number>			|  Addiert mehrere Zahlen miteinander |
+| - <?:Number> <?:Number> ...		|  <Number>			|  Subtrahiert mehrere Zahlen miteinander |
+| * <?:Number> <?:Number> ...		|  <Number>			|  Multipliziert mehrere Zahlen miteinander |
+| / <?:Number> <?:Number> ...		|  <Number>			|  Dividiert mehrere Zahlen miteinander |
 
 | > <?:Number> <?:Number>			|  <Boolean>			|  Größer als |
 | < <?:Number> <?:Number>			|  <Boolean>			|  Kleiner als |
