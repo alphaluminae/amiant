@@ -128,7 +128,7 @@
 | `defined <?:String>`			|  `<Boolean>`			|  Prüft, ob im aktuellen oder höheren Scope die Variable mit dem Namen x definiert wurde |
 | `refs <?>`				|  `<Number>`			|  Gibt die Anzahl an Referenzen auf das Ergebnis eines Ausdrucks zurück |
 | `call <?:String> >?< <?> ..2`		|  `<?>`				|  Ruft eine Funktion über ihren String-Namen auf |
-| `amiant <?:String>`			|  `<?:Number`>			|  Startet ein neues Amiant-Programm ein Level höher. Dabei wird der übergebene String als Programmcode genutzt. Es wird der Exit-Code dieses Programms zurückgegeben. Der Programmfluss blockiert, bis das Meta-Programm beendet wurde |
+| `amiant <?:String>`			|  `<?:Number>`			|  Startet ein neues Amiant-Programm ein Level höher. Dabei wird der übergebene String als Programmcode genutzt. Es wird der Exit-Code dieses Programms zurückgegeben. Der Programmfluss blockiert, bis das Meta-Programm beendet wurde |
 | `avm version`				|  `<Number>`			|  Gibt die aktuell verwendete Amiant-Version zurück |
 | `avm restart`				|  `<Null=null>`			|  Startet das oberste Programm neu. Dabei werden alle Meta-Programme beendet |
 | `avm compver`				|  `<Number>`			|  Gibt die Compiler-Version oder spezifische Implementierungsversion zurück |
