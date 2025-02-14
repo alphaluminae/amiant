@@ -23,7 +23,7 @@
 | `' <'?>`					|  `<?>`				|  Identitätsoperator, der im ersten Argument einen neuen Scope öffnet |
 | `~ >?< >?< <?> ..2`			|  `<?>`				|  Ruft eine Funktion über ihren Fieldname auf |
 | `~ <?:Function> >?< <?> ..2`		|  `<?>`				|  Ruft eine Funktion/Lambda über einen Funktionspointer auf |
-| `function/func >?< <'?>`			|  `<?>`				|  Erzeugt eine Funktion |
+| `function/func >?< <'?>`			|  `<Function>`				|  Erzeugt eine Funktion |
 | `return`					|  `<Null=null>`				|  Bricht die Ausführung in der aktuellen Funktion mit null ab |
 | `return <?>`				|  `<?>`				|  Bricht die Ausführung in der aktuellen Funktion ab |
 | `contract <?:Boolean>`			|  `<?>`				|  Notwendige Bedingung für die Möglichkeit der Funktionsausführung |
