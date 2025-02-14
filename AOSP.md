@@ -32,7 +32,7 @@
 | `lambda <'?>`				|  `<Function>`			|  Erzeugt eine anonyme Funktion (Lambda), führt sie allerdings nicht aus! Das muss mit dem ~ Operator geschehen |
 | `yield <?>`				|  `<?>`				|  Bricht in der aktuellen Klammerung mit einem Wert ab |
 | `when <?:Boolean> ... <?>`		|  `<?>`				|  Führt das letzte Argument nur dann aus, wenn alle Bedingungen wahr sind |
-| `expect >?< <?:String> ..2 <?>`		|  `<?>`				|  Führt das drittletzte Argument nur dann aus, wenn alle Variablen vom jeweiligen Typ existieren |
+| `expect >?< <?:String> ..2 <?>`		|  `<?>`				|  Führt das letzte Argument nur dann aus, wenn alle Variablen vom jeweiligen Typ existieren |
 | `expect >?< <?:String> ..2 <?> else <?>`	|  `<?>`				|  Führt das drittletzte Argument nur dann aus, wenn alle Variablen vom jeweiligen Typ existieren, ansonsten das letzte Argument |
 | `null`					|  `<Null=null>`			|  Konstantes null |
 | `Null`					|  `<String="Null">`		|  Typkonstante |
