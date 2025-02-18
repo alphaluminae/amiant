@@ -74,7 +74,7 @@
 | `size <?:List/Struct/ByteSequence>`	|  `<Number>`			|  Gibt die Anzahl an Elementen einer Liste, bzw. die Anzahl an key-value-Paaren in einem Struct, bzw. die Anzahl an Bytes in einer ByteSequence zurück |
 | `list <?> ...`				|  `<List>`			|  Erzeugt eine neue Liste, wobei die Arguemente die Elemente in dieser Liste sein sollen; die Reihenfolge wird übernommen |
 | `merge <?:List> ...`			|  `<List>`			|  Hängt Listen der Reihe nach aneinander, sodass eine kombinierte lange Liste entsteht |
-| `peak <?:List>`				|  `<?>`				|  Gibt das letzte Objekt auf der Liste (oberstes Objekt auf dem Stapel) zurück, ohne es zu entfernen |
+| `peek <?:List>`				|  `<?>`				|  Gibt das letzte Objekt auf der Liste (oberstes Objekt auf dem Stapel) zurück, ohne es zu entfernen |
 | `pop <?:List>`				|  `<?>`				|  Gibt das letzte Objekt aus der Liste (oberstes Objekt auf dem Stapel) zurück, und entfernt es aus der Liste |
 | `remove <?:List> <?:Number>`		|  `<?>`				|  Entfernt ein Objekt am Index; die restliche Reihenfolge der Liste bleibt erhalten |
 | `reverse <?:List>`			|  `<List>`			|  Kehrt die Reihenfolge der Objekte einer Liste um |
@@ -113,9 +113,10 @@
 | `set/assign >?< <?>`			|  `<?>`				|  Ändert den Wert einer Variablen. Der neue Wert muss den gleichen Typ enthalten, wie vorher (null gilt als uninitialisiert, und darf mit jedem neuen Typ überschrieben werden). Das Setzen auf null ist nicht erlaubt |
 | `if <?:Boolean> <'?>`			|  `<?>`				|  Bedingte Ausführung |
 | `if <?:Boolean> <'?> else <'?>`		|  `<?>`				|  Bedingte Ausführung mit else |
-| `loop/while <?:Boolean> <'?>`		|  `<?>`				|  Bedingte Schleife |
+| `loop <?:Boolean> <'?>`		|  `<?>`				|  Bedingte Schleife |
 | `break`					|  `<Null=null>`			|  Beendet die Schleife |
-| `trim <?:String>`				|  `<String>`			|  Entfernt alle Whitespaces zu Beginn und zum Schluss eines Strings |
+| `break <?>`					|  `<?>`			|  Beendet die Schleife, und gibt einen Wert zurück |
+| `trim <?:String>`		|  `<String>`			|  Entfernt alle Whitespaces zu Beginn und zum Schluss eines Strings |
 | `contains <?:String> <?:String>`		|  `<Boolean>`			|  Prüft, ob ein Substring y im String x enthalten ist |
 | `startswith <?:String> <?:String>`		|  `<Boolean>`		|  Prüft, ob der String x mit String y beginnt |
 | `async >?< >?< <?> ..2 <'?>`		|  `<Boolean>`			|  Startet die parallele Ausführung. Im Capture können dem neuem Scope im letzten Argument Variablen mitgegeben werden. Das erste Argument muss eine Variable vom Typ null sein, die noch nicht von einem anderen Async-Befehl besetzt wurde. Das Ergebnis des letzten Arguments wird in die besetzte Variable gelegt |
