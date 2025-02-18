@@ -90,7 +90,7 @@
 | `is <?:Struct/Signature> <?:Signature/String> ...`	|  `<Boolean>`	|  Prüft, ob die erste Signatur/das erste Struct exakt alle nachfolgenden Eigenschaften besitzt, und keine mehr |
 | `new <?:Number>`				|  `<?:ByteSequence>`		|  Erzeugt eine ByteSequence einer bestimmten Länge |
 | `copy <?:ByteSequence> <?:ByteSequence> <?:Number> <?:Number> <?:Number>`	|  `<Boolean>`	|  Kopiert eine bestimmte Anzahl Bytes (z) mit einem Offset (x) von einer ersten ByteSequence an den Offset (y) einer zweiten ByteSequence |
-| `delete <?:ByteSequence>	...`		|  `<?:Number>`			|  Löscht die Daten einer ByteSequence. Dabei bleibt das Objekt erhalten, aber der Speicher wird freigegeben |
+| `delete <?:ByteSequence>	...`		|  `<Number>`			|  Löscht die Daten einer ByteSequence. Dabei bleibt das Objekt erhalten, aber der Speicher wird freigegeben |
 | `bytes <?> ...`				|  `<Number>`			|  Zählt die Bytes eines Objekts (bei ByteSequence ist das Verhalten gleich dem des size-Operators) |
 | `factorial <?:Number>`			|  `<Number>`			|  Mathematische Funktion |
 | `sqrt <?:Number>`				|  `<Number>`			|  Mathematische Funktion |
