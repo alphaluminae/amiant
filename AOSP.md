@@ -88,7 +88,7 @@
 | `signature <?:String/Signature/Struct> ...`	|  `<Signature>`		|  Erzeugt eine Signatur mit den entsprechenden Eigenschaften |
 | `has <?:Struct/Signature> <?:Signature/String> ...`	|  `<Boolean>`	|  Prüft, ob die erste Signatur/das erste Struct alle nachfolgenden Eigenschaften besitzt |
 | `is <?:Struct/Signature> <?:Signature/String> ...`	|  `<Boolean>`	|  Prüft, ob die erste Signatur/das erste Struct exakt alle nachfolgenden Eigenschaften besitzt, und keine mehr |
-| `new <?:Number>`				|  `<?:ByteSequence>`		|  Erzeugt eine ByteSequence einer bestimmten Länge |
+| `new <?:Number>`				|  `<ByteSequence>`		|  Erzeugt eine ByteSequence einer bestimmten Länge |
 | `copy <?:ByteSequence> <?:ByteSequence> <?:Number> <?:Number> <?:Number>`	|  `<Boolean>`	|  Kopiert eine bestimmte Anzahl Bytes (z) mit einem Offset (x) von einer ersten ByteSequence an den Offset (y) einer zweiten ByteSequence |
 | `delete <?:ByteSequence>	...`		|  `<Number>`			|  Löscht die Daten einer ByteSequence. Dabei bleibt das Objekt erhalten, aber der Speicher wird freigegeben |
 | `bytes <?> ...`				|  `<Number>`			|  Zählt die Bytes eines Objekts (bei ByteSequence ist das Verhalten gleich dem des size-Operators) |
@@ -129,7 +129,7 @@
 | `defined <?:String>`			|  `<Boolean>`			|  Prüft, ob im aktuellen oder höheren Scope die Variable mit dem Namen x definiert wurde |
 | `refs <?>`				|  `<Number>`			|  Gibt die Anzahl an Referenzen auf das Ergebnis eines Ausdrucks zurück |
 | `call <?:String> >?< <?> ..2`		|  `<?>`				|  Ruft eine Funktion über ihren String-Namen auf |
-| `amiant <?:String>`			|  `<?:Number>`			|  Startet ein neues Amiant-Programm ein Level höher. Dabei wird der übergebene String als Programmcode genutzt. Es wird der Exit-Code dieses Programms zurückgegeben. Der Programmfluss blockiert, bis das Meta-Programm beendet wurde |
+| `amiant <?:String>`			|  `<Number>`			|  Startet ein neues Amiant-Programm ein Level höher. Dabei wird der übergebene String als Programmcode genutzt. Es wird der Exit-Code dieses Programms zurückgegeben. Der Programmfluss blockiert, bis das Meta-Programm beendet wurde |
 | `avm version`				|  `<Number>`			|  Gibt die aktuell verwendete Amiant-Version zurück |
 | `avm restart`				|  `<Null=null>`			|  Startet das oberste Programm neu. Dabei werden alle Meta-Programme beendet |
 | `avm compver`				|  `<Number>`			|  Gibt die Compiler-Version oder spezifische Implementierungsversion zurück |
