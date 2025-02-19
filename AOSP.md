@@ -136,6 +136,12 @@
 | `defined <?:String>`			|  `<Boolean>`			|  Prüft, ob im aktuellen oder höheren Scope die Variable mit dem Namen x definiert wurde |
 | `refs <?>`				|  `<Number>`			|  Gibt die Anzahl an Referenzen auf das Ergebnis eines Ausdrucks zurück |
 | `call <?:String> >?< <?> ..2`		|  `<?>`				|  Ruft eine Funktion über ihren String-Namen auf |
+| `file readstring <?:String>`				|  `<String>`			|  Liest eine Datei als String ein. Die Zeilenumbrüche werden mit einem \n übertragen. |
+| `file readlist <?:String>`				|  `<List>`			|  Liest eine Datei als Liste von Strings ein. Jede Zeile der Datei wird ein Listeneintrag sein |
+| `file readbytes <?:String>`				|  `<ByteSequence>`			|  Liest eine Datei als ByteSequence ein |
+| `file savestring <?:String> <?:String>`				|  `<Boolean>`			|  Speichert einen String in eine Datei. Zeilenumbrüche müssen mit \n geschrieben werden |
+| `file savelist <?:String> <?:List>`				|  `<Boolean>`			|  Speichert eine Liste von Strings in eine Datei. Jeder Listeneintrag wird eine Zeile in der Datei sein |
+| `file savebytes <?:String> <?:ByteSequence>`				|  `<Boolean>`			|  Speichert eine ByteSequence in eine Datei. |
 | `amiant <?:String>`			|  `<Number>`			|  Startet ein neues Amiant-Programm ein Level höher. Dabei wird der übergebene String als Programmcode genutzt. Es wird der Exit-Code dieses Programms zurückgegeben. Der Programmfluss blockiert, bis das Meta-Programm beendet wurde |
 | `avm version`				|  `<Number>`			|  Gibt die aktuell verwendete Amiant-Version zurück |
 | `avm restart`				|  `<Null=null>`			|  Startet das oberste Programm neu. Dabei werden alle Meta-Programme beendet |
