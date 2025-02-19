@@ -44,6 +44,7 @@
 | `Function`				|  `<String="Function">`		|  Typkonstante |
 | `ByteSequence`				|  `<String="ByteSequence">`	|  Typkonstante |
 | `Signature`				|  `<String="Signature>`		|  Typkonstante |
+| `Void`				|  `<String="Void">`		|  Typkonstante |
 | `PI`					|  `<Number=$3.14159>`		|  Kreiszahl |
 | `EUL`					|  `<Number=$2.71828>`		|  Euler'sche Zahl |
 | `PHI`					|  `<Number=$1.61803>`		|  Goldener Schnitt |
