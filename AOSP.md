@@ -19,7 +19,7 @@
 | `\ <?:Function>`				|  `<Function>`			|  Gibt einen Funktionspointer zur Funktion zurück |
 | `\ <?:String>`				|  `<Function>`			|  Gibt einen Funktionspointer zum Funktionsnamen zurück |
 | `^ <?:ByteSequence> <?:Number> <?:Number>`|  `<Number>`			|  Schreibt an die Adresse ByteSequence 0+x das Byte y |
-| `% <?:Number>`					|  `<?>`			|  Gibt den Wert einer Variablen zurück, wobei diese Variable nicht über ihren Namen sondern ihrem Index der Erstellung zugegriffen wird. Der Index startet bei 0 |
+| `% <?:Number>`					|  `<?>`			|  Gibt den Wert einer Variablen zurück, wobei diese Variable nicht über ihren Namen sondern ihrem Index der Erstellung zugegriffen wird. Der Index startet bei 1! |
 | `' <'?>`					|  `<?>`				|  Identitätsoperator, der im ersten Argument einen neuen Scope öffnet |
 | `~ >?< >?< <?> ..2`			|  `<?>`				|  Ruft eine Funktion über ihren Fieldname auf |
 | `~ <?:Function> >?< <?> ..2`		|  `<?>`				|  Ruft eine Funktion/Lambda über einen Funktionspointer auf |
