@@ -102,6 +102,7 @@
 | `tan <?:Number>`				|  `<Number>`			|  Mathematische Funktion |
 | `random`					|  `<Number>`			|  Zufällige Zahl zwischen 0 und 1 |
 | `random <?:Number> <?:Number>`		|  `<Number>`			|  Zufällige Zahl zwischen inklusiv x und inklusiv y |
+| `random uuid`					|  `<String>`			|  Zufällige UUID |
 | `modulo <?:Number> <?:Number>`		|  `<Number>`			|  Mathematische Funktion |
 | `log10 <?:Number>`			|  `<Number>`			|  Mathematische Funktion |
 | `ln <?:Number>`				|  `<Number>`			|  Mathematische Funktion |
