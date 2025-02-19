@@ -108,6 +108,7 @@
 | `ipow <?:Number> <?:Number>`		|  `<Number>`			|  Mathematische Funktion |
 | `round <?:Number>`			|  `<Number>`			|  Mathematische Funktion |
 | `round <?:Number> <?:Number>`		|  `<Number>`			|  Rundet x auf y Nachkommastellen |
+| `var >?<`				|  `<Null=null>`			|  Erzeugt eine Variable mit dem Wert null |
 | `var >?< <?>`				|  `<Null=null>`			|  Erzeugt eine Variable mit einem Wert |
 | `var >?< <?:String> <?>`			|  `<Null=null>`			|  Erzeugt eine Variable mit einem Typ und einem Wert (es gibt eine Typabfrage, ansonsten einen Fehler) |
 | `var >?< <?:String> <?> <?:Boolean>`	|  `<Null=null>`			|  Erzeugt eine Variable mit einem Typ, einem Wert und einer Bedingung für den Wert |
