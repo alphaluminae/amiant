@@ -66,6 +66,7 @@
 | `get <?:Struct> <?>`			|  `<?>`				|  Gibt ein Objekt aus einem Struct über sein Key zurück |
 | `put <?:List> <?>`			|  `<?>`				|  Hängt ein beliebiges Objekt ans Ende der Liste an |
 | `put <?:Struct> <?> <?>`			|  `<?>`				|  Fügt/Überschreibt ein key-value-Paar innerhalb des Structs |
+| `putonce <?:List> <?>`			|  `<Boolean>`				|  Fügt ein beliebiges Objekt einer Liste hinzu, vorausgesetzt dass das Objekt noch nicht in der Liste enthalten ist (Mengeneigenschaft) |
 | `first <?:List>`				|  `<?>`				|  Gibt das erste Element einer Liste zurück |
 | `last <?:List>`				|  `<?>`				|  Gibt das letzte Element einer Liste zurück |
 | `contains <?:List> <?> ...`		|  `<Boolean>`			|  Prüft, ob ein Objekt sich innerhalb der Liste befindet |
