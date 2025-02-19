@@ -115,6 +115,8 @@
 | `set/assign >?< <?>`			|  `<?>`				|  Ändert den Wert einer Variablen. Der neue Wert muss den gleichen Typ enthalten, wie vorher (null gilt als uninitialisiert, und darf mit jedem neuen Typ überschrieben werden). Das Setzen auf null ist nicht erlaubt |
 | `if <?:Boolean> <'?>`			|  `<?>`				|  Bedingte Ausführung |
 | `if <?:Boolean> <'?> else <'?>`		|  `<?>`				|  Bedingte Ausführung mit else |
+| `switch <?> <?> <?> ..2`		|  `<?>`				|  Switch-Anweisung die den Ausdruck ausführt, der passend ist, ansonsten null |
+| `switch <?> <?> <?> ..2 <?>`		|  `<?>`				|  Switch-Anweisung die den Ausdruck ausführt, der passend ist, ansonsten default (letzter Ausdruck) |
 | `loop <?:Boolean> <'?>`		|  `<?>`				|  Bedingte Schleife |
 | `break`					|  `<Null=null>`			|  Beendet die Schleife |
 | `break <?>`					|  `<?>`			|  Beendet die Schleife, und gibt einen Wert zurück |
