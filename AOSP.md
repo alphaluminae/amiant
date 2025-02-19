@@ -144,5 +144,5 @@
 | `avm setenv <?:String> <?:String>`	|  `<Boolean>`			|  Setzt eine Umgebungsvariable |
 | `avm regset <?:String> <?:String>`	|  `<String>`			|  Setzt einen Registry-Wert, auf den alle Amiant-Programme, die auf dem Betriebssystem unter dem Nutzer laufen, zugreifen können |
 | `avm regget <?:String>`			|  `<String>`			|  Gibt einen Registry-Wert, auf den alle Amiant-Programme, die auf dem Betriebssystem unter dem Nutzer laufen, zugreifen können, zurück |
-| `avm conf <?:String> <?:String>`			|  `<Boolean>`			|  Konfiguriert die lokale AVM-Instanz indem eine Eigenschaft über key-value gesetzt wird |
+| `avm conf <?:String> <?:String>`			|  `<Boolean>`			|  Konfiguriert die lokale AVM-Instanz indem eine Eigenschaft über key-value gesetzt wird. Nur Level 0 Programme dürfen diesen Befehl nutzen |
 | `exit <?:Number>`				|  `<Number>`			|  Beendet die sofortige Ausführung des aktuellen Amiant-Programms mit dem Exit-Code (bei den Meta-Programmen wird nur das Meta-Programm beendet; beim obersten Programm die gesamte AVM) |
