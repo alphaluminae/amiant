@@ -73,6 +73,7 @@
 | `contains <?:Struct> <?>	...`		|  `<Boolean>`			|  Prüft, ob ein Objekt als value sich innerhalb des Structs befindet |
 | `containskey <?:Struct> <?>`		|  `<Boolean>`			|  Prüft, ob ein Objekt als key sich innerhalb des Structs befindet |
 | `size <?:List/Struct/ByteSequence>`	|  `<Number>`			|  Gibt die Anzahl an Elementen einer Liste, bzw. die Anzahl an key-value-Paaren in einem Struct, bzw. die Anzahl an Bytes in einer ByteSequence zurück |
+| `list`				|  `<List>`			|  Erzeugt eine neue leere Liste |
 | `list <?> ...`				|  `<List>`			|  Erzeugt eine neue Liste, wobei die Arguemente die Elemente in dieser Liste sein sollen; die Reihenfolge wird übernommen |
 | `merge <?:List> ...`			|  `<List>`			|  Hängt Listen der Reihe nach aneinander, sodass eine kombinierte lange Liste entsteht |
 | `peek <?:List>`				|  `<?>`				|  Gibt das letzte Objekt auf der Liste (oberstes Objekt auf dem Stapel) zurück, ohne es zu entfernen |
