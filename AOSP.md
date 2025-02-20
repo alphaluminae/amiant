@@ -45,6 +45,7 @@
 | `ByteSequence`				|  `<String="ByteSequence">`	|  Typkonstante |
 | `Signature`				|  `<String="Signature>`		|  Typkonstante |
 | `Void`				|  `<String="Void">`		|  Typkonstante |
+| `Stream`				|  `<String="Stream">`		|  Typkonstante |
 | `PI`					|  `<Number=$3.14159>`		|  Kreiszahl |
 | `EUL`					|  `<Number=$2.71828>`		|  Euler'sche Zahl |
 | `PHI`					|  `<Number=$1.61803>`		|  Goldener Schnitt |
@@ -58,6 +59,7 @@
 | `println <?> ...`				|  `<Null=null>`			|  Gibt alle Objekt nacheinander in der Konsole, mit Leerzeichen zwischen den Argumenten und Zeilenumbruch am Ende |
 | `string <?> ...`				|  `<String>`			|  Wandelt alle Argumente in einen String um, und verbindet diese ohne Leerzeichen |
 | `number <?:String/Number>`		|  `<Number>`			|  Wandelt den Ausdruck in eine Zahl um |
+| `bytesequence <?:String/Number>`		|  `<Number>`			|  Wandelt den Ausdruck in eine ByteSequence um |
 | `throw <?:Number>`			|  `<Null=null>`			|  Wirft einen Fehler mit dem Fehlercode |
 | `throw <?:Number> <?:String>`		|  `<Null=null>`			|  Wirft einen Fehler mit dem Fehlercode und einem Fehlertext, der auf der Konsole ausgegeben wird |
 | `error`					|  `<Number>`			|  Gibt den zuletzt geworfenen Fehlercode zurück |
@@ -136,12 +138,12 @@
 | `defined <?:String>`			|  `<Boolean>`			|  Prüft, ob im aktuellen oder höheren Scope die Variable mit dem Namen x definiert wurde |
 | `refs <?>`				|  `<Number>`			|  Gibt die Anzahl an Referenzen auf das Ergebnis eines Ausdrucks zurück |
 | `call <?:String> >?< <?> ..2`		|  `<?>`				|  Ruft eine Funktion über ihren String-Namen auf |
-| `file readstring <?:String>`				|  `<String>`			|  Liest eine Datei als String ein. Die Zeilenumbrüche werden mit einem \n übertragen. |
-| `file readlist <?:String>`				|  `<List>`			|  Liest eine Datei als Liste von Strings ein. Jede Zeile der Datei wird ein Listeneintrag sein |
-| `file readbytes <?:String>`				|  `<ByteSequence>`			|  Liest eine Datei als ByteSequence ein |
-| `file savestring <?:String> <?:String>`				|  `<Boolean>`			|  Speichert einen String in eine Datei. Zeilenumbrüche müssen mit \n geschrieben werden |
-| `file savelist <?:String> <?:List>`				|  `<Boolean>`			|  Speichert eine Liste von Strings in eine Datei. Jeder Listeneintrag wird eine Zeile in der Datei sein |
-| `file savebytes <?:String> <?:ByteSequence>`				|  `<Boolean>`			|  Speichert eine ByteSequence in eine Datei. |
+| `write <?:Stream> <?:String/List/ByteSequence>`				|  `<Number>`			|  Schreibt Daten in einen Datenstrom |
+| `read <?:String> <?:Stream>`				|  `<?>`			|  Liest Daten aus einem Datenstrom mit Typ der Daten |
+| `read <?:Number> <?:Stream>`				|  `<ByteSequence>`			|  Liest eine bestimmte Anzahl an Bytes aus einem Stream |
+| `io file <?:String>`				|  `<Stream>`			|  Gibt einen Stream auf eine Datei über ihren Pfad zurück |
+| `io console`				|  `<Stream>`			|  Gibt einen Stream auf die Konsole des Programmes zurück |
+| `io net <?:String> <?:Number>`				|  `<Stream>`			|  Gibt einen Stream auf einen Server über seine Ip und den Port zurück |
 | `amiant <?:String>`			|  `<Number>`			|  Startet ein neues Amiant-Programm ein Level höher. Dabei wird der übergebene String als Programmcode genutzt. Es wird der Exit-Code dieses Programms zurückgegeben. Der Programmfluss blockiert, bis das Meta-Programm beendet wurde |
 | `avm version`				|  `<Number>`			|  Gibt die aktuell verwendete Amiant-Version zurück |
 | `avm restart`				|  `<Null=null>`			|  Startet das oberste Programm neu. Dabei werden alle Meta-Programme beendet |
