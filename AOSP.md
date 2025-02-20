@@ -137,7 +137,6 @@
 | `unmount <?:String>`			|  `<Boolean>`			|  Entfernt eine bereits existierende Funktion (es wird hierarchisch nach der Funktion gesucht, bis sie gefunden wurde; sie muss nicht unbedingt im gleichen Scope liegen) |
 | `defined <?:String>`			|  `<Boolean>`			|  Prüft, ob im aktuellen oder höheren Scope die Variable mit dem Namen x definiert wurde |
 | `refs <?>`				|  `<Number>`			|  Gibt die Anzahl an Referenzen auf das Ergebnis eines Ausdrucks zurück |
-| `call <?:String> >?< <?> ..2`		|  `<?>`				|  Ruft eine Funktion über ihren String-Namen auf |
 | `write <?:Stream> <?:String/List/ByteSequence>`				|  `<Number>`			|  Schreibt Daten in einen Datenstrom |
 | `read <?:String> <?:Stream>`				|  `<?>`			|  Liest Daten aus einem Datenstrom mit Typ der Daten |
 | `read <?:Number> <?:Stream>`				|  `<ByteSequence>`			|  Liest eine bestimmte Anzahl an Bytes aus einem Stream |
