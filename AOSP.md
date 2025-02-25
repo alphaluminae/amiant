@@ -71,7 +71,9 @@
 | `put <?:Struct> <?> <?>`			|  `<?>`				|  Fügt/Überschreibt ein key-value-Paar innerhalb des Structs |
 | `putonce <?:List> <?> ...`			|  `<Boolean>`				|  Fügt eines oder mehrere Objekte einer Liste hinzu, vorausgesetzt dass das Objekt noch nicht in der Liste enthalten ist (Mengeneigenschaft) |
 | `first <?:List>`				|  `<?>`				|  Gibt das erste Element einer Liste zurück |
+| `first <?:List> <?>`				|  `<Number>`				|  Gibt den Index des ersten Elements zurück, das dem entsprechendem Ausdruck gleicht (von vorn das erste entsprechende Element) |
 | `last <?:List>`				|  `<?>`				|  Gibt das letzte Element einer Liste zurück |
+| `last <?:List> <?>`				|  `<Number>`				|  Gibt den Index des letzten Elements zurück, das dem entsprechendem Ausdruck gleicht (von hinten das erste entsprechende Element) |
 | `contains <?:List> <?> ...`		|  `<Boolean>`			|  Prüft, ob ein Objekt sich innerhalb der Liste befindet |
 | `contains <?:Struct> <?>	...`		|  `<Boolean>`			|  Prüft, ob ein Objekt als value sich innerhalb des Structs befindet |
 | `containskey <?:Struct> <?>`		|  `<Boolean>`			|  Prüft, ob ein Objekt als key sich innerhalb des Structs befindet |
@@ -81,7 +83,8 @@
 | `merge <?:List> ...`			|  `<List>`			|  Hängt Listen der Reihe nach aneinander, sodass eine kombinierte lange Liste entsteht |
 | `peek <?:List>`				|  `<?>`				|  Gibt das letzte Objekt auf der Liste (oberstes Objekt auf dem Stapel) zurück, ohne es zu entfernen |
 | `pop <?:List>`				|  `<?>`				|  Gibt das letzte Objekt aus der Liste (oberstes Objekt auf dem Stapel) zurück, und entfernt es aus der Liste |
-| `remove <?:List> <?:Number>`		|  `<?>`				|  Entfernt ein Objekt am Index; die restliche Reihenfolge der Liste bleibt erhalten |
+| `remove <?:List> <?:Number>`		|  `<?>`				|  Entfernt ein Objekt am Index; die restliche Reihenfolge der Liste bleibt erhalten, die Liste wird verkürzt |
+| `remove <?:List> <?:List>`		|  `<List>`				|  Entfernt alle Objekte aus der ersten Liste, die in der zweiten Liste enthalten sind; die restliche Reihenfolge der Liste bleibt erhalten, die Liste wird verkürzt |
 | `reverse <?:List>`			|  `<List>`			|  Kehrt die Reihenfolge der Objekte einer Liste um |
 | `filter <?:List> >?< <'?>`		|  `<List>`			|  Geht durch jedes Element der Liste, weist das dem Fieldname zu, und das Ergebnis des letzten Ausdrucks für jeden Durchlauf wird in eine neue Liste gelegt. Die Reihenfolge bleibt erhalten. Wenn der letzte Ausdruck false zurückgibt, wird das Objekt herausgefiltert, bei true wird es behalten |
 | `map <?:List> ... >?< <'?>`		|  `<List>`			|  Geht durch jedes Element der Liste, weist das dem Fieldname zu, und das Ergebnis des letzten Ausdrucks für jeden Durchlauf wird in eine gemeinsame neue Liste gelegt. Die Reihenfolge bleibt erhalten. Wenn der letzte Ausdruck null zurückgibt, wird das Objekt herausgenommen |
