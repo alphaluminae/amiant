@@ -3,13 +3,14 @@
 | Operator				|  Rückgabetyp  		|  Erklärung |
 | ---             |  ---              | ---        |
 | `+ <?:Number> <?:Number> ...`		|  `<Number>`			|  Addiert mehrere Zahlen miteinander |
-| `- <?:Number> <?:Number> ...`		|  `<Number>`			|  Subtrahiert mehrere Zahlen miteinander |
+| `- <?:Number>`		|  `<Number>`			|  Dreht das Vorzeichen der Zahl um |
+| `- <?:Number> <?:Number> ...`		|  `<Number>`			|  Subtrahiert mehrere Zahlen voneinander. Die hinteren Zahlen werden von der ersten Zahl abgezogen |
 | `* <?:Number> <?:Number> ...`		|  `<Number>`			|  Multipliziert mehrere Zahlen miteinander |
 | `/ <?:Number> <?:Number> ...`		|  `<Number>`			|  Dividiert mehrere Zahlen miteinander |
 | `> <?:Number> <?:Number>`			|  `<Boolean>`			|  Größer als |
 | `< <?:Number> <?:Number>`			|  `<Boolean>`			|  Kleiner als |
-| `& <?:Boolean> <?:Boolean> ...`		|  `<Boolean>`			|  Logisches Und |
-| `\| <?:Boolean> <?:Boolean> ...`		|  `<Boolean>`			|  Logisches Oder |
+| `& <?:Boolean> <?:Boolean> ...`		|  `<Boolean>`			|  Logisches Und. Sollte ein Argument false sein, werden die anderen nicht mehr ausgewertet! |
+| `\| <?:Boolean> <?:Boolean> ...`		|  `<Boolean>`			|  Logisches Oder. Sollte ein Argument true sein, werden die anderen nicht mehr ausgewertet! |
 | `! <?:Boolean>`				|  `<Boolean>`			|  Logisches Nicht |
 | `= <?>`					|  `<?>`				|  Identitätsoperator: Gibt genau das zurück, was ihm übergeben wurde |
 | `= <?> <?> ...`				|  `<Boolean>`			|  Vergleichsoperator |
@@ -18,20 +19,22 @@
 | `\ >?<`					|  `<Function>`			|  Gibt einen Funktionspointer zur Funktion zurück |
 | `\ <?:Function>`				|  `<Function>`			|  Gibt einen Funktionspointer zur Funktion zurück |
 | `\ <?:String>`				|  `<Function>`			|  Gibt einen Funktionspointer zum Funktionsnamen zurück |
-| `^ <?:ByteSequence> <?:Number> <?:Number>`|  `<Number>`			|  Schreibt an die Adresse ByteSequence 0+x das Byte y |
+| `^ <?:ByteSequence> <?:Number> <?:Number>`|  `<Null=null>`			|  Schreibt an die Adresse ByteSequence 0+x das Byte y |
 | `% <?:Number>`					|  `<?>`			|  Gibt den Wert einer Variablen zurück, wobei diese Variable nicht über ihren Namen sondern ihrem Index der Erstellung zugegriffen wird. Der Index startet bei 1! |
 | `' <'?>`					|  `<?>`				|  Identitätsoperator, der im ersten Argument einen neuen Scope öffnet |
+| `~ <?:Quote>`			|  `<?>`				|  Führt einen Quote aus. Hierbei wird kein neuer Scope geöffnet, sondern der ausgeführte Code verhält sich, als hätte er genau an dieser Stelle gestanden |
 | `~ >?< >?< <?> ..2`			|  `<?>`				|  Ruft eine Funktion über ihren Fieldname auf |
-| `~ <?:Function> >?< <?> ..2`		|  `<?>`				|  Ruft eine Funktion/Lambda über einen Funktionspointer auf |
-| `function/func >?< <'?>`			|  `<Function>`				|  Erzeugt eine Funktion |
+| `~ <?:Function/String> >?< <?> ..2`		|  `<?>`				|  Ruft eine Funktion/Lambda über einen Funktionspointer oder über ihren Funktionsnamen als String auf |
+| `´ <?>`				|  `<Quote>`			|  Erstellt eine Quote. Der hinter dem Operator gelegende Code wird nicht ausgeführt, sondern gekappselt. Dieser Code kann dann später im Programm an beliebiger Stelle ausgeführt werden |
+| `function/func/fn >?< <'?>`			|  `<Function>`				|  Erzeugt eine Funktion |
 | `return`					|  `<Null=null>`				|  Bricht die Ausführung in der aktuellen Funktion mit null ab |
 | `return <?>`				|  `<?>`				|  Bricht die Ausführung in der aktuellen Funktion ab |
-| `contract <?:Boolean>`			|  `<?>`				|  Notwendige Bedingung für die Möglichkeit der Funktionsausführung |
+| `contract <?:Boolean>`			|  `<Null=null>`				|  Notwendige Bedingung für die Möglichkeit der Funktionsausführung |
 | `assert <?:Boolean>`			|  `<?>`				|  Notwendige Bedingung für die Ausführung des gesamten Programmes |
 | `assert <?:Boolean> <?:String>`		|  `<?>`				|  Notwendige Bedingung für die Ausführung des gesamten Programmes mit Debugtext |
 | `lambda <'?>`				|  `<Function>`			|  Erzeugt eine anonyme Funktion (Lambda), führt sie allerdings nicht aus! Das muss mit dem ~ Operator geschehen |
 | `yield <?>`				|  `<?>`				|  Bricht in der aktuellen Klammerung mit einem Wert ab |
-| `when <?:Boolean> ... <?>`		|  `<?>`				|  Führt das letzte Argument nur dann aus, wenn alle Bedingungen wahr sind |
+| `when <?:Boolean> ... <?>`		|  `<?>`				|  Führt das letzte Argument nur dann aus, wenn alle Bedingungen wahr sind. Sollte eine Bedingung falsch sein, werden die anderen nicht mehr ausgewertet |
 | `expect >?< <?:String> ..2 <?>`		|  `<?>`				|  Führt das letzte Argument nur dann aus, wenn alle Variablen vom jeweiligen Typ existieren |
 | `expect >?< <?:String> ..2 <?> else <?>`	|  `<?>`				|  Führt das drittletzte Argument nur dann aus, wenn alle Variablen vom jeweiligen Typ existieren, ansonsten das letzte Argument |
 | `null`					|  `<Null=null>`			|  Konstantes null |
@@ -64,30 +67,35 @@
 | `throw <?:Number> <?:String>`		|  `<Null=null>`			|  Wirft einen Fehler mit dem Fehlercode und einem Fehlertext, der auf der Konsole ausgegeben wird |
 | `error`					|  `<Number>`			|  Gibt den zuletzt geworfenen Fehlercode zurück |
 | `error line`				|  `<Number>`			|  Gibt die Zeile an, in der der letzte Fehler geworfen wurde |
-| `catch <?:Number> <?>`			|  `<?>`				|  Führt das letzte Argument nur dann aus, wenn der entsprechende Fehlercode geworfen wurde |
+| `catch <?>`			|  `<?>`				|  Führt den Code nur dann aus, wenn überhaupt ein Fehler geworfen wurde (Code != 0). Der Fehler wird danach auf 0 zurückgesetzt |
+| `catch <?:Number> <?>`			|  `<?>`				|  Führt das letzte Argument nur dann aus, wenn der entsprechende Fehlercode geworfen wurde. Der Fehler wird danach auf 0 zurückgesetzt |
 | `get <?:List> <?:Number>`			|  `<?>`				|  Gibt ein Objekt aus der Liste über seinen Index zurück |
 | `get <?:Struct> <?>`			|  `<?>`				|  Gibt ein Objekt aus einem Struct über sein Key zurück |
-| `put <?:List> <?>`			|  `<?>`				|  Hängt ein beliebiges Objekt ans Ende der Liste an |
-| `put <?:Struct> <?> <?>`			|  `<?>`				|  Fügt/Überschreibt ein key-value-Paar innerhalb des Structs |
-| `putonce <?:List> <?> ...`			|  `<Boolean>`				|  Fügt eines oder mehrere Objekte einer Liste hinzu, vorausgesetzt dass das Objekt noch nicht in der Liste enthalten ist (Mengeneigenschaft) |
-| `first <?:List>`				|  `<?>`				|  Gibt das erste Element einer Liste zurück |
-| `first <?:List> <?>`				|  `<Number>`				|  Gibt den Index des ersten Elements zurück, das dem entsprechendem Ausdruck gleicht (von vorn das erste entsprechende Element) |
+| `put <?:List> <?>`			|  `<?:List>`				|  Hängt ein beliebiges Objekt ans Ende der Liste an. Änderungen einer Liste sind inPlace (da nicht primitiv) |
+| `put <?:Struct> <?> <?>`			|  `<?:Struct>`				|  Fügt/Überschreibt ein key-value-Paar innerhalb des Structs. Änderungen eine Structs sind inPlace (da nicht primitiv) |
+| `putonce <?:List> <?> `			|  `<Boolean>`				|  Fügt ein Objekte einer Liste hinzu, vorausgesetzt dass das Objekt noch nicht in der Liste enthalten ist (Mengeneigenschaft). Änderungen einer Liste sind inPlace (da nicht primitiv) |
+| `first <?:List>`				|  `<?>`				|  Gibt das erste Element einer Liste zurück, sonst null |
+| `first <?:List> <?>`				|  `<Number>`				|  Gibt den Index des ersten Elements zurück, das dem entsprechendem Ausdruck gleicht (von vorn das erste entsprechende Element), ansonsten -1 |
 | `last <?:List>`				|  `<?>`				|  Gibt das letzte Element einer Liste zurück |
 | `last <?:List> <?>`				|  `<Number>`				|  Gibt den Index des letzten Elements zurück, das dem entsprechendem Ausdruck gleicht (von hinten das erste entsprechende Element) |
-| `contains <?:List> <?> ...`		|  `<Boolean>`			|  Prüft, ob ein Objekt sich innerhalb der Liste befindet |
-| `contains <?:Struct> <?>	...`		|  `<Boolean>`			|  Prüft, ob ein Objekt als value sich innerhalb des Structs befindet |
+| `contains <?:List> <?>`		|  `<Boolean>`			|  Prüft, ob ein Objekt sich innerhalb der Liste befindet |
+| `contains <?:Struct> <?>`		|  `<Boolean>`			|  Prüft, ob ein Objekt als value sich innerhalb des Structs befindet |
 | `containskey <?:Struct> <?>`		|  `<Boolean>`			|  Prüft, ob ein Objekt als key sich innerhalb des Structs befindet |
-| `size <?:List/Struct/ByteSequence>`	|  `<Number>`			|  Gibt die Anzahl an Elementen einer Liste, bzw. die Anzahl an key-value-Paaren in einem Struct, bzw. die Anzahl an Bytes in einer ByteSequence zurück |
+| `size <?:List/Struct/ByteSequence/String>`	|  `<Number>`			|  Gibt die Anzahl an Elementen einer Liste, bzw. die Anzahl an key-value-Paaren in einem Struct, bzw. die Anzahl an Bytes in einer ByteSequence,oder die Anzahl an Zeichen innerhalb eines Strings zurück |
 | `list`				|  `<List>`			|  Erzeugt eine neue leere Liste |
-| `list <?> ...`				|  `<List>`			|  Erzeugt eine neue Liste, wobei die Arguemente die Elemente in dieser Liste sein sollen; die Reihenfolge wird übernommen |
+| `list <?> ...`				|  `<List>`			|  Erzeugt eine neue Liste, wobei die Arguemente die Elemente in dieser Liste sein sollen; die Reihenfolge wird übernommen. Wenn ein Element nicht primitiv ist, wird die Liste automatisch weak! |
+| `struct`				|  `<Struct>`			|  Erzeugt ein neues leere Struct |
+| `struct <?> <?> ..2`				|  `<Struct>`			|  Erzeugt ein neues Struct mit den gegebenen Eigenschaften. Wenn ein nicht primitives Objekt dabei ist, wird das Struct automatisch weak! |
 | `merge <?:List> ...`			|  `<List>`			|  Hängt Listen der Reihe nach aneinander, sodass eine kombinierte lange Liste entsteht |
-| `peek <?:List>`				|  `<?>`				|  Gibt das letzte Objekt auf der Liste (oberstes Objekt auf dem Stapel) zurück, ohne es zu entfernen |
+| `peek <?:List>`				|  `<?>`				|  Gibt das letzte Objekt auf der Liste (oberstes Objekt auf dem Stapel) zurück, ohne es zu entfernen, sonst null |
 | `pop <?:List>`				|  `<?>`				|  Gibt das letzte Objekt aus der Liste (oberstes Objekt auf dem Stapel) zurück, und entfernt es aus der Liste |
 | `remove <?:List> <?:Number>`		|  `<?>`				|  Entfernt ein Objekt am Index; die restliche Reihenfolge der Liste bleibt erhalten, die Liste wird verkürzt |
 | `remove <?:List> <?:List>`		|  `<List>`				|  Entfernt alle Objekte aus der ersten Liste, die in der zweiten Liste enthalten sind; die restliche Reihenfolge der Liste bleibt erhalten, die Liste wird verkürzt |
+| `remove <?:Struct> <?>`		|  `<?>`				|  Entfernt ein Objekt aus dem Struct. Das ist eine inPlace Operation, da Structs nicht primitiv sind |
 | `reverse <?:List>`			|  `<List>`			|  Kehrt die Reihenfolge der Objekte einer Liste um |
-| `filter <?:List> >?< <'?>`		|  `<List>`			|  Geht durch jedes Element der Liste, weist das dem Fieldname zu, und das Ergebnis des letzten Ausdrucks für jeden Durchlauf wird in eine neue Liste gelegt. Die Reihenfolge bleibt erhalten. Wenn der letzte Ausdruck false zurückgibt, wird das Objekt herausgefiltert, bei true wird es behalten |
-| `map <?:List> ... >?< <'?>`		|  `<List>`			|  Geht durch jedes Element der Liste, weist das dem Fieldname zu, und das Ergebnis des letzten Ausdrucks für jeden Durchlauf wird in eine gemeinsame neue Liste gelegt. Die Reihenfolge bleibt erhalten. Wenn der letzte Ausdruck null zurückgibt, wird das Objekt herausgenommen |
+| `slice <?:List> <?:Number> <?:Number>`		|  `<List>`				|  Gibt eine Subliste zurück. Die beiden angegebenen Indizes sind inklusiv! |
+| `slice <?:String> <?:Number> <?:Number>`		|  `<String>`				|  Gibt einen Substring zurück. Die beiden angegebenen Indizes sind inklusiv! |
+| `map <?:List> ... >?< <'?>`		|  `<List>`			|  Geht durch jedes Element der Liste, weist das dem Fieldname zu, und das Ergebnis des letzten Ausdrucks für jeden Durchlauf wird in eine gemeinsame neue Liste gelegt. Die Reihenfolge bleibt erhalten. Wenn der letzte Ausdruck null zurückgibt, wird das Objekt herausgenommen, ansonsten wird es hinzugefügt |
 | `foreach/iterate <?:List> >?< <'?>`	|  `<Null=null>`			|  Schleife, die jedes Element der Liste nacheinander dem Fieldname zuweist, und den entsprechenden Code im letzten Ausdruck ausführt |
 | `foreach/iterate <?:Struct> >?< >?< <'?>`	|  `<Null=null>`			|  Schleife, die jedes key-value Paar des Structs nacheinander den Fieldnames zuweist, und den entsprechenden Code im letzten Ausdruck ausführt |
 | `riterate <?:List> >?< <'?>`		|  `<Null=null>`			|  Schleife, die jedes Element der Liste rückwärts nacheinander dem Fieldname zuweist, und den entsprechenden Code im letzten Ausdruck ausführt |
@@ -96,10 +104,9 @@
 | `signature <?:String/Signature/Struct> ...`	|  `<Signature>`		|  Erzeugt eine Signatur mit den entsprechenden Eigenschaften |
 | `has <?:Struct/Signature> <?:Signature/String> ...`	|  `<Boolean>`	|  Prüft, ob die erste Signatur/das erste Struct alle nachfolgenden Eigenschaften besitzt |
 | `is <?:Struct/Signature> <?:Signature/String> ...`	|  `<Boolean>`	|  Prüft, ob die erste Signatur/das erste Struct exakt alle nachfolgenden Eigenschaften besitzt, und keine mehr |
-| `new <?:Number>`				|  `<ByteSequence>`		|  Erzeugt eine ByteSequence einer bestimmten Länge |
-| `copy <?:ByteSequence> <?:ByteSequence> <?:Number> <?:Number> <?:Number>`	|  `<Boolean>`	|  Kopiert eine bestimmte Anzahl Bytes (z) mit einem Offset (x) von einer ersten ByteSequence an den Offset (y) einer zweiten ByteSequence |
+| `new <?:Number>`				|  `<ByteSequence>`		|  Erzeugt eine ByteSequence einer bestimmten Länge. Diese ByteSequenz ist zu Beginn mit Nullen überschrieben worden |
+| `copy <?:ByteSequence> <?:ByteSequence> <?:Number> <?:Number> <?:Number>`	|  `<ByteSequence>`	|  Kopiert eine bestimmte Anzahl Bytes (z) mit einem Offset (x) von einer ersten ByteSequence an den Offset (y) einer zweiten ByteSequence. Zurückgegeben wird die Zielbytesequenz. Es handelt sich um eine inPlace Operation! |
 | `delete <?:ByteSequence>	...`		|  `<Number>`			|  Löscht die Daten einer ByteSequence. Dabei bleibt das Objekt erhalten, aber der Speicher wird freigegeben |
-| `bytes <?> ...`				|  `<Number>`			|  Zählt die Bytes eines Objekts (bei ByteSequence ist das Verhalten gleich dem des size-Operators) |
 | `factorial <?:Number>`			|  `<Number>`			|  Mathematische Funktion |
 | `sqrt <?:Number>`				|  `<Number>`			|  Mathematische Funktion |
 | `sin <?:Number>`				|  `<Number>`			|  Mathematische Funktion |
@@ -112,17 +119,19 @@
 | `log10 <?:Number>`			|  `<Number>`			|  Mathematische Funktion |
 | `ln <?:Number>`				|  `<Number>`			|  Mathematische Funktion |
 | `exp <?:Number>`				|  `<Number>`			|  Mathematische Funktion |
-| `ipow <?:Number> <?:Number>`		|  `<Number>`			|  Mathematische Funktion |
+| `pow <?:Number> <?:Number>`		|  `<Number>`			|  Mathematische Funktion |
 | `round <?:Number>`			|  `<Number>`			|  Mathematische Funktion |
 | `round <?:Number> <?:Number>`		|  `<Number>`			|  Rundet x auf y Nachkommastellen |
 | `var >?<`				|  `<Null=null>`			|  Erzeugt eine Variable mit dem Wert null |
-| `var >?< <?>`				|  `<Null=null>`			|  Erzeugt eine Variable mit einem Wert |
-| `var >?< <?:String> <?>`			|  `<Null=null>`			|  Erzeugt eine Variable mit einem Typ und einem Wert (es gibt eine Typabfrage, ansonsten einen Fehler) |
-| `var >?< <?:String> <?> <?:Boolean>`	|  `<Null=null>`			|  Erzeugt eine Variable mit einem Typ, einem Wert und einer Bedingung für den Wert |
-| `const >?< <?>`				|  `<Null=null>`			|  Erzeugt eine Konstante |
-| `set/assign >?< <?>`			|  `<?>`				|  Ändert den Wert einer Variablen. Der neue Wert muss den gleichen Typ enthalten, wie vorher (null gilt als uninitialisiert, und darf mit jedem neuen Typ überschrieben werden). Das Setzen auf null ist nicht erlaubt |
+| `var >?< <?>`				|  `<?>`			|  Erzeugt eine Variable mit einem Wert, und gibt diesen Wert zurück |
+| `var >?< <?:String> <?>`			|  `<?>`			|  Erzeugt eine Variable mit einem Typ und einem Wert (es gibt eine Typabfrage, ansonsten einen Fehler), und gibt diesen Wert zurück |
+| `const >?<`				|  `<Null=null>`			|  Erzeugt eine Konstante mit dem Wert null |
+| `const >?< <?>`				|  `<?>`			|  Erzeugt eine Konstante mit einem Wert, und gibt diesen Wert zurück |
+| `const >?< <?:String> <?>`			|  `<?>`			|  Erzeugt eine Konstante mit einem Typ und einem Wert (es gibt eine Typabfrage, ansonsten einen Fehler), und gibt diesen Wert zurück |
+| `set/assign >?< <?>`			|  `<?>`				|  Ändert den Wert einer Variablen. Der neue Wert muss den gleichen Typ enthalten, wie vorher (null gilt als uninitialisiert, und darf mit jedem neuen Typ überschrieben werden). Das Setzen auf null ist nicht erlaubt. Es wird der neue Wert der Variablen zurückgegeben (unter Beachtung einer Änderung durch einen watch-Block) |
 | `if <?:Boolean> <'?>`			|  `<?>`				|  Bedingte Ausführung |
-| `if <?:Boolean> <'?> else <'?>`		|  `<?>`				|  Bedingte Ausführung mit else |
+| `if <?:Boolean> <'?> <'?>`		|  `<?>`				|  Bedingte Ausführung |
+| `if <?:Boolean> <'?> else <'?>`		|  `<?>`				|  Bedingte Ausführung mit else zur besseren Lesbarkeit |
 | `switch <?> <?> <?> ..2`		|  `<?>`				|  Switch-Anweisung die den Ausdruck ausführt, der passend ist, ansonsten null |
 | `switch <?> <?> <?> ..2 <?>`		|  `<?>`				|  Switch-Anweisung die den Ausdruck ausführt, der passend ist, ansonsten default (letzter Ausdruck) |
 | `loop <?:Boolean> <'?>`		|  `<?>`				|  Bedingte Schleife |
@@ -130,7 +139,6 @@
 | `break <?>`					|  `<?>`			|  Beendet die Schleife, und gibt einen Wert zurück |
 | `trim <?:String>`		|  `<String>`			|  Entfernt alle Whitespaces zu Beginn und zum Schluss eines Strings |
 | `contains <?:String> <?:String>`		|  `<Boolean>`			|  Prüft, ob ein Substring y im String x enthalten ist |
-| `startswith <?:String> <?:String>`		|  `<Boolean>`		|  Prüft, ob der String x mit String y beginnt |
 | `async >?< >?< <?> ..2 <'?>`		|  `<Boolean>`			|  Startet die parallele Ausführung. Im Capture können dem neuem Scope im letzten Argument Variablen mitgegeben werden. Das erste Argument muss eine Variable vom Typ null sein, die noch nicht von einem anderen Async-Befehl besetzt wurde. Das Ergebnis des letzten Arguments wird in die besetzte Variable gelegt |
 | `await >?<`				|  `<?>`				|  Blockiert den Codefluss bis der Wert der Variable, die zuvor von einem Async-Block genutzt werden musste, verfügbar ist |
 | `functhis`				|  `<Function>`			|  Gibt einen Funktionspointer auf den Prototypen der Funktion zurück, in der das Keyword aufgerufen wurde |
@@ -140,15 +148,16 @@
 | `unmount <?:String>`			|  `<Boolean>`			|  Entfernt eine bereits existierende Funktion (es wird hierarchisch nach der Funktion gesucht, bis sie gefunden wurde; sie muss nicht unbedingt im gleichen Scope liegen) |
 | `defined <?:String>`			|  `<Boolean>`			|  Prüft, ob im aktuellen oder höheren Scope die Variable mit dem Namen x definiert wurde |
 | `refs <?>`				|  `<Number>`			|  Gibt die Anzahl an Referenzen auf das Ergebnis eines Ausdrucks zurück |
-| `write <?:Stream> <?:String/List/ByteSequence>`				|  `<Number>`			|  Schreibt Daten in einen Datenstrom |
-| `read <?:String> <?:Stream>`				|  `<?>`			|  Liest Daten aus einem Datenstrom mit Typ der Daten |
+| `write <?:Stream> <?:String/List/ByteSequence>`				|  `<Boolean>`			|  Schreibt Daten in einen Datenstrom, und gibt zurück, ob die Aktion erfolgreich war |
+| `write <?:Stream> <?:List>`				|  `<Number>`			|  Schreibt Daten unterschiedlichen Typs (nur Primitive! Sublisten werden nicht gesendet) in den Datenstrom. Gibt die Anzahl an erfolgreichen Übertragungen zurück |
+| `read <?:Number> <?:Stream> <?:String>`				|  `<?>`			|  Liest Daten aus einem Datenstrom mit bevorzugtem Typ der Daten (Konvertierung wird automatisch vorgenommen) |
 | `read <?:Number> <?:Stream>`				|  `<ByteSequence>`			|  Liest eine bestimmte Anzahl an Bytes aus einem Stream |
+| `close <?:Stream>`				|  `<Null=null>`			|  Schließt einen Stream. Sollte er schon geschlossen sein, passiert schlicht nichts |
 | `io file <?:String>`				|  `<Stream>`			|  Gibt einen Stream auf eine Datei über ihren Pfad zurück |
 | `io console`				|  `<Stream>`			|  Gibt einen Stream auf die Konsole des Programmes zurück |
 | `io net <?:String> <?:Number>`				|  `<Stream>`			|  Gibt einen Stream auf einen Server über seine Ip und den Port zurück |
 | `amiant <?:String>`			|  `<Number>`			|  Startet ein neues Amiant-Programm ein Level höher. Dabei wird der übergebene String als Programmcode genutzt. Es wird der Exit-Code dieses Programms zurückgegeben. Der Programmfluss blockiert, bis das Meta-Programm beendet wurde |
 | `avm version`				|  `<Number>`			|  Gibt die aktuell verwendete Amiant-Version zurück |
-| `avm restart`				|  `<Null=null>`			|  Startet das oberste Programm neu. Dabei werden alle Meta-Programme beendet |
 | `avm compver`				|  `<Number>`			|  Gibt die Compiler-Version oder spezifische Implementierungsversion zurück |
 | `avm memory`				|  `<Number>`			|  Gibt die Speicherbelegung dieses Amaint-Programms und aller höheren oder tieferen Meta-Programme in Bytes zurück |
 | `avm platform`				|  `<String>`			|  Gibt das Betriebssystem/Plattform zurück, auf der die AVM läuft |
