@@ -129,6 +129,10 @@
 | `const >?< <?>`				|  `<?>`			|  Erzeugt eine Konstante mit einem Wert, und gibt diesen Wert zurück |
 | `const >?< <?:String> <?>`			|  `<?>`			|  Erzeugt eine Konstante mit einem Typ und einem Wert (es gibt eine Typabfrage, ansonsten einen Fehler), und gibt diesen Wert zurück |
 | `set/assign >?< <?>`			|  `<?>`				|  Ändert den Wert einer Variablen. Der neue Wert muss den gleichen Typ enthalten, wie vorher (null gilt als uninitialisiert, und darf mit jedem neuen Typ überschrieben werden). Das Setzen auf null ist nicht erlaubt. Es wird der neue Wert der Variablen zurückgegeben (unter Beachtung einer Änderung durch einen watch-Block) |
+| `inc >?<`			|  `<Number>`				|  Erhöht den Zahlenwert einer Vaiable um Eins, und gibt den neuen Wert zurück |
+| `inc <?:String>`			|  `<Number>`				|  Erhöht den Zahlenwert einer Vaiable (die über ihren Namen spezifiziert wird) um Eins, und gibt den neuen Wert zurück |
+| `dec >?<`			|  `<Number>`				|  Erniedrigt den Zahlenwert einer Vaiable um Eins, und gibt den neuen Wert zurück |
+| `dec <?:String>`			|  `<Number>`				|  Erniedrigt den Zahlenwert einer Vaiable (die über ihren Namen spezifiziert wird) um Eins, und gibt den neuen Wert zurück 
 | `if <?:Boolean> <'?>`			|  `<?>`				|  Bedingte Ausführung |
 | `if <?:Boolean> <'?> <'?>`		|  `<?>`				|  Bedingte Ausführung |
 | `if <?:Boolean> <'?> else <'?>`		|  `<?>`				|  Bedingte Ausführung mit else zur besseren Lesbarkeit |
@@ -141,6 +145,8 @@
 | `contains <?:String> <?:String>`		|  `<Boolean>`			|  Prüft, ob ein Substring y im String x enthalten ist |
 | `async >?< >?< <?> ..2 <'?>`		|  `<Boolean>`			|  Startet die parallele Ausführung. Im Capture können dem neuem Scope im letzten Argument Variablen mitgegeben werden. Das erste Argument muss eine Variable vom Typ null sein, die noch nicht von einem anderen Async-Befehl besetzt wurde. Das Ergebnis des letzten Arguments wird in die besetzte Variable gelegt |
 | `await >?<`				|  `<?>`				|  Blockiert den Codefluss bis der Wert der Variable, die zuvor von einem Async-Block genutzt werden musste, verfügbar ist |
+| `time`				|  `<Number>`				|  Gibt die Anzahl an vergangenen Millisekunden seit dem 01.01.1970 zurück |
+| `time <?>`				|  `<Number>`				|  Misst die Ausführungszeit des Ausdrucks in Millisekunden (mit Dezimalstellen bis in den Nanosekundenbreich) |
 | `functhis`				|  `<Function>`			|  Gibt einen Funktionspointer auf den Prototypen der Funktion zurück, in der das Keyword aufgerufen wurde |
 | `this`					|  `<String>`			|  Gibt den Namen der Funktion zurück, in der der Keyword aufgerufen wurde |
 | `line`					|  `<Number>`			|  Gibt die Zeilennummer zurück, in der das Keyword aufgerufen wurde |
