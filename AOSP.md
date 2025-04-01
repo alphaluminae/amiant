@@ -49,10 +49,10 @@
 | `Signature`				|  `<String="Signature>`		|  Typkonstante |
 | `Void`				|  `<String="Void">`		|  Typkonstante |
 | `Stream`				|  `<String="Stream">`		|  Typkonstante |
+| `Quote`				|  `<String="Quote">`		|  Typkonstante |
+| `Mutex`				|  `<String="Mutex">`		|  Typkonstante |
 | `PI`					|  `<Number=$3.14159>`		|  Kreiszahl |
 | `EUL`					|  `<Number=$2.71828>`		|  Euler'sche Zahl |
-| `PHI`					|  `<Number=$1.61803>`		|  Goldener Schnitt |
-| `TAU`					|  `<Number=$6.28318>`		|  Vollwinkel 2*pi |
 | `LN2`					|  `<Number=$0.69314>`		|  Mathematische Konstante |
 | `LN10`					|  `<Number=$2.30258>`		|  Mathematische Konstante |
 | `SQRT2`					|  `<Number=$1.41421>`		|  Mathematische Konstante |
@@ -129,6 +129,7 @@
 | `const >?< <?>`				|  `<?>`			|  Erzeugt eine Konstante mit einem Wert, und gibt diesen Wert zurück |
 | `const >?< <?:String> <?>`			|  `<?>`			|  Erzeugt eine Konstante mit einem Typ und einem Wert (es gibt eine Typabfrage, ansonsten einen Fehler), und gibt diesen Wert zurück |
 | `set/assign >?< <?>`			|  `<?>`				|  Ändert den Wert einer Variablen. Der neue Wert muss den gleichen Typ enthalten, wie vorher (null gilt als uninitialisiert, und darf mit jedem neuen Typ überschrieben werden). Das Setzen auf null ist nicht erlaubt. Es wird der neue Wert der Variablen zurückgegeben (unter Beachtung einer Änderung durch einen watch-Block) |
+| `set/assign <?:String> <?>`			|  `<?>`				|  Ändert den Wert einer Variablen über ihren Namen als String. Der neue Wert muss den gleichen Typ enthalten, wie vorher (null gilt als uninitialisiert, und darf mit jedem neuen Typ überschrieben werden). Das Setzen auf null ist nicht erlaubt. Es wird der neue Wert der Variablen zurückgegeben (unter Beachtung einer Änderung durch einen watch-Block) |
 | `inc >?<`			|  `<Number>`				|  Erhöht den Zahlenwert einer Vaiable um Eins, und gibt den neuen Wert zurück |
 | `inc <?:String>`			|  `<Number>`				|  Erhöht den Zahlenwert einer Vaiable (die über ihren Namen spezifiziert wird) um Eins, und gibt den neuen Wert zurück |
 | `dec >?<`			|  `<Number>`				|  Erniedrigt den Zahlenwert einer Vaiable um Eins, und gibt den neuen Wert zurück |
@@ -143,15 +144,17 @@
 | `break <?>`					|  `<?>`			|  Beendet die Schleife, und gibt einen Wert zurück |
 | `trim <?:String>`		|  `<String>`			|  Entfernt alle Whitespaces zu Beginn und zum Schluss eines Strings |
 | `contains <?:String> <?:String>`		|  `<Boolean>`			|  Prüft, ob ein Substring y im String x enthalten ist |
+| `mutex >?<`		|  `<Mutex>`			|  Erzeugt einen Mutex auf eine Variable über ihren Namen |
+| `mutex <?:String>`		|  `<Mutex>`			|  Erzeugt einen Mutex auf eine Variable über ihren String-Namen |
 | `async >?< >?< <?> ..2 <'?>`		|  `<Boolean>`			|  Startet die parallele Ausführung. Im Capture können dem neuem Scope im letzten Argument Variablen mitgegeben werden. Das erste Argument muss eine Variable vom Typ null sein, die noch nicht von einem anderen Async-Befehl besetzt wurde. Das Ergebnis des letzten Arguments wird in die besetzte Variable gelegt |
+| `await <?:Mutex>`				|  `<?>`				|  Gibt den Wert der Variable zurück, auf die der Mutex erzeugt wurde, wenn kein anderer Prozess gerade einen Lock hält. Ansonsten wird der Mutex für diesen Prozess gelockt. Nach der Anwendung sollte der Mutex mit unlock freigegeben werden! |
 | `await >?<`				|  `<?>`				|  Blockiert den Codefluss bis der Wert der Variable, die zuvor von einem Async-Block genutzt werden musste, verfügbar ist |
+| `unlock <?:Mutex>`		|  `<Null=null>`			|  Löst den Lock eines Mutex auf |
 | `time`				|  `<Number>`				|  Gibt die Anzahl an vergangenen Millisekunden seit dem 01.01.1970 zurück |
 | `time <?>`				|  `<Number>`				|  Misst die Ausführungszeit des Ausdrucks in Millisekunden (mit Dezimalstellen bis in den Nanosekundenbreich) |
 | `functhis`				|  `<Function>`			|  Gibt einen Funktionspointer auf den Prototypen der Funktion zurück, in der das Keyword aufgerufen wurde |
 | `this`					|  `<String>`			|  Gibt den Namen der Funktion zurück, in der der Keyword aufgerufen wurde |
 | `line`					|  `<Number>`			|  Gibt die Zeilennummer zurück, in der das Keyword aufgerufen wurde |
-| `mount <?:String> <?:String>`		|  `<Boolean>`			|  Fügt eine neue Funktion im aktuellen Scope unter dem Namen zurück. Hierbei wird das zweite Argument als Code geparst und dem Programm dann dynamisch hinzugefügt |
-| `unmount <?:String>`			|  `<Boolean>`			|  Entfernt eine bereits existierende Funktion (es wird hierarchisch nach der Funktion gesucht, bis sie gefunden wurde; sie muss nicht unbedingt im gleichen Scope liegen) |
 | `defined <?:String>`			|  `<Boolean>`			|  Prüft, ob im aktuellen oder höheren Scope die Variable mit dem Namen x definiert wurde |
 | `refs <?>`				|  `<Number>`			|  Gibt die Anzahl an Referenzen auf das Ergebnis eines Ausdrucks zurück |
 | `write <?:Stream> <?:String/List/ByteSequence>`				|  `<Boolean>`			|  Schreibt Daten in einen Datenstrom, und gibt zurück, ob die Aktion erfolgreich war |
@@ -162,7 +165,13 @@
 | `io file <?:String>`				|  `<Stream>`			|  Gibt einen Stream auf eine Datei über ihren Pfad zurück |
 | `io console`				|  `<Stream>`			|  Gibt einen Stream auf die Konsole des Programmes zurück |
 | `io net <?:String> <?:Number>`				|  `<Stream>`			|  Gibt einen Stream auf einen Server über seine Ip und den Port zurück |
-| `amiant <?:String>`			|  `<Number>`			|  Startet ein neues Amiant-Programm ein Level höher. Dabei wird der übergebene String als Programmcode genutzt. Es wird der Exit-Code dieses Programms zurückgegeben. Der Programmfluss blockiert, bis das Meta-Programm beendet wurde |
+| `amiant <?:String>`			|  `<Function>`			|  Parst einen String (mit Amiant Code) und gibt ein Lambda zurück, das diesen Code als Codeblock besitzt |
+| `reflect funcname`					|  `<String>`		|  Gibt den Namen der Funktion/Lambda zurück, in der dieser Befehl ausgeführt wurde |
+| `reflect this`					|  `<Function>`		|  Gibt den Prototyp der Funktion/Lambda zurück, in dem der Befehl ausgeführt wurde |
+| `reflect line`					|  `<Number>`		|  Gibt die Zeilennummer zurück, in der dieser Befehl geschrieben steht (Zählung beginnt bei 1) |
+| `reflect renamef <?:String> <?:String>`					|  `<Function>`		|  Benennt die Funktion mit Namen in einen neuen Namen um |
+| `reflect listvars`					|  `<List>`		|  Gibt eine Liste von Strings zurück - nämlich die Namen aller im aktuellen Scope definierter Variablen |
+| `reflect structvars`					|  `<Struct>`		|  Gibt ein Struct von String-String zurück - nämlich die Namen aller im aktuellen Scope definierter Variablen und ihre Werte |
 | `avm version`				|  `<Number>`			|  Gibt die aktuell verwendete Amiant-Version zurück |
 | `avm compver`				|  `<Number>`			|  Gibt die Compiler-Version oder spezifische Implementierungsversion zurück |
 | `avm memory`				|  `<Number>`			|  Gibt die Speicherbelegung dieses Amaint-Programms und aller höheren oder tieferen Meta-Programme in Bytes zurück |
@@ -172,4 +181,9 @@
 | `avm regset <?:String> <?:String>`	|  `<String>`			|  Setzt einen Registry-Wert, auf den alle Amiant-Programme, die auf dem Betriebssystem unter dem Nutzer laufen, zugreifen können |
 | `avm regget <?:String>`			|  `<String>`			|  Gibt einen Registry-Wert, auf den alle Amiant-Programme, die auf dem Betriebssystem unter dem Nutzer laufen, zugreifen können, zurück |
 | `avm conf <?:String> <?:String>`			|  `<Boolean>`			|  Konfiguriert die lokale AVM-Instanz indem eine Eigenschaft über key-value gesetzt wird. Nur Level 0 Programme dürfen diesen Befehl nutzen |
+| `avm printstats`			|  `<Null=null>`			|  Gibt die von der AVM bis zu diesem Zeitpunkt gesammelten Statistken auf der Konsole aus |
+| `avm createdobjects`			|  `<Number>`			|  Gibt die Anzahl an entstanden Objekten zurück (Statistik) |
+| `avm args`			|  `<List>`			|  Die die zu Programmbeginn übergebenen Konsolen-Argumente in eine Liste von Strings zurück |
+| `manual <?>`			|  `<Null=null>`				|  Gibt die Spezifikation des darauf folgenden Operators auf der Konsole aus |
+| `import <?:String>`			|  `<?>`				|  Lädt den Code über den spezifizierten Pfad und führt ihn an dieser Stelle im aktuellen Scope aus. Dieser Operator ist nur in der globalen Main-Funktion aufrufbar (Level 0). Das doppelte Importieren der gleichen Datei wird von der AVM blockiert |
 | `exit <?:Number>`				|  `<Number>`			|  Beendet die sofortige Ausführung des aktuellen Amiant-Programms mit dem Exit-Code (bei den Meta-Programmen wird nur das Meta-Programm beendet; beim obersten Programm die gesamte AVM) |
