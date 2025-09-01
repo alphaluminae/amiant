@@ -1,0 +1,36 @@
+## Struct-Objects
+
+var PERSON = `struct
+	firstName: firstName,
+	lastName: lastName,
+	age: age
+;
+
+func newPerson expect firstName: String, lastName: String, age: Number {
+	return ~PERSON
+};
+
+var person1 = ~newPerson firstName: "L", lastName: "Ub", age: $12;
+
+println "Name: " #person1 .firstName;
+println "Age: " #person1 .lastName;
+
+## Async Await:
+
+var jsonData: String = "{}";
+
+async jsonData {
+   ## Fetch Data
+   yield "{}";
+};
+
+println "JSON-Data: " await jsonData;
+
+## Rest-API
+
+func rest'connect expect headers: Struct, method: Enum, body: String whith (is method signature .POST .GET) {
+	#headers. 
+};
+
+~rest'connect headers: headers, method: .GET, body: "";
+
