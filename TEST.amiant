@@ -34,3 +34,21 @@ func rest'connect expect headers: Struct, method: Enum, body: String whith (is m
 
 ~rest'connect headers: headers, method: .GET, body: "";
 
+template Person
+name:"",
+age:$-1,
+ageTo18:-> {
+   - $18 #self.age
+},
+
+; ## ist ein im Scope erzeugtes Template für ein Struct
+
+var myPerson = new Person name:"Bob", age: $4;
+
+typeof (myPerson); ## ergibt Person
+
+struct key:value;
+
+template Person:
+name,
+age;
