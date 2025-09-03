@@ -52,3 +52,19 @@ struct key:value;
 template Person:
 name,
 age;
+
+#myPerson .name;
+
+
+struct <?:Signature> ## -> Erzeugt ein Struct nach einer Signatur
+
+enum Weather CLEAR THUNDER;
+
+
+#Weather.CLEAR; ## enum mit Selection Eigenschaft (Selection ist kompletter Pfad Weather.CLEAR; Alle Enums, mit gleichem Pfad sind gleigh
+
+
+
+
+
+if = myWeather #Weather.CLEAR;
